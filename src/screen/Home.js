@@ -26,7 +26,7 @@ import { ENTRIES1, ENTRIES2 } from './static/entries';
 import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor } from '../reducers/Action';
+import { setTrendingTodayX, setDataFor, setTMDBIdToGetDetails } from '../reducers/Action';
 // import {setDataFor} from "../reducers/Action"
 
 // https://entertainmenthub.netlify.app/
@@ -48,6 +48,11 @@ const Home = (props) => {
 		setSlider1ActiveSlide(index);
 	};
 
+	const myNavigation = (tmdbId) => {
+		props.setTMDBIdToGetDetails(tmdbId);
+		navigateTo();
+	};
+
 	const navigateTo = () => {
 		navigation.navigate('MovieDetails');
 	};
@@ -62,7 +67,7 @@ const Home = (props) => {
 			<TouchableOpacity
 				activeOpacity={1}
 				// style={styles.slideInnerContainer}
-				onPress={() => navigateTo()}
+				onPress={() => myNavigation(item.id)}
 			>
 				<View style={{ marginLeft: 5, flex: 1 }}>
 					<Image
@@ -316,7 +321,8 @@ const mapStateToProps = (state) => ({
 // });
 const mapDispatchToProps = {
 	setTrendingTodayX,
-	setDataFor
+	setDataFor,
+	setTMDBIdToGetDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
