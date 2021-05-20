@@ -123,7 +123,11 @@ class SliderEntry extends Component {
 							textTransform: 'capitalize'
 						}}
 					>
-						{data.media_type.toUpperCase() === 'tv'.toUpperCase() ? 'Series' : data.media_type}
+						{data.media_type && data.media_type.toUpperCase() === 'tv'.toUpperCase() ? (
+							'Series'
+						) : (
+							data.media_type
+						)}
 					</Text>
 				</View>
 			</View>

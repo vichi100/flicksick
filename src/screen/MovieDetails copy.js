@@ -11,8 +11,7 @@ import {
 	Image,
 	Button,
 	TouchableOpacity,
-	Modal,
-	ActivityIndicator
+	Modal
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -41,44 +40,20 @@ const SLIDER_1_FIRST_ITEM = 1;
 const MovieDetails = (props) => {
 	const [ movieDetails, setMovieDetails ] = useState(null);
 	const [ genres, setGenres ] = useState([]);
-	const [ isVisible, setIsVisible ] = useState(false);
+	const [ isVisible, setVisible ] = useState(false);
 	const [ slider1ActiveSlide, setSlider1ActiveSlide ] = useState(SLIDER_1_FIRST_ITEM);
 	const [ trailerURI, setTrailerURI ] = useState(null);
 	const carouselRef = useRef(null);
-	const [ visible, setVisible ] = useState(false);
-	const [ OTTProvidesList, setOTTProvidesList ] = useState([
-		require('../../assets/img/netflix.jpeg'),
-		require('../../assets/img/prime.jpeg'),
-		require('../../assets/img/erosnow.jpeg'),
-		require('../../assets/img/hotstar.jpeg'),
-		require('../../assets/img/jiocinema.jpeg'),
-		require('../../assets/img/sonyliv.jpeg'),
-		require('../../assets/img/zee5.jpeg')
-	]);
 
 	const video = React.useRef(null);
 	const [ status, setStatus ] = React.useState({});
 
-	const ActivityIndicatorElement = () => {
-		return (
-			<View
-				style={{
-					flex: 1,
-					position: 'absolute',
-					marginLeft: 'auto',
-					marginRight: 'auto',
-					marginTop: 'auto',
-					marginBottom: 'auto',
-					left: 0,
-					right: 0,
-					top: 0,
-					bottom: 0,
-					justifyContent: 'center'
-				}}
-			>
-				<ActivityIndicator color="#FF8C00" size="large" />
-			</View>
-		);
+	const setSlider1ActiveSlideX = (index) => {
+		setSlider1ActiveSlide(index);
+	};
+
+	const _renderItem = ({ item, index }) => {
+		return <SliderEntry data={item} even={(index + 1) % 2 === 0} />;
 	};
 
 	useEffect(
@@ -221,27 +196,32 @@ const MovieDetails = (props) => {
 		console.log('playTrailer: ', 'https://www.youtube.com/embed/' + JSON.stringify(trailerLink));
 
 		setTrailerURI('https://www.youtube.com/embed/' + trailerLink);
-		setIsVisible(true);
-	};
-
-	const renderOTTProvider = ({ item }) => {
-		console.log(item);
-		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					marginRight: 20,
-					borderWidth: 0.5,
-					borderColor: '#fff',
-					padding: 10,
-					borderRadius: 10
-				}}
-			>
-				{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
-				<Image source={item} style={{ width: 40, height: 40 }} />
-			</View>
-		);
+		setVisible(true);
+		// return (
+		// 	<View
+		// 		style={{
+		// 			flex: 1,
+		// 			justifyContent: 'center',
+		// 			backgroundColor: '#ecf0f1'
+		// 		}}
+		// 	>
+		// 		<Video
+		// 			ref={video}
+		// 			style={{
+		// 				alignSelf: 'center',
+		// 				width: 320,
+		// 				height: 200
+		// 			}}
+		// 			source={{
+		// 				uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+		// 			}}
+		// 			useNativeControls
+		// 			resizeMode="contain"
+		// 			isLooping
+		// 			onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+		// 		/>
+		// 	</View>
+		// );
 	};
 
 	return (
@@ -527,8 +507,8 @@ const MovieDetails = (props) => {
 						style={{
 							flexDirection: 'row',
 							justifyContent: 'space-between',
-							// paddingLeft: 15,
-							// paddingRight: 15,
+							paddingLeft: 15,
+							paddingRight: 15,
 							paddingTop: 20,
 							paddingBottom: 20,
 							margin: 5,
@@ -560,11 +540,11 @@ const MovieDetails = (props) => {
 								{'   By Friends   '}
 							</Text>
 						</View>
-						<View style={{ flex: 1, alignItems: 'center' }}>
+						<View>
 							<View style={{ flexDirection: 'row' }}>
-								{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
-								<View style={{ marginLeft: 0 }} />
-								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>70%</Text>
+								<AntDesign name="eyeo" color={'#7CFC00'} size={20} />
+								<View style={{ marginLeft: 5 }} />
+								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>100</Text>
 							</View>
 							<Text
 								style={{
@@ -574,51 +554,32 @@ const MovieDetails = (props) => {
 									paddingTop: 3
 								}}
 							>
-								Loved It
+								Watched
 							</Text>
 						</View>
-						<View style={{ flex: 1, alignItems: 'center' }}>
+						<View>
 							<View style={{ flexDirection: 'row' }}>
-								{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
-								<View style={{ marginLeft: 0 }} />
-								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>40%</Text>
+								<MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} />
+								<View style={{ marginLeft: 5 }} />
+								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>250</Text>
 							</View>
 							<Text
 								style={{
 									color: 'rgb(169,169,169)',
 									fontSize: 12,
 									fontWeight: '500',
-									paddingTop: 3,
-									textAlign: 'center'
+									paddingTop: 3
 								}}
 							>
-								Dumb But{'\n'}Entertaining
+								Bucket List
 							</Text>
 						</View>
 
-						<View style={{ flex: 1, alignItems: 'center' }}>
+						<View>
 							<View style={{ flexDirection: 'row' }}>
-								{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
-								<View style={{ marginLeft: 0 }} />
-								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>10%</Text>
-							</View>
-							<Text
-								style={{
-									color: 'rgb(169,169,169)',
-									fontSize: 12,
-									fontWeight: '500',
-									paddingTop: 3,
-									textAlign: 'center'
-								}}
-							>
-								Just Time{'\n'} Pass
-							</Text>
-						</View>
-						<View style={{ flex: 1, alignItems: 'center' }}>
-							<View style={{ flexDirection: 'row' }}>
-								{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
-								<View style={{ marginLeft: 0 }} />
-								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>5%</Text>
+								<AntDesign name="hearto" color={'#FF69B4'} size={20} />
+								<View style={{ marginLeft: 5 }} />
+								<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>90%</Text>
 							</View>
 							<Text
 								style={{
@@ -628,12 +589,11 @@ const MovieDetails = (props) => {
 									paddingTop: 3
 								}}
 							>
-								Worthless
+								Favourite
 							</Text>
 						</View>
 					</View>
 
-					{/* 					
 					<View
 						style={{
 							flexDirection: 'row',
@@ -652,7 +612,6 @@ const MovieDetails = (props) => {
 							<View style={{ flexDirection: 'row' }}>
 								<MaterialCommunityIcons name="owl" color={'#0000FF'} size={20} />
 								<View style={{ marginLeft: 5 }} />
-								
 							</View>
 							<Text
 								style={{
@@ -699,41 +658,6 @@ const MovieDetails = (props) => {
 							>
 								Favourite
 							</Text>
-						</View>
-					</View>
-
-					 */}
-
-					<View
-						style={{
-							flexDirection: 'row',
-							alignItems: 'center',
-							paddingLeft: 15,
-							paddingRight: 15,
-							paddingTop: 10,
-							paddingBottom: 10,
-							margin: 5
-							// borderColor: "rgba(105,105,105, 0.6)",
-							// borderWidth: 0.3,
-							// borderRadius: 10,
-						}}
-					>
-						{/* <View style={{}}>
-							<Text style={{ color: '#fff' }}>Watch On</Text>
-						</View> */}
-						<Text style={{ color: '#fff', textAlign: 'center', fontSize: 16, fontWeight: '500' }}>
-							Watch On
-						</Text>
-						<View style={{ marginLeft: 10, marginRight: 10 }}>
-							<FlatList
-								horizontal
-								data={OTTProvidesList}
-								//data defined in constructor
-								// ItemSeparatorComponent={ItemSeparatorView}
-								//Item Separator View
-								renderItem={(item) => renderOTTProvider(item)}
-								keyExtractor={(item, index) => index.toString()}
-							/>
 						</View>
 					</View>
 
@@ -798,12 +722,9 @@ const MovieDetails = (props) => {
 								// uri: 'https://www.youtube.com/embed/FzT7-NfkxLA'
 								uri: trailerURI
 							}}
-							renderLoading={ActivityIndicatorElement}
-							//Want to show the view or not
-							startInLoadingState={true}
 						/>
 						<TouchableOpacity
-							onPress={() => setIsVisible(false)}
+							onPress={() => setVisible(false)}
 							style={{
 								borderColor: 'rgba(192,192,192, .9)',
 								borderWidth: 1,

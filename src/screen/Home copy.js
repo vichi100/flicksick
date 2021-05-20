@@ -49,12 +49,127 @@ const Home = (props) => {
 		setSlider1ActiveSlide(index);
 	};
 
+	const myNavigation = (tmdbId) => {
+		props.setTMDBIdToGetDetails(tmdbId);
+		navigateTo();
+	};
+
 	const navigateTo = () => {
 		navigation.navigate('MovieDetails');
 	};
 
 	const _renderItem = ({ item, index }) => {
 		return <SliderEntry data={item} even={(index + 1) % 2 === 0} navigateTo={() => navigateTo()} />;
+	};
+
+	const renderItem = ({ item }) => {
+		// console.log("Item:  ", item.illustration);
+		return (
+			<TouchableOpacity
+				activeOpacity={1}
+				// style={styles.slideInnerContainer}
+				onPress={() => myNavigation(item.id)}
+			>
+				<View style={{ marginLeft: 5, flex: 1 }}>
+					<Image
+						source={{
+							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
+						}}
+						style={{ width: 160, height: 200, alignSelf: 'center' }}
+						resizeMode={'cover'}
+					/>
+					<View
+						style={{
+							position: 'absolute',
+							// top: 0,
+							// right: 0,
+							// height: 100,
+							// width: 70,
+							backgroundColor: 'rgba(0,0,0, .3)',
+							// borderTopRightRadius: 10,
+							// borderBottomRightRadius: 10,
+							// flexDirection: "row",
+							// justifyContent: "space-between",
+							// padding: 5,
+							// bo
+							// paddingLeft: 15,
+							// paddingRight: 15
+							width: '100%',
+							height: '100%'
+						}}
+					>
+						<View
+							style={{
+								position: 'absolute',
+								flex: 1,
+								top: 0,
+								right: 0,
+								flexDirection: 'row',
+								// backgroundColor: "rgba(0,0,0, .3)",
+								padding: 5
+							}}
+						>
+							<AntDesign name="hearto" color={'red'} size={18} />
+							<View style={{ marginLeft: 5 }} />
+							<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>90%</Text>
+						</View>
+						{/* <View style={{ flexDirection: "row" }}>
+            <AntDesign name="eyeo" color={"#fff"} size={20} />
+            <View style={{ marginLeft: 5 }} />
+            <Text style={{ color: "#fff" }}>100</Text>
+          </View> */}
+						{/* <View style={{ flexDirection: "row" }}>
+            <Entypo name="list" color={"#fff"} size={20} />
+            <View style={{ marginLeft: 5 }} />
+            <Text style={{ color: "#fff" }}>250</Text>
+          </View> */}
+					</View>
+					<View style={{ position: 'absolute', bottom: 5, left: 5 }}>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 12,
+								fontWeight: '500',
+								textTransform: 'capitalize'
+							}}
+						>
+							{item.media_type && item.media_type.toUpperCase() === 'tv'.toUpperCase() ? (
+								'Series'
+							) : (
+								item.media_type
+							)}
+						</Text>
+					</View>
+					<View
+						style={{
+							position: 'absolute',
+							bottom: 0,
+							right: 0,
+							borderColor: 'rgba(211,211,211, .6)',
+							borderWidth: 1,
+							padding: 3,
+							borderRadius: 5,
+							backgroundColor: 'rgba(0,0,0, .4)',
+							flexDirection: 'row',
+							justifyContent: 'center',
+							alignItems: 'center'
+						}}
+					>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 10,
+								fontWeight: '500',
+								textTransform: 'capitalize'
+							}}
+						>
+							Seen |
+						</Text>
+						<Ionicons name="checkmark" color={'#00FF00'} size={12} />
+					</View>
+				</View>
+			</TouchableOpacity>
+		);
 	};
 
 	const getHomeScreenData = () => {
@@ -126,17 +241,73 @@ const Home = (props) => {
 							autoplayInterval={5000}
 							onSnapToItem={(index) => setSlider1ActiveSlideX(index)}
 						/>
+						{/* <Pagination
+            dotsLength={ENTRIES1.length}
+            activeDotIndex={slider1ActiveSlide}
+            containerStyle={styles.paginationContainer}
+            dotColor={"rgba(255, 255, 255, 0.92)"}
+            dotStyle={styles.paginationDot}
+            inactiveDotColor={"#fff"}
+            inactiveDotOpacity={0.9}
+            inactiveDotScale={0.6}
+            carouselRef={carouselRef}
+            tappableDots={!!carouselRef}
+          /> */}
 					</View>
 				</View>
 
-				<FlatListStrip data={props.trendingToday} title={'Trending Today'} navigation={navigation} />
-
-				<FlatListStrip
-					data={props.trendingCurrentWeek}
-					title={'Most Watched This Week'}
-					navigation={navigation}
-				/>
-
+				<FlatListStrip data={props.trendingToday} title={'Trending Today'} />
+				{/* <View>
+					<Text
+						style={{
+							color: '#fff',
+							fontSize: 16,
+							fontWeight: '600',
+							marginTop: 10,
+							marginBottom: 10,
+							marginLeft: 15,
+							padding: 0,
+							borderColor: '#fff'
+						}}
+					>
+						Trending Today
+					</Text>
+					<FlatList
+						horizontal
+						data={props.trendingToday}
+						//data defined in constructor
+						// ItemSeparatorComponent={ItemSeparatorView}
+						//Item Separator View
+						renderItem={(item) => renderItem(item)}
+						keyExtractor={(item, index) => index.toString()}
+					/>
+				</View> */}
+				<FlatListStrip data={props.trendingCurrentWeek} title={'Most Watched This Week'} />
+				{/* <View>
+					<Text
+						style={{
+							color: '#fff',
+							fontSize: 16,
+							fontWeight: '600',
+							marginTop: 10,
+							marginBottom: 10,
+							marginLeft: 15,
+							padding: 0,
+							borderColor: '#fff'
+						}}
+					>
+						Most watched This Week
+					</Text>
+					<FlatList
+						horizontal
+						data={props.trendingCurrentWeek}
+						//data defined in constructor
+						// ItemSeparatorComponent={ItemSeparatorView}
+						//Item Separator View
+						renderItem={(item) => renderItem(item)}
+						keyExtractor={(item, index) => index.toString()}
+					/>
+				</View> */}
 				<View style={{ marginBottom: 10 }} />
 			</ScrollView>
 		</SafeAreaView>

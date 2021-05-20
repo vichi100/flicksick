@@ -13,13 +13,12 @@ import {
 	TextInput
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import * as Font from 'expo-font';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Carousel, { Pagination } from './react-native-snap-carousel/index';
 import { sliderWidth, itemWidth } from './styles/SliderEntry.style';
 import SliderEntry from './components/SliderEntry';
@@ -28,114 +27,12 @@ import { ENTRIES1, ENTRIES2 } from './static/entries';
 import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor } from '../reducers/Action';
-// import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
-
-const dataX = [
-	{
-		name: 'Miyah Myles',
-		mobile: '9833097595'
-	},
-	{
-		name: 'June Cha',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Iida Niskanen',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Renee Sims',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Jonathan Nu\u00f1ez',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Sasha Ho',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Abdullah Hadley',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Thomas Stock',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Veeti Seppanen',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Bonnie Riley',
-		mobile: '9833097595'
-	}
-];
+import { setTrendingTodayX, setDataFor, setTMDBIdToGetDetails } from '../reducers/Action';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
-const Friends = (props) => {
+const Search = (props) => {
 	const [ search, setSearch ] = useState('');
-
-	const renderItem = ({ item }) => {
-		console.log('Item:  ', item.name);
-		return (
-			<TouchableOpacity
-				activeOpacity={1}
-				// style={styles.slideInnerContainer}
-				onPress={() => navigateTo()}
-			>
-				<View style={{ marginTop: 10 }} />
-
-				<View
-					style={{
-						borderColor: 'rgba(105,105,105, .4)',
-						borderWidth: 0.3,
-						borderRadius: 30,
-						padding: 15,
-						marginLeft: 5,
-						marginRight: 5,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center'
-					}}
-				>
-					<View
-						style={{
-							paddingLeft: 10,
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							width: '80%',
-							alignItems: 'center'
-						}}
-					>
-						<View>
-							<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '600' }}>{item.name}</Text>
-							<Text style={{ color: '#A9A9A9', fontSize: 12, fontWeight: '400', paddingTop: 5 }}>
-								{'+91 ' + item.mobile}
-							</Text>
-						</View>
-
-						<Text
-							style={{
-								color: 'rgba(0,191,255, .9)',
-								fontSize: 16,
-								fontWeight: '600',
-								textAlign: 'center'
-							}}
-						>
-							Invite
-						</Text>
-					</View>
-					<View>
-						<MaterialCommunityIcons name="chevron-down" color={'#A9A9A9'} size={26} />
-					</View>
-				</View>
-			</TouchableOpacity>
-		);
-	};
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
@@ -170,7 +67,7 @@ const Friends = (props) => {
 				style={{
 					flex: 1,
 					justifyContent: 'center',
-					width: 100
+					marginRight: 20
 				}}
 			>
 				<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
@@ -178,22 +75,19 @@ const Friends = (props) => {
 		);
 	};
 
-	const renderMovieItem = ({ item }) => {
+	const renderItem = ({ item }) => {
 		// console.log("Item:  ", item.illustration);
 		return (
-			<TouchableOpacity
-				activeOpacity={1}
-				// style={styles.slideInnerContainer}
-				onPress={() => myNavigation(item.id)}
-			>
-				<View style={{ marginLeft: 5, flex: 1 }}>
+			<TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => myNavigation(item.id)}>
+				<View style={{ marginLeft: 5, width: '100%', height: 270 }}>
 					<Image
 						source={{
 							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
 						}}
-						style={{ width: 160, height: 200, alignSelf: 'center' }}
+						style={{ width: '100%', height: '100%' }}
 						resizeMode={'cover'}
 					/>
+
 					<View
 						style={{
 							position: 'absolute',
@@ -229,16 +123,6 @@ const Friends = (props) => {
 							<View style={{ marginLeft: 5 }} />
 							<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>90%</Text>
 						</View>
-						{/* <View style={{ flexDirection: "row" }}>
-            <AntDesign name="eyeo" color={"#fff"} size={20} />
-            <View style={{ marginLeft: 5 }} />
-            <Text style={{ color: "#fff" }}>100</Text>
-          </View> */}
-						{/* <View style={{ flexDirection: "row" }}>
-            <Entypo name="list" color={"#fff"} size={20} />
-            <View style={{ marginLeft: 5 }} />
-            <Text style={{ color: "#fff" }}>250</Text>
-          </View> */}
 					</View>
 					<View style={{ position: 'absolute', bottom: 5, left: 5 }}>
 						<Text
@@ -306,7 +190,7 @@ const Friends = (props) => {
 					onChangeText={(text) => searchFilterFunction(text)}
 					value={search}
 					underlineColorAndroid="transparent"
-					placeholder="Search by name or mobile"
+					placeholder="Search by movie / series name or cast"
 					inlineImageLeft="search_icon"
 					placeholderTextColor={'#A9A9A9'}
 				/>
@@ -315,9 +199,6 @@ const Friends = (props) => {
 				</View>
 			</View>
 			<View style={{ flexDirection: 'row', margin: 15 }}>
-				<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500', marginRight: 20 }}>
-					All Friends |{' '}
-				</Text>
 				<FlatList
 					horizontal
 					data={categoryData}
@@ -333,30 +214,18 @@ const Friends = (props) => {
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
 			</View>
-			<View style={{ height: 200 }}>
+			<View>
 				<FlatList
-					horizontal
+					// horizontal
 					data={props.trendingCurrentWeek}
 					//data defined in constructor
 					// ItemSeparatorComponent={ItemSeparatorView}
 					//Item Separator View
-					renderItem={(item) => renderMovieItem(item)}
+					renderItem={(item) => renderItem(item)}
 					keyExtractor={(item, index) => index.toString()}
+					numColumns={2}
 				/>
 			</View>
-			<ScrollView>
-				<View>
-					<FlatList
-						// horizontal
-						data={dataX}
-						//data defined in constructor
-						// ItemSeparatorComponent={ItemSeparatorView}
-						//Item Separator View
-						renderItem={(item) => renderItem(item)}
-						keyExtractor={(item, index) => index.toString()}
-					/>
-				</View>
-			</ScrollView>
 		</SafeAreaView>
 	);
 };
@@ -373,6 +242,7 @@ const mapStateToProps = (state) => ({
 // });
 const mapDispatchToProps = {
 	setTrendingTodayX,
-	setDataFor
+	setDataFor,
+	setTMDBIdToGetDetails
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Friends);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

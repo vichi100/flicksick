@@ -13,6 +13,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 // import Ionicons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeStackNav from './HomeStackNav';
 import Friends from '../screen/Friends';
+import Profile from '../screen/Profile';
+import Search from '../screen/Search';
 // import Recommendation from "../screen/Recommendation";
 // import Order from "../screen/Order";
 // import Profile from "../screen/Profile";
@@ -55,15 +57,15 @@ const BottomTabScreen = () => {
 			/>
 			<Tab.Screen
 				name="Search"
-				component={HomeStackNav}
+				component={Search}
 				options={{
 					tabBarLabel: '',
 					tabBarIcon: ({ color }) => <IoniconsX name="search" color={color} size={26} />
 				}}
 			/>
 			<Tab.Screen
-				name="Me"
-				component={HomeStackNav}
+				name="Profile"
+				component={Profile}
 				options={{
 					tabBarLabel: '',
 					tabBarIcon: ({ color }) => <MaterialCommunityIcons name="incognito" color={color} size={26} />

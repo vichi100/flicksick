@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, SafeAreaView, StyleSheet, Modal, TouchableHighlight, Share, Linking, AsyncStorage } from 'react-native';
+import {
+	View,
+	SafeAreaView,
+	StyleSheet,
+	Modal,
+	TouchableHighlight,
+	Share,
+	Linking,
+	FlatList,
+	Image
+} from 'react-native';
 import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
 import { connect } from 'react-redux';
 // import Button from "../components/Button";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -17,9 +29,35 @@ import axios from 'axios';
 // https://github.com/itzpradip/Food-Finder-React-Native-App/blob/master/screens/EditProfileScreen.js
 // https://www.youtube.com/watch?v=mjJzaiGkaQA
 
+// const OTTProvidesList = [
+// {netflix: require('../../assets/img/netflix.jpeg')},
+// 		{prime: require('../../assets/img/prime.jpeg')},
+// 		{erosnow: require('../../assets/img/erosnow.jpeg')},
+// 		{hotstar: require('../../assets/img/hotstar.jpeg')},
+// 		{jiocinema: require('../../assets/img/jiocinema.jpeg')},
+// 		{sonyliv: require('../../assets/img/sonyliv.jpeg')},
+// 		{zee5: require('../../assets/img/zee5.jpeg')}
+// ];
+
 const Profile = (props) => {
 	const { navigation } = props;
 	const [ modalVisible, setModalVisible ] = useState(false);
+	const [ OTTProvidesList, setOTTProvidesList ] = useState([
+		require('../../assets/img/netflix.jpeg'),
+		require('../../assets/img/prime.jpeg'),
+		require('../../assets/img/erosnow.jpeg'),
+		require('../../assets/img/hotstar.jpeg'),
+		require('../../assets/img/jiocinema.jpeg'),
+		require('../../assets/img/sonyliv.jpeg'),
+		require('../../assets/img/zee5.jpeg')
+	]);
+
+	const [ selectedList, setSelectedList ] = useState([
+		require('../../assets/img/netflix.jpeg'),
+		require('../../assets/img/prime.jpeg')
+	]);
+
+	// selectedList = [ require('../../assets/img/netflix.jpeg'), require('../../assets/img/prime.jpeg') ];
 
 	// useEffect(() => {
 	//   // console.log(JSON.stringify(props.userDetails));
@@ -50,62 +88,33 @@ const Profile = (props) => {
 		}
 	};
 
-	const onSubmit = () => {
-		navigation.navigate('ManageEmployee');
-	};
-	const myCustomShare = async () => {
-		const shareOptions = {
-			message: "Order your next meal from FoodFinder App. I've already ordered more than 10 meals on it."
-			// url: files.appLogo,
-			// urls: [files.image1, files.image2]
-		};
-
-		try {
-			//   const ShareResponse = await Share.open(shareOptions);
-			//   // console.log(JSON.stringify(ShareResponse));
-		} catch (error) {
-			// console.log("Error => ", error);
-		}
-	};
-
-	const deleteAgentAccount = () => {
-		const agent = {
-			agent_id: props.userDetails.user_details.id
-		};
-		axios('http://192.168.0.101:3000/deleteAgentAccount', {
-			method: 'post',
-			headers: {
-				'Content-type': 'Application/json',
-				Accept: 'Application/json'
-			},
-			data: agent
-		}).then(
-			(response) => {
-				if (response.data === 'success') {
-					// console.log("1: " + JSON.stringify(props.userDetails.user_details));
-					props.userDetails.user_details['user_status'] = 'suspend';
-
-					setModalVisible(!modalVisible);
-					updateAsyncStorageData();
-					// navigation.navigate("Profile");
-				}
-			},
-			(error) => {
-				// console.log(error);
-			}
+	const renderOTTProvider = ({ item }) => {
+		console.log(item);
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: 'center',
+					marginRight: 20,
+					borderWidth: 0.5,
+					borderColor: '#fff',
+					padding: 10,
+					borderRadius: 10
+				}}
+			>
+				{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
+				<Image source={item} style={{ width: 40, height: 40 }} />
+			</View>
 		);
 	};
 
-	const updateAsyncStorageData = async () => {
-		const userDetailsDataX = await AsyncStorage.getItem('user_details');
-		// console.log("userDetailsDataX: " + userDetailsDataX);
-		const userDetailsData = JSON.parse(userDetailsDataX);
-		userDetailsData.user_details['user_status'] = 'suspend';
-		AsyncStorage.setItem('user_details', JSON.stringify(userDetailsData));
-	};
-
 	return (
-		<SafeAreaView style={styles.container}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				backgroundColor: '#000'
+			}}
+		>
 			<View style={styles.userInfoSection}>
 				<View style={{ flexDirection: 'row', marginTop: 15 }}>
 					<Avatar.Image
@@ -120,7 +129,8 @@ const Profile = (props) => {
 								styles.title,
 								{
 									marginTop: 15,
-									marginBottom: 5
+									marginBottom: 5,
+									color: '#fff'
 								}
 							]}
 						>
@@ -134,7 +144,7 @@ const Profile = (props) => {
 							{props.userDetails.user_details && props.userDetails.user_details.company_name ? (
 								props.userDetails.user_details.company_name
 							) : (
-								'Company'
+								'+91 9833097595'
 							)}
 						</Caption>
 					</View>
@@ -142,22 +152,10 @@ const Profile = (props) => {
 			</View>
 
 			<View style={styles.userInfoSection}>
-				<View style={styles.row}>
-					<Icon name="map-marker-radius" color="#777777" size={20} />
-					<Text style={{ color: '#777777', marginLeft: 20 }}>
-						{props.userDetails.user_details && props.userDetails.user_details.city ? (
-							props.userDetails.user_details.city
-						) : (
-							'Guest City'
-						)}
-					</Text>
-				</View>
-				<View style={styles.row}>
+				{/* <View style={styles.row}>
 					<Icon name="phone" color="#777777" size={20} />
-					<Text style={{ color: '#777777', marginLeft: 20 }}>
-						+91 {' ' + props.userDetails.user_details && props.userDetails.user_details.mobile}
-					</Text>
-				</View>
+					<Text style={{ color: '#777777', marginLeft: 20 }}>+91 {' ' + 9833097595}</Text>
+				</View> */}
 				{/* <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
@@ -185,31 +183,6 @@ const Profile = (props) => {
 				</View>
 			) : null}
 
-			{props.userDetails.user_details && props.userDetails.user_details.user_type === 'agent' ? (
-				<View style={[ { flexDirection: 'column', marginTop: 20 } ]}>
-					<View
-						style={{
-							marginTop: 10,
-							marginBottom: 10,
-							marginLeft: 10,
-							marginRight: 10
-						}}
-					>
-						<Button title="ADD EMPLOYEE" onPress={() => onSubmit()} />
-					</View>
-				</View>
-			) : (
-				<View
-					style={{
-						borderBottomColor: 'rgba(211,211,211, 0.5)',
-						borderBottomWidth: 1,
-						marginTop: 30,
-						marginLeft: 10,
-						marginRight: 10
-					}}
-				/>
-			)}
-
 			<View style={styles.menuWrapper}>
 				<TouchableRipple onPress={() => onShare()}>
 					<View style={styles.menuItem}>
@@ -217,18 +190,36 @@ const Profile = (props) => {
 						<Text style={styles.menuItemText}>Tell Your Friends</Text>
 					</View>
 				</TouchableRipple>
+				<View>
+					<View style={styles.menuItem}>
+						<FontAwesome5 name="play" color="#FF6347" size={25} />
+						<Text style={styles.menuItemText}>Your OTT Partners</Text>
+					</View>
+					<View style={{ marginLeft: 50 }}>
+						<FlatList
+							horizontal
+							data={OTTProvidesList}
+							//data defined in constructor
+							// ItemSeparatorComponent={ItemSeparatorView}
+							//Item Separator View
+							renderItem={(item) => renderOTTProvider(item)}
+							keyExtractor={(item, index) => index.toString()}
+						/>
+					</View>
+				</View>
+
 				<TouchableRipple onPress={() => makeCall()}>
 					<View style={styles.menuItem}>
 						<AntDesign name="customerservice" color="#FF6347" size={25} />
 						<Text style={styles.menuItemText}>Support</Text>
 					</View>
 				</TouchableRipple>
-				<TouchableRipple onPress={() => {}}>
+				{/* <TouchableRipple onPress={() => {}}>
 					<View style={styles.menuItem}>
 						<Icon name="settings-outline" color="#FF6347" size={25} />
 						<Text style={styles.menuItemText}>Settings</Text>
 					</View>
-				</TouchableRipple>
+				</TouchableRipple> */}
 				<TouchableRipple onPress={() => {}}>
 					<View style={styles.menuItem}>
 						<MaterialIcons name="local-police" color="#FF6347" size={25} />
@@ -318,7 +309,8 @@ const styles = StyleSheet.create({
 	caption: {
 		fontSize: 14,
 		lineHeight: 14,
-		fontWeight: '500'
+		fontWeight: '500',
+		color: '#dddddd'
 	},
 	row: {
 		flexDirection: 'row',

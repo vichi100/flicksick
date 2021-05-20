@@ -141,7 +141,11 @@ const SliderEntry = (props) => {
 								textTransform: 'capitalize'
 							}}
 						>
-							{data.media_type.toUpperCase() === 'tv'.toUpperCase() ? 'Series' : data.media_type}
+							{data.media_type && data.media_type.toUpperCase() === 'tv'.toUpperCase() ? (
+								'Series'
+							) : (
+								data.media_type
+							)}
 						</Text>
 					</View>
 
@@ -160,7 +164,7 @@ const SliderEntry = (props) => {
 						}}
 					>
 						<TouchableOpacity
-							onPress={() => openRating(data.id)}
+							onPress={() => openRating(data.tmdb_id)}
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'center'
@@ -191,7 +195,7 @@ const SliderEntry = (props) => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer} onPress={() => navigateTo(data.id)}>
+		<TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer} onPress={() => navigateTo(data.tmdb_id)}>
 			{/* <View style={styles.shadow} /> */}
 			<View style={[ styles.imageContainer, even ? styles.imageContainerEven : {} ]}>
 				{image()}
