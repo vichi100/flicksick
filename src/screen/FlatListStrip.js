@@ -34,9 +34,10 @@ const FlatListStrip = (props) => {
 	const [ ratingIndex, setRatingIndex ] = useState(-1);
 	const [ fsId, setFSId ] = useState(null);
 	const [ movieName, setMovieName ] = useState(null);
+	const [ displayError, setDisplayError ] = useState(false);
 
 	const openRating = (movie) => {
-		console.log('rating');
+		// console.log('rating');
 		setModalVisible(true);
 		setFSId(movie.fs_id);
 		setMovieName(movie.title);
@@ -44,6 +45,7 @@ const FlatListStrip = (props) => {
 
 	const selectRatingIndex = (index) => {
 		setRatingIndex(index);
+		setDisplayError(false);
 	};
 
 	const myNavigation = (fsId) => {
@@ -56,9 +58,15 @@ const FlatListStrip = (props) => {
 	};
 
 	const addRatingAndSeenFlag = () => {
-		console.log('addRatingAndSeenFlag called', props.userDetails);
+		// console.log('addRatingAndSeenFlag called', props.userDetails);
+		if (ratingIndex === -1) {
+			setDisplayError(true);
+			return;
+		}
+
 		if (!props.userDetails) {
 			navigation.navigate('Login');
+			setModalVisible(false);
 			return;
 		}
 
@@ -78,6 +86,7 @@ const FlatListStrip = (props) => {
 		}).then(
 			(response) => {
 				console.log(response.data);
+				setRatingIndex(-1);
 			},
 			(error) => {
 				console.log(error);
@@ -88,7 +97,7 @@ const FlatListStrip = (props) => {
 	};
 
 	const renderItem = ({ item }) => {
-		console.log('ItemX:  ', item.poster_path);
+		// console.log('ItemX:  ', item.poster_path);
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
@@ -336,6 +345,7 @@ const FlatListStrip = (props) => {
 								// stylesX={{ ...stylesX.cancelButton }}
 								onPress={() => {
 									setModalVisible(!modalVisible);
+									setRatingIndex(-1);
 								}}
 							>
 								<Text
@@ -366,6 +376,13 @@ const FlatListStrip = (props) => {
 								</Text>
 							</TouchableHighlight>
 						</View>
+						{displayError ? (
+							<View style={{ position: 'absolute', bottom: 5, left: 15 }}>
+								<Text style={{ color: 'rgba(255,69,0, .9)', fontSize: 14 }}>
+									Please Select Rating !!!
+								</Text>
+							</View>
+						) : null}
 					</View>
 				</View>
 			</Modal>

@@ -49,16 +49,22 @@ const Home = (props) => {
 		setSlider1ActiveSlide(index);
 	};
 
-	const navigateTo = () => {
-		navigation.navigate('MovieDetails');
+	const navigateTo = (destination) => {
+		navigation.navigate(destination);
 	};
 
 	const _renderItem = ({ item, index }) => {
-		return <SliderEntry data={item} even={(index + 1) % 2 === 0} navigateTo={() => navigateTo()} />;
+		return (
+			<SliderEntry
+				data={item}
+				even={(index + 1) % 2 === 0}
+				navigateTo={(destination) => navigateTo(destination)}
+			/>
+		);
 	};
 
 	const getHomeScreenData = () => {
-		console.log('getHomeScreenData called');
+		// console.log('getHomeScreenData called');
 		const obj = {
 			id: '123'
 		};

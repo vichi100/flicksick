@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { setFSIdToGetDetails } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
+import axios from 'axios';
 
 // https://snack.expo.io/@vichi/45c79d   image overlay text
 
@@ -19,15 +20,20 @@ const SliderEntry = (props) => {
 	const { data, parallax, parallaxProps, even } = props;
 	const [ modalVisible, setModalVisible ] = useState(false);
 	const [ ratingIndex, setRatingIndex ] = useState(-1);
-	// const { data, even } = this.props;
+	const [ fsId, setFSId ] = useState(null);
+	const [ movieName, setMovieName ] = useState(null);
+	const [ displayError, setDisplayError ] = useState(false);
 
-	const openRating = (id) => {
-		console.log('rating');
+	const openRating = (movie) => {
+		console.log('rating', movie);
 		setModalVisible(true);
+		setFSId(movie.fs_id);
+		setMovieName(movie.title);
 	};
 
 	const selectRatingIndex = (index) => {
 		setRatingIndex(index);
+		setDisplayError(false);
 	};
 
 	const image = () => {
@@ -164,7 +170,7 @@ const SliderEntry = (props) => {
 						}}
 					>
 						<TouchableOpacity
-							onPress={() => openRating(data.fs_id)}
+							onPress={() => openRating(data)}
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'center'
@@ -191,7 +197,46 @@ const SliderEntry = (props) => {
 	const navigateTo = (fsId) => {
 		// console.log("navi");
 		props.setFSIdToGetDetails(fsId);
-		props.navigateTo();
+		props.navigateTo('MovieDetails');
+	};
+
+	const addRatingAndSeenFlag = () => {
+		// console.log('addRatingAndSeenFlag called', props.userDetails);
+		if (ratingIndex === -1) {
+			setDisplayError(true);
+			return;
+		}
+		if (!props.userDetails) {
+			// navigation.navigate('Login');
+			props.navigateTo('Login');
+			setModalVisible(false);
+			return;
+		}
+
+		const obj = {
+			user_id: props.userDetails.id,
+			mobile: props.userDetails.mobile,
+			fs_id: fsId,
+			rating_code: ratingIndex
+		};
+		axios('http://192.168.0.100:3000/addRatingAndSeenFlag', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				console.log(response.data);
+				setRatingIndex(-1);
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+
+		setModalVisible(!modalVisible);
 	};
 
 	return (
@@ -202,6 +247,7 @@ const SliderEntry = (props) => {
 
 				<View style={[ styles.radiusMask, even ? styles.radiusMaskEven : {} ]} />
 			</View>
+
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -223,7 +269,7 @@ const SliderEntry = (props) => {
 					<View
 						style={{
 							margin: 20,
-							height: 300,
+							height: 370,
 							backgroundColor: '#000',
 							borderRadius: 20,
 							borderColor: 'rgba(105,105,105, .8)',
@@ -242,12 +288,25 @@ const SliderEntry = (props) => {
 					>
 						<Text
 							style={{
-								marginBottom: 15,
+								marginBottom: 10,
 								textAlign: 'center',
-								color: 'rgba(245,245,245,.9)'
+								color: 'rgba(255,255,255,.9)',
+								fontSize: 15,
+								fontWeight: '600'
 							}}
 						>
-							Did you win deal for this property?
+							What you feel about movie / series ?
+						</Text>
+						<Text
+							style={{
+								marginBottom: 15,
+								textAlign: 'center',
+								color: 'rgba(255,255,255,.9)',
+								fontSize: 16,
+								fontWeight: '600'
+							}}
+						>
+							{movieName}
 						</Text>
 						<ButtonGroup
 							vertical
@@ -262,8 +321,9 @@ const SliderEntry = (props) => {
 								borderWidth: 0.5,
 								borderRadius: 5,
 								borderColor: 'rgba(128,128,128,.9)',
-								borderBottomColor: 'rgba(0,0,0, .7)',
-								height: 150,
+								borderBottomColor: 'rgba(128,128,128,.9)',
+								borderBottomWidth: 1,
+								height: 180,
 								width: 300,
 								backgroundColor: 'rgba(0,0,0, .7)'
 							}}
@@ -286,6 +346,7 @@ const SliderEntry = (props) => {
 								// stylesX={{ ...stylesX.cancelButton }}
 								onPress={() => {
 									setModalVisible(!modalVisible);
+									setRatingIndex(-1);
 								}}
 							>
 								<Text
@@ -302,7 +363,7 @@ const SliderEntry = (props) => {
 							<TouchableHighlight
 								// styles={{ ...stylesX.applyButton }}
 								onPress={() => {
-									setModalVisible(!modalVisible);
+									addRatingAndSeenFlag();
 								}}
 							>
 								<Text
@@ -316,6 +377,13 @@ const SliderEntry = (props) => {
 								</Text>
 							</TouchableHighlight>
 						</View>
+						{displayError ? (
+							<View style={{ position: 'absolute', bottom: 5, left: 15 }}>
+								<Text style={{ color: 'rgba(255,69,0, .9)', fontSize: 14 }}>
+									Please Select Rating !!!
+								</Text>
+							</View>
+						) : null}
 					</View>
 				</View>
 			</Modal>
@@ -323,10 +391,11 @@ const SliderEntry = (props) => {
 	);
 };
 
-// const mapStateToProps = (state) => ({
-//   trendingToday: state.AppReducer.trendingToday,
-//   trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-// });
+const mapStateToProps = (state) => ({
+	trendingToday: state.AppReducer.trendingToday,
+	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
+	userDetails: state.AppReducer.userDetails
+});
 
 // const mapDispatchToProps = () => ({
 //   setTrendingTodayX,
@@ -335,7 +404,7 @@ const SliderEntry = (props) => {
 const mapDispatchToProps = {
 	setFSIdToGetDetails
 };
-export default connect(null, mapDispatchToProps)(SliderEntry);
+export default connect(mapStateToProps, mapDispatchToProps)(SliderEntry);
 
 const stylesX = StyleSheet.create({
 	applyButton: {

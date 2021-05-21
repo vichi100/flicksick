@@ -117,7 +117,7 @@ const MovieDetails = (props) => {
 
 	const getMovieDetails = () => {
 		// scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
-		console.log('getMovieDetails called');
+		// console.log('getMovieDetails called');
 
 		const obj = {
 			id: props.fsIdToGetDetails
@@ -131,14 +131,14 @@ const MovieDetails = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				setMovieDetails(response.data);
 				if (response.data) {
 					{
 						console.log(response.data.genres.length);
 						const genresX = [];
 						response.data.genres.map((item) => {
-							console.log(item.name);
+							// console.log(item.name);
 							genresX.push(item.name);
 						});
 						setGenres(genresX);
@@ -247,14 +247,14 @@ const MovieDetails = (props) => {
 	};
 
 	const playTrailer = (trailerLink) => {
-		console.log('playTrailer: ', 'https://www.youtube.com/embed/' + JSON.stringify(trailerLink));
+		// console.log('playTrailer: ', 'https://www.youtube.com/embed/' + JSON.stringify(trailerLink));
 
 		setTrailerURI('https://www.youtube.com/embed/' + trailerLink);
 		setIsVisible(true);
 	};
 
 	const renderOTTProvider = ({ item }) => {
-		console.log(item);
+		// console.log(item);
 		return (
 			<View
 				style={{

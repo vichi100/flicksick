@@ -436,7 +436,7 @@ const Friends = (props) => {
 				</View>
 			</View>
 			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
-				<Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: '600', width: '25%' }} numberOfLines={1}>
+				<Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: '600', width: '26%' }} numberOfLines={1}>
 					{selectedFriendName}
 				</Text>
 				<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500' }}>| </Text>
