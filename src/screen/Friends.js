@@ -29,24 +29,24 @@ import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor } from '../reducers/Action';
-// import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
+import FlatListStrip from './FlatListStrip';
 
 const dataX = [
 	{
 		name: 'Miyah Myles',
-		mobile: '9833097595'
+		mobile: '9833097591'
 	},
 	{
 		name: 'June Cha',
-		mobile: '9833097595'
+		mobile: '9833097592'
 	},
 	{
 		name: 'Iida Niskanen',
-		mobile: '9833097595'
+		mobile: '9833097593'
 	},
 	{
 		name: 'Renee Sims',
-		mobile: '9833097595'
+		mobile: '9833097594'
 	},
 	{
 		name: 'Jonathan Nu\u00f1ez',
@@ -54,45 +54,57 @@ const dataX = [
 	},
 	{
 		name: 'Sasha Ho',
-		mobile: '9833097595'
+		mobile: '9833097596'
 	},
 	{
 		name: 'Abdullah Hadley',
-		mobile: '9833097595'
+		mobile: '9833097597'
 	},
 	{
 		name: 'Thomas Stock',
-		mobile: '9833097595'
+		mobile: '9833097598'
 	},
 	{
 		name: 'Veeti Seppanen',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Bonnie Riley',
-		mobile: '9833097595'
+		mobile: '9833097599'
 	}
 ];
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
 const Friends = (props) => {
+	const { navigation } = props;
 	const [ search, setSearch ] = useState('');
+	const [ selectedFriendMobile, setSelectedFriendMobile ] = useState(null);
+	const [ selectedFriendName, setSelectedFriendName ] = useState('All Friends');
+	const [ borderColor, setBorderColor ] = useState('#fff');
+	const [ borderWidth, setBorderWidth ] = useState(null);
 
-	const renderItem = ({ item }) => {
-		console.log('Item:  ', item.name);
+	const displayFriendMovieList = (item) => {
+		if (selectedFriendMobile !== item.mobile) {
+			setSelectedFriendMobile(item.mobile);
+			setSelectedFriendName(item.name);
+		} else {
+			setSelectedFriendMobile(null);
+			setSelectedFriendName('All Friends');
+		}
+	};
+
+	const renderFriendsList = ({ item }) => {
+		console.log('Item:  ', item);
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
 				// style={styles.slideInnerContainer}
-				onPress={() => navigateTo()}
+				onPress={() => displayFriendMovieList(item)}
 			>
 				<View style={{ marginTop: 10 }} />
 
 				<View
 					style={{
-						borderColor: 'rgba(105,105,105, .4)',
-						borderWidth: 0.3,
+						borderColor:
+							selectedFriendMobile === item.mobile ? 'rgba(255,255,255, .9)' : 'rgba(105,105,105, .4)',
+						borderWidth: selectedFriendMobile === item.mobile ? 0.9 : 0.3,
 						borderRadius: 30,
 						padding: 15,
 						marginLeft: 5,
@@ -170,7 +182,8 @@ const Friends = (props) => {
 				style={{
 					flex: 1,
 					justifyContent: 'center',
-					width: 100
+					marginRight: 10,
+					marginLeft: 10
 				}}
 			>
 				<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
@@ -178,8 +191,8 @@ const Friends = (props) => {
 		);
 	};
 
-	const renderMovieItem = ({ item }) => {
-		// console.log("Item:  ", item.illustration);
+	const renderMovieItemX = ({ item }) => {
+		console.log('Item:  ', item.poster_path);
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
@@ -288,6 +301,114 @@ const Friends = (props) => {
 		);
 	};
 
+	const renderMovieItem = ({ item }) => {
+		console.log('ItemX:  ', item.poster_path);
+		return (
+			<TouchableOpacity
+				activeOpacity={1}
+				// style={styles.slideInnerContainer}
+				onPress={() => myNavigation(item.fs_id)}
+			>
+				<View style={{ marginLeft: 5, flex: 1 }}>
+					<Image
+						source={{
+							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
+						}}
+						style={{ width: 160, height: 200, alignSelf: 'center' }}
+						resizeMode={'cover'}
+					/>
+					<View
+						style={{
+							position: 'absolute',
+							// top: 0,
+							// right: 0,
+							// height: 100,
+							// width: 70,
+							backgroundColor: 'rgba(0,0,0, .3)',
+							// borderTopRightRadius: 10,
+							// borderBottomRightRadius: 10,
+							// flexDirection: "row",
+							// justifyContent: "space-between",
+							// padding: 5,
+							// bo
+							// paddingLeft: 15,
+							// paddingRight: 15
+							width: '100%',
+							height: '100%'
+						}}
+					>
+						<View
+							style={{
+								position: 'absolute',
+								flex: 1,
+								top: 0,
+								right: 0,
+								flexDirection: 'row',
+								// backgroundColor: "rgba(0,0,0, .3)",
+								padding: 5
+							}}
+						>
+							<AntDesign name="hearto" color={'red'} size={18} />
+							<View style={{ marginLeft: 5 }} />
+							<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>90%</Text>
+						</View>
+					</View>
+					<View style={{ position: 'absolute', bottom: 5, left: 5 }}>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 12,
+								fontWeight: '500',
+								textTransform: 'capitalize'
+							}}
+						>
+							{item.media_type && item.media_type.toUpperCase() === 'tv'.toUpperCase() ? (
+								'Series'
+							) : (
+								item.media_type
+							)}
+						</Text>
+					</View>
+					<TouchableOpacity
+						onPress={() => openRating(item.fs_id)}
+						style={{
+							flexDirection: 'row',
+							justifyContent: 'center'
+						}}
+					>
+						<View
+							style={{
+								position: 'absolute',
+								bottom: 0,
+								right: 0,
+								borderColor: 'rgba(211,211,211, .6)',
+								borderWidth: 1,
+								padding: 3,
+								borderRadius: 5,
+								backgroundColor: 'rgba(0,0,0, .4)',
+								flexDirection: 'row',
+								justifyContent: 'center',
+								alignItems: 'center'
+							}}
+						>
+							<Text
+								style={{
+									color: '#fff',
+									fontSize: 10,
+									fontWeight: '500',
+									textTransform: 'capitalize'
+								}}
+							>
+								Seen |
+							</Text>
+							<Ionicons name="checkmark" color={'#00FF00'} size={12} />
+						</View>
+					</TouchableOpacity>
+				</View>
+			</TouchableOpacity>
+		);
+	};
+
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
 			<View style={{ marginBottom: 5 }}>
@@ -314,10 +435,11 @@ const Friends = (props) => {
 					<AntDesign name="search1" color={'#7CFC00'} size={20} />
 				</View>
 			</View>
-			<View style={{ flexDirection: 'row', margin: 15 }}>
-				<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500', marginRight: 20 }}>
-					All Friends |{' '}
+			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
+				<Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: '600', width: '25%' }} numberOfLines={1}>
+					{selectedFriendName}
 				</Text>
+				<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500' }}>| </Text>
 				<FlatList
 					horizontal
 					data={categoryData}
@@ -333,17 +455,18 @@ const Friends = (props) => {
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
 			</View>
-			<View style={{ height: 200 }}>
-				<FlatList
-					horizontal
-					data={props.trendingCurrentWeek}
-					//data defined in constructor
-					// ItemSeparatorComponent={ItemSeparatorView}
-					//Item Separator View
-					renderItem={(item) => renderMovieItem(item)}
-					keyExtractor={(item, index) => index.toString()}
-				/>
-			</View>
+			<View style={{ margin: 7 }} />
+
+			<FlatListStrip
+				data={props.trendingCurrentWeek}
+				title={null}
+				navigation={navigation}
+				horizontalFlag={true}
+				numColumns={1}
+				imageHight={200}
+				imageWidth={160}
+			/>
+
 			<ScrollView>
 				<View>
 					<FlatList
@@ -352,7 +475,7 @@ const Friends = (props) => {
 						//data defined in constructor
 						// ItemSeparatorComponent={ItemSeparatorView}
 						//Item Separator View
-						renderItem={(item) => renderItem(item)}
+						renderItem={(item) => renderFriendsList(item)}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				</View>
@@ -364,7 +487,9 @@ const Friends = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	tmdbIdToGetDetails: state.AppReducer.tmdbIdToGetDetails
+	// trendingToday: state.AppReducer.trendingToday,
+	// trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
 });
 
 // const mapDispatchToProps = () => ({

@@ -25,7 +25,7 @@ import { scrollInterpolators, animatedStyles } from './utils/animations';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import ViewMoreText from './components/ViewMoreText';
 import { connect } from 'react-redux';
-import { setTMDBIdToGetDetails } from '../reducers/Action';
+import { setFSIdToGetDetails } from '../reducers/Action';
 import { WebView } from 'react-native-webview';
 
 // https://entertainmenthub.netlify.app/
@@ -69,13 +69,13 @@ const MovieDetails = (props) => {
 		() => {
 			getMovieDetails();
 		},
-		[ props.tmdbIdToGetDetails ]
+		[ props.fsIdToGetDetails ]
 	);
 
 	const getMovieDetails = () => {
 		console.log('getMovieDetails called');
 		const obj = {
-			id: props.tmdbIdToGetDetails
+			id: props.fsIdToGetDetails
 		};
 		axios('http://192.168.0.100:3000/getMovieDetailData', {
 			method: 'post',
@@ -790,7 +790,7 @@ const MovieDetails = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	tmdbIdToGetDetails: state.AppReducer.tmdbIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
 });
 
 // const mapDispatchToProps = () => ({
@@ -798,7 +798,7 @@ const mapStateToProps = (state) => ({
 //   setTrendingCurrentWeekY,
 // });
 const mapDispatchToProps = {
-	setTMDBIdToGetDetails
+	setFSIdToGetDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MovieDetails);
 

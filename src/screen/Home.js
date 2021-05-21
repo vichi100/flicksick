@@ -26,7 +26,7 @@ import { ENTRIES1, ENTRIES2 } from './static/entries';
 import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setTMDBIdToGetDetails } from '../reducers/Action';
+import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 // import {setDataFor} from "../reducers/Action"
 
@@ -129,12 +129,24 @@ const Home = (props) => {
 					</View>
 				</View>
 
-				<FlatListStrip data={props.trendingToday} title={'Trending Today'} navigation={navigation} />
+				<FlatListStrip
+					data={props.trendingToday}
+					title={'Trending Today'}
+					navigation={navigation}
+					horizontalFlag={true}
+					numColumns={1}
+					imageHight={200}
+					imageWidth={160}
+				/>
 
 				<FlatListStrip
 					data={props.trendingCurrentWeek}
 					title={'Most Watched This Week'}
 					navigation={navigation}
+					horizontalFlag={true}
+					numColumns={1}
+					imageHight={200}
+					imageWidth={160}
 				/>
 
 				<View style={{ marginBottom: 10 }} />
@@ -146,7 +158,7 @@ const Home = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	tmdbIdToGetDetails: state.AppReducer.tmdbIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
 });
 
 // const mapDispatchToProps = () => ({
@@ -156,7 +168,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setTrendingTodayX,
 	setDataFor,
-	setTMDBIdToGetDetails
+	setFSIdToGetDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 

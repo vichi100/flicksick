@@ -332,7 +332,7 @@ const MovieDetails = (props) => {
           /> */}
 					</View>
 
-					<ScrollView style={{ marginBottom: 200 }}>
+					<ScrollView>
 						<View style={{ marginTop: 15 }}>
 							<View
 								style={{

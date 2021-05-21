@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import {
 	setTrendingTodayX,
 	setDataFor,
-	setTMDBIdToGetDetails,
+	setFSIdToGetDetails,
 	setUserMobile,
 	setUserDetails
 } from '../../reducers/Action';
@@ -33,7 +33,7 @@ const Login = (props) => {
 	const [ country, setCountry ] = useState();
 	const [ mobile, setMobile ] = useState();
 	const [ otp, setOTP ] = useState('');
-	const [ userDetails, setUserDetails ] = useState(null);
+	// const [ userDetails, setUserDetailsX ] = useState(null);
 
 	useEffect(
 		() => {
@@ -54,7 +54,7 @@ const Login = (props) => {
 	const getUserDetails = async () => {
 		// AsyncStorage.setItem("agent_details", JSON.stringify(agentDetails));
 
-		AsyncStorage.clear();
+		// AsyncStorage.clear();
 		// userDetailsStr: { "user_details": { "user_type": "agent", "id": "15476a82-997a-4bef-bf1b-b1236f6c177e", "expo_token": null, "name": null, "company_name": null, "mobile": "9833097595", "address": null, "city": null, "access_rights": "all", "works_for": ["15476a82-997a-4bef-bf1b-b1236f6c177e"] } }
 
 		const userDetailsStr = await AsyncStorage.getItem('user_details');

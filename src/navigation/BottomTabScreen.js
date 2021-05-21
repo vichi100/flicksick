@@ -15,6 +15,7 @@ import HomeStackNav from './HomeStackNav';
 import Friends from '../screen/Friends';
 import Profile from '../screen/Profile';
 import Search from '../screen/Search';
+import Home from '../screen/Home';
 // import Recommendation from "../screen/Recommendation";
 // import Order from "../screen/Order";
 // import Profile from "../screen/Profile";
@@ -41,7 +42,7 @@ const BottomTabScreen = () => {
 		>
 			<Tab.Screen
 				name="Home"
-				component={HomeStackNav}
+				component={Home}
 				options={{
 					tabBarLabel: '',
 					tabBarIcon: ({ color }) => <IoniconsX name="play" color={color} size={26} />

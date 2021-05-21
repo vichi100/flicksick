@@ -26,20 +26,18 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 
-const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
+const RATTING_ARRAY = [ 'Loved it', 'Dumb but entertaining', 'Just time pass', 'Worthless' ];
 const FlatListStrip = (props) => {
 	const { data, title, navigation, horizontalFlag, numColumns, imageHight, imageWidth } = props;
 
 	const [ modalVisible, setModalVisible ] = useState(false);
 	const [ ratingIndex, setRatingIndex ] = useState(-1);
 	const [ fsId, setFSId ] = useState(null);
-	const [ movieName, setMovieName ] = useState(null);
 
-	const openRating = (movie) => {
+	const openRating = (id) => {
 		console.log('rating');
 		setModalVisible(true);
-		setFSId(movie.fs_id);
-		setMovieName(movie.title);
+		setFSId(id);
 	};
 
 	const selectRatingIndex = (index) => {
@@ -157,7 +155,7 @@ const FlatListStrip = (props) => {
 						</Text>
 					</View>
 					<TouchableOpacity
-						onPress={() => openRating(item)}
+						onPress={() => openRating(item.fs_id)}
 						style={{
 							flexDirection: 'row',
 							justifyContent: 'center'
@@ -199,22 +197,20 @@ const FlatListStrip = (props) => {
 	return (
 		<View>
 			<View>
-				{title ? (
-					<Text
-						style={{
-							color: '#fff',
-							fontSize: 16,
-							fontWeight: '600',
-							marginTop: 10,
-							marginBottom: 10,
-							marginLeft: 15,
-							padding: 0,
-							borderColor: '#fff'
-						}}
-					>
-						{title}
-					</Text>
-				) : null}
+				<Text
+					style={{
+						color: '#fff',
+						fontSize: 16,
+						fontWeight: '600',
+						marginTop: 10,
+						marginBottom: 10,
+						marginLeft: 15,
+						padding: 0,
+						borderColor: '#fff'
+					}}
+				>
+					{title}
+				</Text>
 				{horizontalFlag ? (
 					<FlatList
 						horizontal
@@ -259,7 +255,7 @@ const FlatListStrip = (props) => {
 					<View
 						style={{
 							margin: 20,
-							height: 370,
+							height: 300,
 							backgroundColor: '#000',
 							borderRadius: 20,
 							borderColor: 'rgba(105,105,105, .8)',
@@ -278,25 +274,12 @@ const FlatListStrip = (props) => {
 					>
 						<Text
 							style={{
-								marginBottom: 10,
+								marginBottom: 15,
 								textAlign: 'center',
-								color: 'rgba(255,255,255,.9)',
-								fontSize: 15,
-								fontWeight: '600'
+								color: 'rgba(245,245,245,.9)'
 							}}
 						>
 							What you feel about movie / series ?
-						</Text>
-						<Text
-							style={{
-								marginBottom: 15,
-								textAlign: 'center',
-								color: 'rgba(255,255,255,.9)',
-								fontSize: 16,
-								fontWeight: '600'
-							}}
-						>
-							{movieName}
 						</Text>
 						<ButtonGroup
 							vertical
@@ -311,9 +294,8 @@ const FlatListStrip = (props) => {
 								borderWidth: 0.5,
 								borderRadius: 5,
 								borderColor: 'rgba(128,128,128,.9)',
-								borderBottomColor: 'rgba(128,128,128,.9)',
-								borderBottomWidth: 1,
-								height: 180,
+								borderBottomColor: 'rgba(0,0,0, .7)',
+								height: 150,
 								width: 300,
 								backgroundColor: 'rgba(0,0,0, .7)'
 							}}

@@ -8,6 +8,7 @@ import Login from '../screen/login/Login';
 import OtpScreen from '../screen/login/OtpScreen';
 import BottomTabScreen from './BottomTabScreen';
 // import ProfileForm from "../screen/ProfileForm";
+import MovieDetails from '../screen/MovieDetails';
 
 export default function MainScreen() {
 	const RootStack = createStackNavigator();
@@ -66,6 +67,16 @@ export default function MainScreen() {
                         headerBackTitleVisible: false
                     }}
                 /> */}
+				<RootStack.Screen
+					name="MovieDetails"
+					component={MovieDetails}
+					options={{
+						tabBarLabel: 'Home!',
+						tabBarVisible: false,
+						headerShown: true,
+						title: null
+					}}
+				/>
 			</RootStack.Navigator>
 		</NavigationContainer>
 	);

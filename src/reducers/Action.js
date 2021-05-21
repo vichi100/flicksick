@@ -8,16 +8,16 @@ export const setTrendingTodayX = (payload) => {
 	};
 };
 
-export const setTMDBIdToGetDetails = (payload) => {
-	console.log('payload', payload);
+export const setFSIdToGetDetails = (payload) => {
+	// console.log('payload', payload);
 	return {
-		type: ACTION_TYPES.SET_TMBD_ID_GET_DETAILS,
+		type: ACTION_TYPES.SET_FS_ID_GET_DETAILS,
 		payload
 	};
 };
 
 export const setDataFor = (payload) => {
-	console.log('payload', payload);
+	// console.log('payload', payload);
 	return {
 		type: ACTION_TYPES.SET_DATA_FOR,
 		payload
@@ -25,7 +25,7 @@ export const setDataFor = (payload) => {
 };
 
 export const setUserMobile = (payload) => {
-	console.log('payload', payload);
+	// console.log('payload', payload);
 	return {
 		type: ACTION_TYPES.SET_USER_MOBILE,
 		payload
@@ -33,7 +33,7 @@ export const setUserMobile = (payload) => {
 };
 
 export const setUserDetails = (payload) => {
-	console.log('payload', payload);
+	// console.log('payload', payload);
 	return {
 		type: ACTION_TYPES.SET_USER_DETAILS,
 		payload

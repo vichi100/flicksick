@@ -26,7 +26,7 @@ import { ENTRIES1, ENTRIES2 } from './static/entries';
 import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setTMDBIdToGetDetails } from '../reducers/Action';
+import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 // import {setDataFor} from "../reducers/Action"
 
@@ -50,7 +50,7 @@ const Home = (props) => {
 	};
 
 	const myNavigation = (tmdbId) => {
-		props.setTMDBIdToGetDetails(tmdbId);
+		props.setFSIdToGetDetails(tmdbId);
 		navigateTo();
 	};
 
@@ -317,7 +317,7 @@ const Home = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	tmdbIdToGetDetails: state.AppReducer.tmdbIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
 });
 
 // const mapDispatchToProps = () => ({
@@ -327,7 +327,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setTrendingTodayX,
 	setDataFor,
-	setTMDBIdToGetDetails
+	setFSIdToGetDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 

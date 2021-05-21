@@ -3,7 +3,7 @@ import { ACTION_TYPES } from './ActionType';
 const initialState = {
 	trendingToday: [],
 	trendingCurrentWeek: [],
-	tmdbIdToGetDetails: null,
+	fsIdToGetDetails: null,
 	userDetails: null,
 	userMobile: null
 };
@@ -23,15 +23,15 @@ const AppReducer = (state = initialState, action) => {
 				trendingCurrentWeek: action.payload
 			};
 
-		case ACTION_TYPES.SET_TMBD_ID_GET_DETAILS:
+		case ACTION_TYPES.SET_FS_ID_GET_DETAILS:
 			// // console.log("SET_RESTAURANT_DETAILS");
 			return {
 				...state,
-				tmdbIdToGetDetails: action.payload
+				fsIdToGetDetails: action.payload
 			};
 
 		case ACTION_TYPES.SET_USER_MOBILE:
-			console.log('SET_USER_MOBILE');
+			// console.log('SET_USER_MOBILE');
 			return {
 				...state,
 				userMobile: action.payload

@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { setTMDBIdToGetDetails } from '../../reducers/Action';
+import { setFSIdToGetDetails } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 
@@ -164,7 +164,7 @@ const SliderEntry = (props) => {
 						}}
 					>
 						<TouchableOpacity
-							onPress={() => openRating(data.tmdb_id)}
+							onPress={() => openRating(data.fs_id)}
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'center'
@@ -188,14 +188,14 @@ const SliderEntry = (props) => {
 		);
 	};
 
-	const navigateTo = (tmdbId) => {
+	const navigateTo = (fsId) => {
 		// console.log("navi");
-		props.setTMDBIdToGetDetails(tmdbId);
+		props.setFSIdToGetDetails(fsId);
 		props.navigateTo();
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer} onPress={() => navigateTo(data.tmdb_id)}>
+		<TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer} onPress={() => navigateTo(data.fs_id)}>
 			{/* <View style={styles.shadow} /> */}
 			<View style={[ styles.imageContainer, even ? styles.imageContainerEven : {} ]}>
 				{image()}
@@ -333,7 +333,7 @@ const SliderEntry = (props) => {
 //   setTrendingCurrentWeekY,
 // });
 const mapDispatchToProps = {
-	setTMDBIdToGetDetails
+	setFSIdToGetDetails
 };
 export default connect(null, mapDispatchToProps)(SliderEntry);
 
