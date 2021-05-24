@@ -28,6 +28,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
+import * as Contacts from 'expo-contacts';
 // import {setDataFor} from "../reducers/Action"
 
 // https://entertainmenthub.netlify.app/
@@ -41,7 +42,6 @@ const SLIDER_1_FIRST_ITEM = 1;
 
 const Home = (props) => {
 	const { navigation } = props;
-
 	const [ slider1ActiveSlide, setSlider1ActiveSlide ] = useState(SLIDER_1_FIRST_ITEM);
 	const carouselRef = useRef(null);
 
@@ -164,7 +164,8 @@ const Home = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
+	userDetails: state.AppReducer.userDetails
 });
 
 // const mapDispatchToProps = () => ({

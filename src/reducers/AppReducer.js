@@ -5,7 +5,8 @@ const initialState = {
 	trendingCurrentWeek: [],
 	fsIdToGetDetails: null,
 	userDetails: null,
-	userMobile: null
+	userMobile: null,
+	userContactDict: null
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -43,6 +44,13 @@ const AppReducer = (state = initialState, action) => {
 				...state,
 				userDetails: action.payload
 			};
+		case ACTION_TYPES.SET_USER_CONTACTS_DICT:
+			// // console.log("SET_RESTAURANT_DETAILS");
+			return {
+				...state,
+				userContactDict: action.payload
+			};
+
 		default:
 			// console.log("Default");
 			return state;

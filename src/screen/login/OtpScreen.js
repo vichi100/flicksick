@@ -62,7 +62,7 @@ const OtpScreen = (props) => {
 	};
 
 	const save = async (userData) => {
-		console.log('userData: ' + JSON.stringify(userData));
+		// console.log('userData: ' + JSON.stringify(userData));
 		AsyncStorage.setItem('user_details', JSON.stringify(userData));
 		props.setUserDetails(userData);
 	};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import {
 	StyleSheet,
 	Platform,
@@ -25,6 +25,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
+import SearchDisplay from './SearchDisplay';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
 const FlatListStrip = (props) => {
@@ -85,7 +86,7 @@ const FlatListStrip = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				setRatingIndex(-1);
 			},
 			(error) => {
@@ -96,8 +97,8 @@ const FlatListStrip = (props) => {
 		setModalVisible(!modalVisible);
 	};
 
-	const renderItem = ({ item }) => {
-		// console.log('ItemX:  ', item.poster_path);
+	const Row = ({ item }) => {
+		// console.log(item);
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
@@ -205,6 +206,11 @@ const FlatListStrip = (props) => {
 		);
 	};
 
+	const renderItem = ({ item }) => {
+		// console.log('ItemX:  ', item.poster_path);
+		return <Row item={item} />;
+	};
+
 	return (
 		<View>
 			<View>
@@ -231,7 +237,7 @@ const FlatListStrip = (props) => {
 						//data defined in constructor
 						// ItemSeparatorComponent={ItemSeparatorView}
 						//Item Separator View
-						renderItem={(item) => renderItem(item)}
+						renderItem={({ item }) => <Row item={item} />}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				) : (
@@ -240,7 +246,7 @@ const FlatListStrip = (props) => {
 						//data defined in constructor
 						// ItemSeparatorComponent={ItemSeparatorView}
 						//Item Separator View
-						renderItem={(item) => renderItem(item)}
+						renderItem={({ item }) => <Row item={item} />}
 						keyExtractor={(item, index) => index.toString()}
 						numColumns={2}
 					/>

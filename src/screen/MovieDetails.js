@@ -99,7 +99,7 @@ const MovieDetails = (props) => {
 					justifyContent: 'center'
 				}}
 			>
-				<ActivityIndicator color="#FF8C00" size="large" />
+				<ActivityIndicator color="#000000" size="large" />
 			</View>
 		);
 	};
