@@ -10,6 +10,7 @@ import {
 	FlatList,
 	Image,
 	TouchableOpacity,
+	TouchableHighlight,
 	TextInput,
 	RefreshControl,
 	ActivityIndicator
@@ -55,15 +56,18 @@ const Friends = (props) => {
 	const [ loadingMore, setLoadingMore ] = useState(false);
 	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
 	const [ refreshing, setRefreshing ] = useState(false);
+	const [ category, setCategory ] = useState('all');
 
 	const displayFriendMovieList = (item) => {
 		console.log(item);
 		if (selectedFriendMobile !== item.mobile) {
 			setSelectedFriendMobile(item.mobile);
 			setSelectedFriendName(item.name);
+			setCategory('all');
 		} else {
 			setSelectedFriendMobile(null);
 			setSelectedFriendName('All Friends');
+			setCategory('all');
 		}
 	};
 
@@ -187,7 +191,13 @@ const Friends = (props) => {
 					marginLeft: 10
 				}}
 			>
-				<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+				<TouchableHighlight onPress={() => setCategory(item)}>
+					{item.toString().toUpperCase() === category.toUpperCase() ? (
+						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					) : (
+						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					)}
+				</TouchableHighlight>
 			</View>
 		);
 	};
@@ -425,10 +435,13 @@ const Friends = (props) => {
 				</View>
 			</View>
 			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
-				<Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: '600', width: '26%' }} numberOfLines={1}>
+				<Text
+					style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
+					numberOfLines={1}
+				>
 					{selectedFriendName}
 				</Text>
-				<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500' }}>| </Text>
+				<Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text>
 				<FlatList
 					horizontal
 					data={categoryData}

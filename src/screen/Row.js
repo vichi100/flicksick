@@ -119,8 +119,8 @@ const Row = (props) => {
 					<View
 						style={{
 							position: 'absolute',
-							bottom: 0,
-							right: 0,
+							bottom: 3,
+							right: 3,
 							borderColor: 'rgba(211,211,211, .6)',
 							borderWidth: 1,
 							padding: 3,
@@ -141,7 +141,17 @@ const Row = (props) => {
 						>
 							Seen |
 						</Text>
-						<Ionicons name="checkmark" color={'#00FF00'} size={12} />
+						<Text
+							style={{
+								color: '#00FF00',
+								fontSize: 10,
+								fontWeight: '700',
+								textTransform: 'capitalize'
+							}}
+						>
+							{' ?'}
+						</Text>
+						{/* <Ionicons name="checkmark" color={'#00FF00'} size={12} /> */}
 					</View>
 				</TouchableOpacity>
 			</View>

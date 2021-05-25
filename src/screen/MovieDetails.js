@@ -276,7 +276,7 @@ const MovieDetails = (props) => {
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
 			{movieDetails ? (
-				<View>
+				<View style={{ flex: 1 }}>
 					<View
 						style={{
 							height: 200,
@@ -332,379 +332,395 @@ const MovieDetails = (props) => {
           /> */}
 					</View>
 
-					<ScrollView style={{ marginBottom: 200 }}>
-						<View style={{ marginTop: 15 }}>
-							<View
+					<View style={{ marginTop: 15 }}>
+						<View
+							style={{
+								paddingLeft: 15,
+								paddingRight: 15,
+								flexDirection: 'row',
+								justifyContent: 'space-between'
+							}}
+						>
+							<Text style={{ fontSize: 18, fontWeight: '600', color: '#fff', width: '80%' }}>
+								{movieDetails.title || movieDetails.original_title}
+							</Text>
+							<Text style={{ fontSize: 18, fontWeight: '600', color: '#FFA500' }}>
+								{movieDetails.adult ? 'A' : 'UA'}
+							</Text>
+						</View>
+
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'space-between',
+								paddingLeft: 15,
+								paddingRight: 15
+							}}
+						>
+							<Text
 								style={{
-									paddingLeft: 15,
-									paddingRight: 15,
-									flexDirection: 'row',
-									justifyContent: 'space-between'
+									fontSize: 14,
+									fontWeight: '400',
+									color: '#b9b9c0',
+									paddingTop: 5,
+									width: '80%'
 								}}
 							>
-								<Text style={{ fontSize: 18, fontWeight: '600', color: '#fff', width: '80%' }}>
-									{movieDetails.title || movieDetails.original_title}
-								</Text>
-								<Text style={{ fontSize: 18, fontWeight: '600', color: '#FFA500' }}>
-									{movieDetails.adult ? 'A' : 'UA'}
-								</Text>
+								{genres.join(' ,')}
+							</Text>
+							<Text
+								style={{
+									fontSize: 14,
+									fontWeight: '400',
+									color: '#b9b9c0',
+									paddingTop: 5
+								}}
+							>
+								{movieDetails.runtime + ' min'}
+							</Text>
+						</View>
+
+						<View style={{ marginLeft: 15, marginRight: 15, marginTop: 5 }}>
+							<ViewMoreText
+								numberOfLines={2}
+								renderViewMore={renderViewMore}
+								renderViewLess={renderViewLess}
+								// textStyle={{ textAlign: "center" }}
+							>
+								<Text style={{ color: '#c2cac4' }}>{movieDetails.overview}</Text>
+							</ViewMoreText>
+						</View>
+					</View>
+
+					<ScrollView>
+						<View style={{ paddingBottom: 0 }}>
+							<View
+								style={{
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+									paddingLeft: 15,
+									paddingRight: 15,
+									paddingTop: 20,
+									paddingBottom: 20,
+									marginTop: 30,
+									margin: 5,
+									borderColor: 'rgba(105,105,105, 0.6)',
+									borderWidth: 0.3,
+									borderRadius: 10
+								}}
+							>
+								<View
+									style={{
+										position: 'absolute',
+										// backgroundColor: "#FFF",
+										top: -18,
+										left: 15,
+										padding: 5,
+										// paddingLeft: 10,
+										zIndex: 50,
+										flexDirection: 'row'
+									}}
+								>
+									<Text
+										style={{
+											color: 'rgb(211,211,211)',
+											fontSize: 14,
+											fontWeight: '600',
+											paddingTop: 3
+											// backgroundColor: "rgba(0,0,0, .1)",
+										}}
+									>
+										{'   Rating'}
+									</Text>
+								</View>
+
+								<View>
+									<View
+										style={{
+											flexDirection: 'row',
+											marginBottom: 5,
+											flex: 1,
+											justifyContent: 'center'
+										}}
+									>
+										{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text
+											style={{
+												color: '#fff',
+												fontSize: 14,
+												fontWeight: '500',
+												textAlign: 'center'
+											}}
+										>
+											{Number(movieDetails.imdb_rating) / 10 || 'NA'}
+										</Text>
+									</View>
+									<View
+										style={{
+											backgroundColor: 'rgba(218,165,32,.8)',
+											padding: 5,
+											borderColor: 'rgba(218,165,32,.8)',
+											borderWidth: 0.3,
+											borderRadius: 10,
+											alignItems: 'center',
+											justifyContent: 'center'
+										}}
+									>
+										<Text
+											style={{
+												color: 'rgb(0,0,0)',
+												fontSize: 12,
+												fontWeight: '800',
+												textAlign: 'center'
+											}}
+										>
+											IMDb
+										</Text>
+									</View>
+								</View>
+								<View>
+									<View
+										style={{
+											flexDirection: 'row',
+											marginBottom: 5,
+											flex: 1,
+											justifyContent: 'center'
+										}}
+									>
+										{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text
+											style={{
+												color: '#fff',
+												fontSize: 14,
+												fontWeight: '500',
+												textAlign: 'center'
+											}}
+										>
+											{Number(movieDetails.rotten_tomatoes_rating) / 10 || 'NA'}
+										</Text>
+									</View>
+									<View
+										style={{
+											backgroundColor: 'rgba(255,69,0,.8)',
+											padding: 5,
+											borderColor: 'rgba(255,69,0,.8)',
+											borderWidth: 0.3,
+											borderRadius: 10
+
+											// alignItems: 'center',
+											// justifyContent: 'center',
+											// alignContent: 'center',
+											// flex: 1
+										}}
+									>
+										<Text
+											adjustsFontSizeToFit={true}
+											style={{
+												color: 'rgb(0,0,0)',
+												fontSize: 12,
+												fontWeight: '800',
+												paddingTop: 3
+											}}
+										>
+											Rotten Tomato
+										</Text>
+									</View>
+								</View>
+
+								<View>
+									<View
+										style={{
+											flexDirection: 'row',
+											marginBottom: 5,
+											flex: 1,
+											justifyContent: 'center'
+										}}
+									>
+										{/* <AntDesign name="hearto" color={'red'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text
+											style={{
+												color: '#fff',
+												fontSize: 14,
+												fontWeight: '500',
+												textAlign: 'center'
+											}}
+										>
+											{Number(movieDetails.tmdb_rating) / 10 || 'NA'}
+										</Text>
+									</View>
+									<View
+										style={{
+											backgroundColor: 'rgba(0,206,209,.8)',
+											padding: 5,
+											borderColor: 'rgba(0,206,209,.8)',
+											borderWidth: 0.3,
+											borderRadius: 10,
+											alignItems: 'center',
+											justifyContent: 'center'
+										}}
+									>
+										<Text
+											style={{
+												color: 'rgb(0,0,0)',
+												fontSize: 12,
+												fontWeight: '800',
+												paddingTop: 3
+											}}
+										>
+											TMDB
+										</Text>
+									</View>
+								</View>
 							</View>
 
 							<View
 								style={{
 									flexDirection: 'row',
 									justifyContent: 'space-between',
-									paddingLeft: 15,
-									paddingRight: 15
+									// paddingLeft: 15,
+									// paddingRight: 15,
+									paddingTop: 20,
+									paddingBottom: 20,
+									margin: 5,
+									borderColor: 'rgba(105,105,105, 0.6)',
+									borderWidth: 0.3,
+									borderRadius: 10,
+									marginTop: 15
 								}}
 							>
-								<Text
-									style={{
-										fontSize: 14,
-										fontWeight: '400',
-										color: '#b9b9c0',
-										paddingTop: 5,
-										width: '80%'
-									}}
-								>
-									{genres.join(' ,')}
-								</Text>
-								<Text
-									style={{
-										fontSize: 14,
-										fontWeight: '400',
-										color: '#b9b9c0',
-										paddingTop: 5
-									}}
-								>
-									{movieDetails.runtime + ' min'}
-								</Text>
-							</View>
-
-							<View style={{ marginLeft: 15, marginRight: 15, marginTop: 5 }}>
-								<ViewMoreText
-									numberOfLines={2}
-									renderViewMore={renderViewMore}
-									renderViewLess={renderViewLess}
-									// textStyle={{ textAlign: "center" }}
-								>
-									<Text style={{ color: '#c2cac4' }}>{movieDetails.overview}</Text>
-								</ViewMoreText>
-							</View>
-						</View>
-
-						<View
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'space-between',
-								paddingLeft: 15,
-								paddingRight: 15,
-								paddingTop: 20,
-								paddingBottom: 20,
-								marginTop: 30,
-								margin: 5,
-								borderColor: 'rgba(105,105,105, 0.6)',
-								borderWidth: 0.3,
-								borderRadius: 10
-							}}
-						>
-							<View
-								style={{
-									position: 'absolute',
-									// backgroundColor: "#FFF",
-									top: -18,
-									left: 15,
-									padding: 5,
-									// paddingLeft: 10,
-									zIndex: 50,
-									flexDirection: 'row'
-								}}
-							>
-								<Text
-									style={{
-										color: 'rgb(211,211,211)',
-										fontSize: 14,
-										fontWeight: '600',
-										paddingTop: 3
-										// backgroundColor: "rgba(0,0,0, .1)",
-									}}
-								>
-									{'   Rating'}
-								</Text>
-							</View>
-
-							<View>
 								<View
 									style={{
-										flexDirection: 'row',
-										marginBottom: 5,
-										flex: 1,
-										justifyContent: 'center'
-									}}
-								>
-									{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text
-										style={{ color: '#fff', fontSize: 14, fontWeight: '500', textAlign: 'center' }}
-									>
-										{Number(movieDetails.imdb_rating) / 10 || 'NA'}
-									</Text>
-								</View>
-								<View
-									style={{
-										backgroundColor: 'rgba(218,165,32,.8)',
+										position: 'absolute',
+										// backgroundColor: "#FFF",
+										top: -18,
+										left: 15,
 										padding: 5,
-										borderColor: 'rgba(218,165,32,.8)',
-										borderWidth: 0.3,
-										borderRadius: 10,
-										alignItems: 'center',
-										justifyContent: 'center'
+										// paddingLeft: 10,
+										zIndex: 50
 									}}
 								>
 									<Text
 										style={{
-											color: 'rgb(0,0,0)',
+											color: 'rgb(211,211,211)',
+											fontSize: 14,
+											fontWeight: '600',
+											paddingTop: 3
+										}}
+									>
+										{'   By Friends   '}
+									</Text>
+								</View>
+								<View style={{ flex: 1, alignItems: 'center' }}>
+									<View style={{ flexDirection: 'row' }}>
+										{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>70%</Text>
+									</View>
+									<Text
+										style={{
+											color: 'rgb(169,169,169)',
 											fontSize: 12,
-											fontWeight: '800',
+											fontWeight: '500',
+											paddingTop: 3
+										}}
+									>
+										Loved It
+									</Text>
+								</View>
+								<View style={{ flex: 1, alignItems: 'center' }}>
+									<View style={{ flexDirection: 'row' }}>
+										{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>40%</Text>
+									</View>
+									<Text
+										style={{
+											color: 'rgb(169,169,169)',
+											fontSize: 12,
+											fontWeight: '500',
+											paddingTop: 3,
 											textAlign: 'center'
 										}}
 									>
-										IMDb
+										Dumb But{'\n'}Entertaining
 									</Text>
 								</View>
-							</View>
-							<View>
-								<View
-									style={{
-										flexDirection: 'row',
-										marginBottom: 5,
-										flex: 1,
-										justifyContent: 'center'
-									}}
-								>
-									{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text
-										style={{ color: '#fff', fontSize: 14, fontWeight: '500', textAlign: 'center' }}
-									>
-										{Number(movieDetails.rotten_tomatoes_rating) / 10 || 'NA'}
-									</Text>
-								</View>
-								<View
-									style={{
-										backgroundColor: 'rgba(255,69,0,.8)',
-										padding: 5,
-										borderColor: 'rgba(255,69,0,.8)',
-										borderWidth: 0.3,
-										borderRadius: 10
 
-										// alignItems: 'center',
-										// justifyContent: 'center',
-										// alignContent: 'center',
-										// flex: 1
-									}}
-								>
+								<View style={{ flex: 1, alignItems: 'center' }}>
+									<View style={{ flexDirection: 'row' }}>
+										{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>10%</Text>
+									</View>
 									<Text
-										adjustsFontSizeToFit={true}
 										style={{
-											color: 'rgb(0,0,0)',
+											color: 'rgb(169,169,169)',
 											fontSize: 12,
-											fontWeight: '800',
+											fontWeight: '500',
+											paddingTop: 3,
+											textAlign: 'center'
+										}}
+									>
+										Just Time{'\n'} Pass
+									</Text>
+								</View>
+								<View style={{ flex: 1, alignItems: 'center' }}>
+									<View style={{ flexDirection: 'row' }}>
+										{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
+										<View style={{ marginLeft: 0 }} />
+										<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>5%</Text>
+									</View>
+									<Text
+										style={{
+											color: 'rgb(169,169,169)',
+											fontSize: 12,
+											fontWeight: '500',
 											paddingTop: 3
 										}}
 									>
-										Rotten Tomato
+										Worthless
 									</Text>
 								</View>
 							</View>
 
-							<View>
-								<View
-									style={{
-										flexDirection: 'row',
-										marginBottom: 5,
-										flex: 1,
-										justifyContent: 'center'
-									}}
-								>
-									{/* <AntDesign name="hearto" color={'red'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text
-										style={{ color: '#fff', fontSize: 14, fontWeight: '500', textAlign: 'center' }}
-									>
-										{Number(movieDetails.tmdb_rating) / 10 || 'NA'}
-									</Text>
-								</View>
-								<View
-									style={{
-										backgroundColor: 'rgba(0,206,209,.8)',
-										padding: 5,
-										borderColor: 'rgba(0,206,209,.8)',
-										borderWidth: 0.3,
-										borderRadius: 10,
-										alignItems: 'center',
-										justifyContent: 'center'
-									}}
-								>
-									<Text
-										style={{
-											color: 'rgb(0,0,0)',
-											fontSize: 12,
-											fontWeight: '800',
-											paddingTop: 3
-										}}
-									>
-										TMDB
-									</Text>
-								</View>
-							</View>
-						</View>
-
-						<View
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'space-between',
-								// paddingLeft: 15,
-								// paddingRight: 15,
-								paddingTop: 20,
-								paddingBottom: 20,
-								margin: 5,
-								borderColor: 'rgba(105,105,105, 0.6)',
-								borderWidth: 0.3,
-								borderRadius: 10,
-								marginTop: 15
-							}}
-						>
 							<View
 								style={{
-									position: 'absolute',
-									// backgroundColor: "#FFF",
-									top: -18,
-									left: 15,
-									padding: 5,
-									// paddingLeft: 10,
-									zIndex: 50
+									flexDirection: 'row',
+									alignItems: 'center',
+									paddingLeft: 15,
+									paddingRight: 15,
+									paddingTop: 10,
+									paddingBottom: 10,
+									margin: 5
+									// borderColor: "rgba(105,105,105, 0.6)",
+									// borderWidth: 0.3,
+									// borderRadius: 10,
 								}}
 							>
-								<Text
-									style={{
-										color: 'rgb(211,211,211)',
-										fontSize: 14,
-										fontWeight: '600',
-										paddingTop: 3
-									}}
-								>
-									{'   By Friends   '}
-								</Text>
-							</View>
-							<View style={{ flex: 1, alignItems: 'center' }}>
-								<View style={{ flexDirection: 'row' }}>
-									{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>70%</Text>
-								</View>
-								<Text
-									style={{
-										color: 'rgb(169,169,169)',
-										fontSize: 12,
-										fontWeight: '500',
-										paddingTop: 3
-									}}
-								>
-									Loved It
-								</Text>
-							</View>
-							<View style={{ flex: 1, alignItems: 'center' }}>
-								<View style={{ flexDirection: 'row' }}>
-									{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>40%</Text>
-								</View>
-								<Text
-									style={{
-										color: 'rgb(169,169,169)',
-										fontSize: 12,
-										fontWeight: '500',
-										paddingTop: 3,
-										textAlign: 'center'
-									}}
-								>
-									Dumb But{'\n'}Entertaining
-								</Text>
-							</View>
-
-							<View style={{ flex: 1, alignItems: 'center' }}>
-								<View style={{ flexDirection: 'row' }}>
-									{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>10%</Text>
-								</View>
-								<Text
-									style={{
-										color: 'rgb(169,169,169)',
-										fontSize: 12,
-										fontWeight: '500',
-										paddingTop: 3,
-										textAlign: 'center'
-									}}
-								>
-									Just Time{'\n'} Pass
-								</Text>
-							</View>
-							<View style={{ flex: 1, alignItems: 'center' }}>
-								<View style={{ flexDirection: 'row' }}>
-									{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
-									<View style={{ marginLeft: 0 }} />
-									<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>5%</Text>
-								</View>
-								<Text
-									style={{
-										color: 'rgb(169,169,169)',
-										fontSize: 12,
-										fontWeight: '500',
-										paddingTop: 3
-									}}
-								>
-									Worthless
-								</Text>
-							</View>
-						</View>
-
-						<View
-							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
-								paddingLeft: 15,
-								paddingRight: 15,
-								paddingTop: 10,
-								paddingBottom: 10,
-								margin: 5
-								// borderColor: "rgba(105,105,105, 0.6)",
-								// borderWidth: 0.3,
-								// borderRadius: 10,
-							}}
-						>
-							{/* <View style={{}}>
+								{/* <View style={{}}>
 							<Text style={{ color: '#fff' }}>Watch On</Text>
 						</View> */}
-							<Text style={{ color: '#fff', textAlign: 'center', fontSize: 16, fontWeight: '500' }}>
-								Watch On
-							</Text>
-							<View style={{ marginLeft: 10, marginRight: 10 }}>
-								<FlatList
-									horizontal
-									data={OTTProvidesList}
-									//data defined in constructor
-									// ItemSeparatorComponent={ItemSeparatorView}
-									//Item Separator View
-									renderItem={(item) => renderOTTProvider(item)}
-									keyExtractor={(item, index) => index.toString()}
-								/>
+								<Text style={{ color: '#fff', textAlign: 'center', fontSize: 16, fontWeight: '500' }}>
+									Watch On
+								</Text>
+								<View style={{ marginLeft: 10, marginRight: 10 }}>
+									<FlatList
+										horizontal
+										data={OTTProvidesList}
+										//data defined in constructor
+										// ItemSeparatorComponent={ItemSeparatorView}
+										//Item Separator View
+										renderItem={(item) => renderOTTProvider(item)}
+										keyExtractor={(item, index) => index.toString()}
+									/>
+								</View>
 							</View>
-						</View>
 
-						<View>
-							{/* <Text
+							<View>
+								{/* <Text
 							style={{
 								color: '#fff',
 								fontSize: 16,
@@ -727,20 +743,21 @@ const MovieDetails = (props) => {
 							renderItem={(item) => renderItem(item)}
 							keyExtractor={(item, index) => index.toString()}
 						/> */}
-							{/* <FlatListStrip
+								{/* <FlatListStrip
 							data={props.trendingCurrentWeek}
 							title={'Recommendations'}
 							navigation={navigation}
 						/> */}
-							<FlatListStrip
-								data={props.trendingToday}
-								title={'Recommendations'}
-								navigation={navigation}
-								horizontalFlag={true}
-								numColumns={1}
-								imageHight={200}
-								imageWidth={160}
-							/>
+								<FlatListStrip
+									data={props.trendingToday}
+									title={'Recommendations'}
+									navigation={navigation}
+									horizontalFlag={true}
+									numColumns={1}
+									imageHight={200}
+									imageWidth={160}
+								/>
+							</View>
 						</View>
 					</ScrollView>
 				</View>

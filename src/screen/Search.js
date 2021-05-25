@@ -26,6 +26,7 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import Row from './Row';
 import SeenModal from './SeenModal';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -42,6 +43,7 @@ const Search = (props) => {
 	const [ fsId, setFSId ] = useState(null);
 	const [ movieTitle, setMovieTitle ] = useState(null);
 	const [ modalVisible, setModalVisible ] = useState(false);
+	const [ category, setCategory ] = useState('all');
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
@@ -72,10 +74,11 @@ const Search = (props) => {
 		}).then(
 			(response) => {
 				console.log(response.data.length);
-				if (response.data.length > 0) {
-					const result = response.data;
-					setShowMovieDataArray(result);
-				}
+				const result = response.data;
+				// if (response.data.length > 0) {
+
+				setShowMovieDataArray(result);
+				// }
 				setLoadingMore(false);
 				setRefreshing(false);
 			},
@@ -86,6 +89,9 @@ const Search = (props) => {
 		);
 	};
 
+	// const fetchResultByCategory = categoryX => {
+
+	// }
 	const renderCategoryItem = ({ item }) => {
 		// console.log(item);
 		return (
@@ -96,7 +102,13 @@ const Search = (props) => {
 					marginRight: 20
 				}}
 			>
-				<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+				<TouchableHighlight onPress={() => setCategory(item)}>
+					{item.toString().toUpperCase() === category.toUpperCase() ? (
+						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					) : (
+						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					)}
+				</TouchableHighlight>
 			</View>
 		);
 	};
@@ -192,7 +204,17 @@ const Search = (props) => {
 						>
 							Seen |
 						</Text>
-						<Ionicons name="checkmark" color={'#00FF00'} size={12} />
+						<Text
+							style={{
+								color: '#00FF00',
+								fontSize: 10,
+								fontWeight: '700',
+								textTransform: 'capitalize'
+							}}
+						>
+							{' ?'}
+						</Text>
+						{/* <Ionicons name="checkmark" color={'#00FF00'} size={12} /> */}
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -211,16 +233,25 @@ const Search = (props) => {
 		);
 	};
 
-	useEffect(() => {
-		if (search.length === 0) {
-			fetchOnScrollDownMovies();
-		}
-	}, []);
+	useEffect(
+		() => {
+			if (category !== 'all') {
+				console.log(category);
+				setShowMovieDataArray([]);
+				setMovieDataArray([]);
+			}
+			if (search.length === 0) {
+				fetchOnScrollDownMovies();
+			}
+		},
+		[ category ]
+	);
 
 	const fetchOnScrollDownMovies = () => {
 		setLoadingMore(true);
 		const obj = {
-			id: startId
+			id: startId,
+			category: category
 		};
 		axios('http://192.168.0.100:3000/fetchOnScrollDownMovies', {
 			method: 'post',
@@ -362,31 +393,39 @@ const Search = (props) => {
 				/>
 			</View>
 
-			<FlatList
-				removeClippedSubviews={true}
-				data={showMovieDataArray}
-				// renderItem={(item) => renderMovieItem(item)}
-				renderItem={(item) => renderMovieItem(item)}
-				keyExtractor={(item, index) => index.toString()}
-				onEndReached={() => handleLoadMore()}
-				onEndReachedThreshold={0}
-				initialNumToRender={10}
-				ListFooterComponent={renderFooter}
-				numColumns={2}
-				onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-				scrollEnabled={!loadingMore}
-				// refreshControl={
-				// 	<RefreshControl
-				// 		refreshing={refreshing}
-				// 		onRefresh={handleRefresh}
-				// 		tintColor={'#fff'}
-				// 		// colors={[ 'gray', 'orange' ]}
-				// 	/>
-				// }
-				// onRefresh={() => handleRefresh()}
-				// refreshing={refreshing}
-				// enabled={true}
-			/>
+			{showMovieDataArray && showMovieDataArray.length > 0 ? (
+				<FlatList
+					removeClippedSubviews={true}
+					data={showMovieDataArray}
+					// renderItem={(item) => renderMovieItem(item)}
+					renderItem={(item) => renderMovieItem(item)}
+					keyExtractor={(item, index) => index.toString()}
+					onEndReached={() => handleLoadMore()}
+					onEndReachedThreshold={0}
+					initialNumToRender={10}
+					ListFooterComponent={renderFooter}
+					numColumns={2}
+					onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+					scrollEnabled={!loadingMore}
+					// refreshControl={
+					// 	<RefreshControl
+					// 		refreshing={refreshing}
+					// 		onRefresh={handleRefresh}
+					// 		tintColor={'#fff'}
+					// 		// colors={[ 'gray', 'orange' ]}
+					// 	/>
+					// }
+					// onRefresh={() => handleRefresh()}
+					// refreshing={refreshing}
+					// enabled={true}
+				/>
+			) : (
+				<View style={{ justifyContent: 'center', flex: 1 }}>
+					<Text style={{ color: '#DCDCDC', textAlign: 'center', fontSize: 16 }}>
+						Sorry !!! no movie for <Text style={{ color: '#F4A460' }}>{category}</Text> category
+					</Text>
+				</View>
+			)}
 			<SeenModal
 				fsId={fsId}
 				movieTitle={movieTitle}
