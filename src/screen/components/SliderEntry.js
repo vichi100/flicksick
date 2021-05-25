@@ -186,7 +186,17 @@ const SliderEntry = (props) => {
 							>
 								Seen |
 							</Text>
-							<Ionicons name="checkmark" color={'#00FF00'} size={15} />
+							<Text
+								style={{
+									color: '#00FF00',
+									fontSize: 12,
+									fontWeight: '700',
+									textTransform: 'capitalize'
+								}}
+							>
+								{' ?'}
+							</Text>
+							{/* <Ionicons name="checkmark" color={'#00FF00'} size={15} /> */}
 						</TouchableOpacity>
 					</View>
 				</View>

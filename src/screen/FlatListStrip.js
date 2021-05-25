@@ -198,7 +198,17 @@ const FlatListStrip = (props) => {
 							>
 								Seen |
 							</Text>
-							<Ionicons name="checkmark" color={'#00FF00'} size={12} />
+							<Text
+								style={{
+									color: '#00FF00',
+									fontSize: 10,
+									fontWeight: '700',
+									textTransform: 'capitalize'
+								}}
+							>
+								{' ?'}
+							</Text>
+							{/* <AntDesign name="question" color={'#00FF00'} size={12} /> */}
 						</View>
 					</TouchableOpacity>
 				</View>

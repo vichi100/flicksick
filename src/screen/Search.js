@@ -11,7 +11,8 @@ import {
 	Image,
 	TouchableOpacity,
 	TextInput,
-	ActivityIndicator
+	ActivityIndicator,
+	RefreshControl
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -20,11 +21,11 @@ import * as Font from 'expo-font';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
-import FlatListStrip from './FlatListStrip';
+import Row from './Row';
+import SeenModal from './SeenModal';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -34,34 +35,55 @@ const Search = (props) => {
 	const [ startId, setStartId ] = useState('0');
 	const [ endId, setEndId ] = useState('0');
 	const [ movieDataArray, setMovieDataArray ] = useState([]);
+	const [ showMovieDataArray, setShowMovieDataArray ] = useState([]);
 	const [ loadingMore, setLoadingMore ] = useState(false);
 	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
 	const [ refreshing, setRefreshing ] = useState(false);
+	const [ fsId, setFSId ] = useState(null);
+	const [ movieTitle, setMovieTitle ] = useState(null);
+	const [ modalVisible, setModalVisible ] = useState(false);
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
-		if (text) {
-			// Inserted text is not blank
-			// Filter the masterDataSource and update FilteredDataSource
-			const newData = props.residentialPropertyList.filter(function(item) {
-				// Applying filter for the inserted text in search bar
-				const itemData =
-					item.property_address.building_name +
-					item.property_address.landmark_or_street +
-					item.property_address.location_area +
-					item.owner_details.name +
-					item.owner_details.mobile1;
-				const textData = text.toUpperCase();
-				return itemData.toUpperCase().indexOf(textData) > -1;
-			});
-			setData(newData);
+		console.log(text);
+		if (text.length > 1) {
+			searchMovie(text);
 			setSearch(text);
 		} else {
 			// Inserted text is blank
 			// Update FilteredDataSource with masterDataSource
-			setData(props.residentialPropertyList);
+			setShowMovieDataArray(movieDataArray);
 			setSearch(text);
 		}
+	};
+
+	const searchMovie = (titleX) => {
+		setLoadingMore(true);
+		const obj = {
+			title: titleX
+		};
+		axios('http://192.168.0.100:3000/searchMovieByTitle', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				console.log(response.data.length);
+				if (response.data.length > 0) {
+					const result = response.data;
+					setShowMovieDataArray(result);
+				}
+				setLoadingMore(false);
+				setRefreshing(false);
+			},
+			(error) => {
+				setLoadingMore(false);
+				console.log(error);
+			}
+		);
 	};
 
 	const renderCategoryItem = ({ item }) => {
@@ -79,7 +101,7 @@ const Search = (props) => {
 		);
 	};
 
-	const renderItem = ({ item }) => {
+	const renderMovieItemX = ({ item }) => {
 		// console.log("Item:  ", item.illustration);
 		return (
 			<TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => myNavigation(item.id)}>
@@ -89,7 +111,7 @@ const Search = (props) => {
 							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
 						}}
 						// style={{ width: '100%', height: '100%' }}
-						style={{ width: '100%', height: 270, alignSelf: 'center' }}
+						style={{ width: '100%', height: 230, alignSelf: 'center' }}
 						resizeMode={'cover'}
 					/>
 
@@ -177,8 +199,22 @@ const Search = (props) => {
 		);
 	};
 
+	const renderMovieItem = ({ item }) => {
+		return (
+			<Row
+				item={item}
+				setFSId={(id) => setFSId(id)}
+				setMovieTitle={(title) => setMovieTitle(title)}
+				setModalVisible={(flag) => setModalVisible(flag)}
+				navigation={navigation}
+			/>
+		);
+	};
+
 	useEffect(() => {
-		fetchOnScrollDownMovies();
+		if (search.length === 0) {
+			fetchOnScrollDownMovies();
+		}
 	}, []);
 
 	const fetchOnScrollDownMovies = () => {
@@ -198,11 +234,9 @@ const Search = (props) => {
 				console.log(response.data.length);
 				if (response.data.length > 0) {
 					const result = response.data;
-					if (movieDataArray.length > 25) {
-						movieDataArray.splice(0, 25);
-					}
 					const tempData = [ ...movieDataArray, ...result ];
 					setMovieDataArray(tempData);
+					setShowMovieDataArray(tempData);
 					setStartId(tempData[tempData.length - 1]._id); // start for next scroll down
 					setEndId(tempData[0]._id); // start for next pull down
 				}
@@ -253,7 +287,7 @@ const Search = (props) => {
 	};
 
 	const handleLoadMore = () => {
-		console.log(handleLoadMore);
+		// console.log(handleLoadMore);
 		// setLoadingMore(true);
 
 		if (!onEndReachedCalledDuringMomentum && !loadingMore) {
@@ -269,7 +303,10 @@ const Search = (props) => {
 		return (
 			<View
 				style={{
-					position: 'relative',
+					// position: 'relative',
+					flex: 1,
+					justifyContent: 'center',
+					alignItems: 'center',
 					width: 60,
 					height: 60,
 					paddingVertical: 20,
@@ -302,7 +339,8 @@ const Search = (props) => {
 						// marginBottom: 5,
 						borderRadius: 10,
 						borderColor: '#00FFFF',
-						backgroundColor: '#000'
+						backgroundColor: '#000',
+						color: '#A9A9A9'
 					}}
 					onChangeText={(text) => searchFilterFunction(text)}
 					value={search}
@@ -312,50 +350,23 @@ const Search = (props) => {
 					placeholderTextColor={'#A9A9A9'}
 				/>
 				<View style={{ position: 'absolute', top: 15, right: 10 }}>
-					<AntDesign name="search1" color={'#7CFC00'} size={20} />
+					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
 				</View>
 			</View>
 			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom: 15, marginTop: 2 }}>
 				<FlatList
 					horizontal
 					data={categoryData}
-					//data defined in constructor
-					// ItemSeparatorComponent={ItemSeparatorView}
-					//Item Separator View
 					renderItem={(item) => renderCategoryItem(item)}
 					keyExtractor={(item, index) => index.toString()}
 				/>
-				{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
-					<Text style={{ color: '#F5F5F5', margin: 10 }}>Crime</Text>
-					<Text style={{ color: '#F5F5F5', margin: 10 }}>Mystery</Text>
-					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
-					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
 			</View>
-			{/* <View> */}
-			{/* <FlatListStrip
-				data={props.trendingCurrentWeek}
-				title={'Most Watched This Week'}
-				navigation={navigation}
-				horizontalFlag={true}
-				numColumns={2}
-				imageHight={270}
-				imageWidth={'100%'}
-			/> */}
-			{/* <FlatListStrip
-				data={movieDataArray}
-				title={null}
-				navigation={navigation}
-				horizontalFlag={false}
-				numColumns={2}
-				imageHight={260}
-				imageWidth={'100%'}
-			/> */}
+
 			<FlatList
-				data={movieDataArray}
-				//data defined in constructor
-				// ItemSeparatorComponent={ItemSeparatorView}
-				//Item Separator View
-				renderItem={(item) => renderItem(item)}
+				removeClippedSubviews={true}
+				data={showMovieDataArray}
+				// renderItem={(item) => renderMovieItem(item)}
+				renderItem={(item) => renderMovieItem(item)}
 				keyExtractor={(item, index) => index.toString()}
 				onEndReached={() => handleLoadMore()}
 				onEndReachedThreshold={0}
@@ -364,10 +375,27 @@ const Search = (props) => {
 				numColumns={2}
 				onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
 				scrollEnabled={!loadingMore}
-				onRefresh={() => handleRefresh()}
-				refreshing={refreshing}
+				// refreshControl={
+				// 	<RefreshControl
+				// 		refreshing={refreshing}
+				// 		onRefresh={handleRefresh}
+				// 		tintColor={'#fff'}
+				// 		// colors={[ 'gray', 'orange' ]}
+				// 	/>
+				// }
+				// onRefresh={() => handleRefresh()}
+				// refreshing={refreshing}
+				// enabled={true}
 			/>
-			{/* </View> */}
+			<SeenModal
+				fsId={fsId}
+				movieTitle={movieTitle}
+				userId={props.userDetails.id}
+				mobile={props.userDetails.mobile}
+				modalVisible={modalVisible}
+				setModalVisible={(vFlag) => setModalVisible(vFlag)}
+				navigation={navigation}
+			/>
 		</SafeAreaView>
 	);
 };
@@ -375,7 +403,8 @@ const Search = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
+	userDetails: state.AppReducer.userDetails
 });
 
 // const mapDispatchToProps = () => ({

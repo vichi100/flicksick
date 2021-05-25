@@ -11,7 +11,8 @@ import {
 	Image,
 	TouchableOpacity,
 	TextInput,
-	RefreshControl
+	RefreshControl,
+	ActivityIndicator
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -49,10 +50,11 @@ const Friends = (props) => {
 	const [ allFriendsDataArray, setAllFriendsDataArray ] = useState([]);
 	const [ allFriendsDataArrayMain, setAllFriendsDataArrayMain ] = useState([]);
 	const [ subAllFriendsDataArray, setSubAllFriendsDataArray ] = useState([]);
-	const [ refreshing, setRefreshing ] = React.useState(false);
 	const [ startIndex, setStartIndex ] = useState(0);
-	const [ endIndex, setEndIndex ] = useState(6);
+	const [ endIndex, setEndIndex ] = useState(10);
 	const [ loadingMore, setLoadingMore ] = useState(false);
+	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
+	const [ refreshing, setRefreshing ] = useState(false);
 
 	const displayFriendMovieList = (item) => {
 		console.log(item);
@@ -137,7 +139,7 @@ const Friends = (props) => {
 		return <FriendsDisplay item={item} displayFriendMovieList={(item) => displayFriendMovieList(item)} />;
 	};
 
-	const rowKeyExt = (item) => item.mobile;
+	const rowKeyExt = (item, index) => item.mobile;
 
 	const areEqual = (prevProps, nextProps) => {
 		// return false prevProps.text & nextProps.text are not equal.
@@ -310,6 +312,7 @@ const Friends = (props) => {
 					// setFriendOff(contactObjDict);
 					createFriendsDataArray(contactObjDict, 'off', allFriendsDataArrayX);
 				}
+				const temp = allFriendsDataArrayX.slice(startIndex, endIndex);
 				setAllFriendsDataArray(allFriendsDataArrayX);
 				setAllFriendsDataArrayMain(allFriendsDataArrayX);
 				// const start = startIndex;
@@ -340,48 +343,59 @@ const Friends = (props) => {
 		});
 	};
 
-	// const handleLoadMoreX = React.useCallback(async () => {
-	// 	console.log('refresh');
-	// 	setRefreshing(true);
-	// 	const start = startIndex;
-	// 	const end = endIndex;
-	// 	const temp = allFriendsDataArray.slice(start, end);
-	// 	setSubAllFriendsDataArray(temp);
-	// 	setStartIndex(endIndex);
-	// 	setEndIndex(end + 6);
-	// 	// wait(2000).then(() => setRefreshing(false));
-	// 	setRefreshing(false);
-	// }, []);
-
-	const handleLoadMore = () => {
-		// console.log('refresh');
-		setRefreshing(true);
-		setLoadingMore(true);
-		const start = startIndex;
-		const end = endIndex;
-		const temp = allFriendsDataArray.slice(start, end);
-		console.log('temp len: ', temp.length);
-		setSubAllFriendsDataArray(temp);
-		setStartIndex(endIndex);
-		setEndIndex(end + 6);
-		// wait(2000).then(() => setRefreshing(false));
-		setRefreshing(false);
+	// allFriendsDataArray
+	const fetchOnScrollDownMovies = () => {
+		console.log('fetchOnScrollDownMovies1: ', allFriendsDataArray.length);
+		const subData = allFriendsDataArrayMain.slice(endIndex, endIndex + 10);
+		// if (allFriendsDataArray.length > 50) {
+		// 	const x = allFriendsDataArray.length - 50;
+		// 	allFriendsDataArray.splice(0, x);
+		// }
+		// const temp = [ ...allFriendsDataArray, ...subData ];
+		allFriendsDataArray.concat(subData);
+		// setAllFriendsDataArray(temp);
+		setEndIndex(endIndex + 10);
+		// setOnEndReachedCalledDuringMomentum(true);
 		setLoadingMore(false);
+		console.log('fetchOnScrollDownMovies2: ', allFriendsDataArray.length);
+		// setTimeout(() => {}, 1000);
 	};
 
-	const ListFooterComponent = () => (
-		<Text
-			style={{
-				fontSize: 16,
-				fontWeight: 'bold',
-				textAlign: 'center',
-				padding: 5,
-				color: '#fff'
-			}}
-		>
-			Loading...
-		</Text>
-	);
+	const handleLoadMore = () => {
+		console.log('handleLoadMore1');
+		console.log('onEndReachedCalledDuringMomentum: ', onEndReachedCalledDuringMomentum);
+		console.log('loadingMore: ', loadingMore);
+		if (!onEndReachedCalledDuringMomentum && !loadingMore) {
+			console.log('handleLoadMore2');
+			setLoadingMore(true);
+			fetchOnScrollDownMovies();
+			setOnEndReachedCalledDuringMomentum(true);
+		}
+	};
+
+	const renderFooter = () => {
+		if (!loadingMore) return null;
+
+		return (
+			<View
+				style={{
+					// position: 'relative',
+					flex: 1,
+					justifyContent: 'center',
+					alignItems: 'center',
+					width: 60,
+					height: 60,
+					paddingVertical: 20,
+					borderTopWidth: 1,
+					marginTop: 10,
+					marginBottom: 10,
+					borderColor: '#fff'
+				}}
+			>
+				<ActivityIndicator animating size="large" />
+			</View>
+		);
+	};
 
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
@@ -442,24 +456,23 @@ const Friends = (props) => {
 				imageWidth={160}
 			/>
 
-			<ScrollView>
-				<View>
-					<FlatList
-						// horizontal
-						data={allFriendsDataArray}
-						//data defined in constructor
-						// ItemSeparatorComponent={ItemSeparatorView}
-						//Item Separator View
-						// renderItem={rowItem}
-						renderItem={({ item }) => <RowX item={item} />}
-						keyExtractor={rowKeyExt}
-						extraData={selectedFriendMobile}
-						// onEndReached={handleLoadMore}
-						// onEndReachedThreshold={0.5}
-						// ListFooterComponent={() => loadingMore && <ListFooterComponent />}
-					/>
-				</View>
-			</ScrollView>
+			{/* <ScrollView> */}
+			<FlatList
+				// horizontal
+				removeClippedSubviews={true}
+				data={allFriendsDataArray}
+				// renderItem={rowItem}
+				renderItem={({ item }) => <RowX item={item} />}
+				extraData={allFriendsDataArray}
+				keyExtractor={rowKeyExt}
+				// onEndReached={() => handleLoadMore()}
+				// onEndReachedThreshold={0}
+				// ListFooterComponent={renderFooter}
+				// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+				// scrollEnabled={!loadingMore}
+			/>
+			{/* </ScrollView> */}
+			{/* <View style={{ marginBottom: 90 }} /> */}
 		</SafeAreaView>
 	);
 };
