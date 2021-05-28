@@ -9,8 +9,7 @@ import {
 	SafeAreaView,
 	FlatList,
 	Image,
-	TouchableOpacity,
-	ActivityIndicator
+	TouchableOpacity
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -42,12 +41,9 @@ const IS_ANDROID = Platform.OS === 'android';
 const SLIDER_1_FIRST_ITEM = 1;
 
 const Home = (props) => {
-	var num = 0;
 	const { navigation } = props;
 	const [ slider1ActiveSlide, setSlider1ActiveSlide ] = useState(SLIDER_1_FIRST_ITEM);
 	const carouselRef = useRef(null);
-	const [ homeData, setHomeData ] = useState(null);
-	const [ loading, setLoading ] = useState(false);
 
 	const setSlider1ActiveSlideX = (index) => {
 		setSlider1ActiveSlide(index);
@@ -82,94 +78,64 @@ const Home = (props) => {
 		}).then(
 			(response) => {
 				// console.log(response.data);
-				setHomeData(response.data);
-				setLoading(false);
-				// props.setTrendingTodayX(response.data['trending_today']);
-				// props.setDataFor(response.data['trending_current_week']);
+				props.setTrendingTodayX(response.data['trending_today']);
+				props.setDataFor(response.data['trending_current_week']);
 				// props.setTrendingTodayX(response.data['trending_today']);
 				// props.setDataFor(response.data['trending_current_week']);
 			},
 			(error) => {
 				console.log(error);
-				setLoading(false);
 			}
 		);
 	};
 
 	useEffect(() => {
-		setLoading(true);
 		getHomeScreenData();
 	}, []);
 
-	return loading ? (
-		<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0, .9)' }}>
-			<ActivityIndicator animating size="large" color={'#fff'} />
-			{/* <ActivityIndicator animating size="large" /> */}
-		</View>
-	) : (
+	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
-			{homeData && homeData.length > 0 ? (
-				<ScrollView>
-					<View>
-						<Text
-							style={{
-								color: 'rgba(255, 255, 255, 1)',
-								marginTop: 10,
-								marginBottom: 10,
-								textAlign: 'center',
-								fontSize: 16,
-								fontWeight: '600'
-							}}
-						>
-							{homeData[0].title}
-						</Text>
-						<View style={{ flexDirection: 'column' }}>
-							<View style={{}}>
-								{/* <Text style={styles.title}>{`Example ${1}`}</Text>
+			<ScrollView>
+				<Text
+					style={{
+						color: 'rgba(255, 255, 255, 1)',
+						marginTop: 10,
+						marginBottom: 10,
+						textAlign: 'center',
+						fontSize: 16,
+						fontWeight: '600'
+					}}
+				>
+					Dope on these with FRIENDS{' '}
+				</Text>
+				<View style={{ flexDirection: 'column' }}>
+					<View style={{}}>
+						{/* <Text style={styles.title}>{`Example ${1}`}</Text>
           <Text style={styles.subtitle}>{"title"}</Text> */}
-								<Carousel
-									ref={carouselRef}
-									data={homeData[0].data}
-									renderItem={_renderItem}
-									sliderWidth={sliderWidth}
-									itemWidth={itemWidth}
-									hasParallaxImages={true}
-									firstItem={SLIDER_1_FIRST_ITEM}
-									inactiveSlideScale={0.94}
-									inactiveSlideOpacity={0.7}
-									// inactiveSlideShift={20}
-									containerCustomStyle={styles.slider}
-									contentContainerCustomStyle={styles.sliderContentContainer}
-									loop={true}
-									loopClonesPerSide={2}
-									autoplay={false}
-									autoplayDelay={1000}
-									autoplayInterval={5000}
-									onSnapToItem={(index) => setSlider1ActiveSlideX(index)}
-								/>
-							</View>
-						</View>
+						<Carousel
+							ref={carouselRef}
+							data={props.trendingToday}
+							renderItem={_renderItem}
+							sliderWidth={sliderWidth}
+							itemWidth={itemWidth}
+							hasParallaxImages={true}
+							firstItem={SLIDER_1_FIRST_ITEM}
+							inactiveSlideScale={0.94}
+							inactiveSlideOpacity={0.7}
+							// inactiveSlideShift={20}
+							containerCustomStyle={styles.slider}
+							contentContainerCustomStyle={styles.sliderContentContainer}
+							loop={true}
+							loopClonesPerSide={2}
+							autoplay={false}
+							autoplayDelay={1000}
+							autoplayInterval={5000}
+							onSnapToItem={(index) => setSlider1ActiveSlideX(index)}
+						/>
 					</View>
+				</View>
 
-					{homeData &&
-						homeData.map((item) => {
-							if (num === 0) {
-								num = num + 1;
-								return;
-							}
-							return (
-								<FlatListStrip
-									data={item.data}
-									title={item.title}
-									navigation={navigation}
-									horizontalFlag={true}
-									numColumns={1}
-									imageHight={200}
-									imageWidth={160}
-								/>
-							);
-						})}
-					{/* <FlatListStrip
+				<FlatListStrip
 					data={props.trendingToday}
 					title={'Trending Today'}
 					navigation={navigation}
@@ -187,17 +153,10 @@ const Home = (props) => {
 					numColumns={1}
 					imageHight={200}
 					imageWidth={160}
-				/> */}
+				/>
 
-					<View style={{ marginBottom: 10 }} />
-				</ScrollView>
-			) : (
-				<View style={{ justifyContent: 'center', flex: 1 }}>
-					<Text style={{ color: '#DCDCDC', textAlign: 'center', fontSize: 16 }}>
-						Please check your network !!!
-					</Text>
-				</View>
-			)}
+				<View style={{ marginBottom: 10 }} />
+			</ScrollView>
 		</SafeAreaView>
 	);
 };
@@ -239,5 +198,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 // mind blending: drama, mystery, thriller
 // spy: action, mystery, thriller
 //siyfiy:
-
-// action, adventure, animation, biography, comedy, crime, horror, sci-fi, thriller, rom-com

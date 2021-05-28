@@ -6,7 +6,9 @@ const initialState = {
 	fsIdToGetDetails: null,
 	userDetails: null,
 	userMobile: null,
-	userContactDict: null
+	userContactDict: null,
+	countryCode: null,
+	country: null
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -49,6 +51,20 @@ const AppReducer = (state = initialState, action) => {
 			return {
 				...state,
 				userContactDict: action.payload
+			};
+
+		case ACTION_TYPES.SET_COUNTRY_CODE:
+			// // console.log("SET_COUNTRY_CODE");
+			return {
+				...state,
+				countryCode: action.payload
+			};
+
+		case ACTION_TYPES.SET_COUNTRY:
+			// // console.log("SET_COUNTRY");
+			return {
+				...state,
+				country: action.payload
 			};
 
 		default:

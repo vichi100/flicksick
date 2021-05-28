@@ -8,7 +8,8 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
-	AsyncStorage
+	AsyncStorage,
+	ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
 // import OtpInputs from "./OtpInputs";
@@ -17,28 +18,58 @@ import Counter from './Counter';
 import axios from 'axios';
 import { setUserDetails } from '../../reducers/Action';
 import OTPTextView from './OTPTextView';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const OtpScreen = (props) => {
 	const { navigation } = props;
-	const [ otp, setOTP ] = useState('');
+	const [ otp, setOTP ] = useState(null);
 	const otpInput = useRef(null);
+	const [ loading, setLoading ] = useState(false);
 
-	const getOtp = (otp) => {
-		// console.log(otp);
-		setOTP(otp);
+	useEffect(() => {
+		setLoading(true);
+		generateOTP();
+	}, []);
+
+	const generateOTP = () => {
+		const num = Math.floor(Math.random() * 900000) + 100000;
+		const mobileX = props.countryCode + props.userMobile;
+		setOTP(num);
+		const obj = {
+			mobile: mobileX,
+			otp: num
+		};
+		axios
+			.post(
+				'http://192.168.0.100:3000/generateOTP',
+				// SERVER_URL + "/addNewResidentialRentProperty",
+				// await AsyncStorage.getItem("property")
+				// JSON.stringify({ vichi: "vchi" })
+				obj
+			)
+			.then(
+				(response) => {
+					console.log(response.data);
+					setLoading(false);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 	};
 
-	const handleSubmit = (text) => {
-		console.log(text);
-		if (text.length === 6) {
+	const handleSubmit = (code) => {
+		console.log(code);
+		if (code === otp.toString()) {
 			onSubmit();
 		}
 	};
 	const onSubmit = () => {
-		console.log('onSubmit: ', props.userMobile);
+		const mobileX = props.countryCode + props.userMobile;
+		console.log('onSubmit: ', mobileX);
 		const userObj = {
-			mobile: props.userMobile,
-			country: 'IN'
+			mobile: mobileX,
+			country: props.country
 		};
 		axios
 			.post(
@@ -67,7 +98,19 @@ const OtpScreen = (props) => {
 		props.setUserDetails(userData);
 	};
 
-	return (
+	return loading ? (
+		<View
+			style={{
+				flex: 1,
+				justifyContent: 'center',
+				alignItems: 'center',
+				backgroundColor: 'rgba(0,0,0, .9)'
+			}}
+		>
+			<ActivityIndicator animating size="large" color={'#fff'} />
+			{/* <ActivityIndicator animating size="large" /> */}
+		</View>
+	) : (
 		<SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
 			<ScrollView>
 				<View
@@ -78,9 +121,9 @@ const OtpScreen = (props) => {
 						alignItems: 'center'
 					}}
 				>
-					<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>OTP sent to mobile</Text>
-					<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500', marginTop: 10 }}>
-						+91 9833097595
+					<Text style={{ color: '#F5F5F5', fontSize: 18, fontWeight: '500' }}>OTP sent to mobile</Text>
+					<Text style={{ color: '#F5F5F5', fontSize: 16, fontWeight: '500', marginTop: 10 }}>
+						{props.countryCode + ' ' + props.userMobile}
 					</Text>
 				</View>
 				<View
@@ -93,7 +136,7 @@ const OtpScreen = (props) => {
 						marginTop: 40
 					}}
 				>
-					<OTPTextView
+					{/* <OTPTextView
 						handleTextChange={(e) => {
 							handleSubmit(e);
 						}}
@@ -104,6 +147,30 @@ const OtpScreen = (props) => {
 						// }}
 						inputCount={6}
 						inputCellLength={1}
+					/> */}
+
+					<OTPInputView
+						// style={{ width: '80%', height: 200 }}
+						pinCount={6}
+						// code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+						// onCodeChanged = {code => { this.setState({code})}}
+						autoFocusOnLoad
+						codeInputFieldStyle={{
+							width: 40,
+							height: 40,
+							borderWidth: 0.9,
+							borderColor: '#fff',
+							borderRadius: 5,
+							fontSize: 18
+						}}
+						codeInputHighlightStyle={{ borderColor: '#03DAC6' }}
+						onCodeFilled={(code) => {
+							console.log(`Code is ${code}, you are good to go!`);
+							handleSubmit(code);
+						}}
+						// placeholderCharacter={'*'}
+						// placeholderTextColor={'red'}
+						// selectionColor={"#03DAC6"}
 					/>
 				</View>
 
@@ -119,11 +186,13 @@ const OtpScreen = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-	userMobile: state.AppReducer.userMobile
+	userMobile: state.AppReducer.userMobile,
+	country: state.AppReducer.country,
+	countryCode: state.AppReducer.countryCode
 });
 const mapDispatchToProps = {
 	setUserDetails
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OtpScreen);
-// export default OtpScreen;
+// export default OtpScreen; XXXXXX is your OTP for mobile verification at Flick Sick

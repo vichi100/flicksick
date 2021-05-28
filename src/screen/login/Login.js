@@ -21,7 +21,9 @@ import {
 	setDataFor,
 	setFSIdToGetDetails,
 	setUserMobile,
-	setUserDetails
+	setUserDetails,
+	setCountryCode,
+	setCountry
 } from '../../reducers/Action';
 import { TextInput, Provider } from 'react-native-paper';
 import Dropdown from '../components/dropDown/Dropdown';
@@ -56,7 +58,7 @@ const Login = (props) => {
 	const getUserDetails = async () => {
 		// AsyncStorage.setItem("agent_details", JSON.stringify(agentDetails));
 
-		// AsyncStorage.clear();
+		AsyncStorage.clear();
 		// userDetailsStr: { "user_details": { "user_type": "agent", "id": "15476a82-997a-4bef-bf1b-b1236f6c177e", "expo_token": null, "name": null, "company_name": null, "mobile": "9833097595", "address": null, "city": null, "access_rights": "all", "works_for": ["15476a82-997a-4bef-bf1b-b1236f6c177e"] } }
 
 		const userDetailsStr = await AsyncStorage.getItem('user_details');
@@ -72,12 +74,8 @@ const Login = (props) => {
 
 	const onNext = () => {
 		console.log(mobile);
-		if (country && country.indexOf('IN') > -1) {
-			console.log('INdia');
-			setMobile('+91' + mobile);
-			props.setUserMobile('+91' + mobile);
-		}
 
+		props.setUserMobile(mobile);
 		navigation.navigate('OtpScreen');
 	};
 
@@ -87,7 +85,16 @@ const Login = (props) => {
 
 	const onChangeText = (text) => {
 		console.log(text);
-		setCountry(text);
+		if (text.indexOf('IN') > -1) {
+			props.setCountry('IN');
+			props.setCountryCode('+91');
+		} else if (text.indexOf('US') > -1) {
+			props.setCountry('US');
+			props.setCountryCode('+1');
+		} else if (text.indexOf('UK') > -1) {
+			props.setCountry('UK');
+			props.setCountryCode('+44');
+		}
 	};
 
 	return (
@@ -177,7 +184,9 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
 	setUserMobile,
-	setUserDetails
+	setUserDetails,
+	setCountryCode,
+	setCountry
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

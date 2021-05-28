@@ -47,3 +47,19 @@ export const setUserContactDict = (payload) => {
 		payload
 	};
 };
+
+export const setCountryCode = (payload) => {
+	// console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_COUNTRY_CODE,
+		payload
+	};
+};
+
+export const setCountry = (payload) => {
+	// console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_COUNTRY,
+		payload
+	};
+};

@@ -559,18 +559,30 @@ const MovieDetails = (props) => {
 									</Text>
 								</View>
 								<View style={{ flex: 1, alignItems: 'center' }}>
-									<View style={{ flexDirection: 'row' }}>
+									<View
+										style={{
+											flexDirection: 'row',
+											backgroundColor: 'rgba(255,105,180, .9)',
+											// marginRight: 10,
+											borderRadius: 10,
+											// width: 70,
+											// height: 50,
+											padding: 20,
+											marginLeft: 3
+										}}
+									>
 										{/* <AntDesign name="eyeo" color={'#7CFC00'} size={20} /> */}
 										<View style={{ marginLeft: 0 }} />
 										<Text
-											style={{ color: 'rgba(255,105,180, .9)', fontSize: 22, fontWeight: '700' }}
+											style={{ color: 'rgba(245,245,245, .9)', fontSize: 18, fontWeight: '700' }}
 										>
 											70%
 										</Text>
 									</View>
+
 									<Text
 										style={{
-											color: 'rgba(245,245,245, .9)',
+											color: 'rgba(192,192,192,.9)',
 											fontSize: 13,
 											fontWeight: '500',
 											paddingTop: 3,
@@ -580,18 +592,30 @@ const MovieDetails = (props) => {
 										Loved It
 									</Text>
 								</View>
-								<View style={{ flex: 1, alignItems: 'center' }}>
-									<View style={{ flexDirection: 'row' }}>
+								<View style={{ flex: 1, alignItems: 'center', marginLeft: 4 }}>
+									<View
+										style={{
+											flexDirection: 'row',
+											backgroundColor: 'rgba(255,140,0, .9)',
+											// marginRight: 10,
+											borderRadius: 10,
+											// width: 70,
+											// height: 50,
+											padding: 20
+										}}
+									>
 										{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
 										<View style={{ marginLeft: 0 }} />
-										<Text style={{ color: 'rgba(255,140,0, .8)', fontSize: 22, fontWeight: '700' }}>
+										<Text
+											style={{ color: 'rgba(245,245,245, .9)', fontSize: 18, fontWeight: '700' }}
+										>
 											40%
 										</Text>
 									</View>
 									<Text
 										style={{
-											color: 'rgba(245,245,245, .9)',
-											fontSize: 13,
+											color: 'rgba(192,192,192,.9)',
+											fontSize: 12,
 											fontWeight: '500',
 											paddingTop: 3,
 											textAlign: 'center'
@@ -601,20 +625,28 @@ const MovieDetails = (props) => {
 									</Text>
 								</View>
 
-								<View style={{ flex: 1, alignItems: 'center' }}>
-									<View style={{ flexDirection: 'row' }}>
+								<View style={{ flex: 1, alignItems: 'center', marginLeft: 3 }}>
+									<View
+										style={{
+											flexDirection: 'row',
+											backgroundColor: 'rgba(64,224,208, .6)',
+											// marginRight: 10,
+											borderRadius: 10,
+											padding: 20
+										}}
+									>
 										{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
 										<View style={{ marginLeft: 0 }} />
 										<Text
-											style={{ color: 'rgba(64,224,208, .6)', fontSize: 22, fontWeight: '700' }}
+											style={{ color: 'rgba(245,245,245, .9)', fontSize: 18, fontWeight: '700' }}
 										>
 											10%
 										</Text>
 									</View>
 									<Text
 										style={{
-											color: 'rgba(245,245,245, .9)',
-											fontSize: 13,
+											color: 'rgba(192,192,192,.9)',
+											fontSize: 12,
 											fontWeight: '500',
 											paddingTop: 3,
 											textAlign: 'center'
@@ -623,19 +655,35 @@ const MovieDetails = (props) => {
 										Just Time{'\n'} Pass
 									</Text>
 								</View>
-								<View style={{ flex: 1, alignItems: 'center' }}>
-									<View style={{ flexDirection: 'row' }}>
+								<View
+									style={{
+										flex: 1,
+										alignItems: 'center'
+									}}
+								>
+									<View
+										style={{
+											flexDirection: 'row',
+											backgroundColor: 'rgba(245,222,179, .6)',
+											// marginRight: 10,
+											borderRadius: 10,
+											paddingLeft: 23,
+											paddingRight: 22,
+											paddingTop: 20,
+											paddingBottom: 20
+										}}
+									>
 										{/* <AntDesign name="hearto" color={'#FF69B4'} size={20} /> */}
 										<View style={{ marginLeft: 0 }} />
 										<Text
-											style={{ color: 'rgba(245,222,179, .6)', fontSize: 22, fontWeight: '700' }}
+											style={{ color: 'rgba(245,245,245, .9)', fontSize: 18, fontWeight: '700' }}
 										>
 											5%
 										</Text>
 									</View>
 									<Text
 										style={{
-											color: 'rgba(245,245,245, .9)',
+											color: 'rgba(192,192,192,.9)',
 											fontSize: 13,
 											fontWeight: '500',
 											paddingTop: 3,

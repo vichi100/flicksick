@@ -118,7 +118,7 @@ const Friends = (props) => {
 								textAlign: 'center'
 							}}
 						>
-							Invite
+							Invite | Block
 						</Text>
 					</View>
 					{item.status === 'on' ? (

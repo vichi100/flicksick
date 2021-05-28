@@ -44,6 +44,7 @@ const Search = (props) => {
 	const [ movieTitle, setMovieTitle ] = useState(null);
 	const [ modalVisible, setModalVisible ] = useState(false);
 	const [ category, setCategory ] = useState('all');
+	const [ loading, setLoading ] = useState(false);
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
@@ -235,6 +236,7 @@ const Search = (props) => {
 
 	useEffect(
 		() => {
+			setLoading(true);
 			if (category !== 'all') {
 				console.log(category);
 				setShowMovieDataArray([]);
@@ -273,6 +275,7 @@ const Search = (props) => {
 				}
 				setLoadingMore(false);
 				setRefreshing(false);
+				setLoading(false);
 			},
 			(error) => {
 				setLoadingMore(false);
@@ -393,7 +396,19 @@ const Search = (props) => {
 				/>
 			</View>
 
-			{showMovieDataArray && showMovieDataArray.length > 0 ? (
+			{loading ? (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: 'center',
+						alignItems: 'center',
+						backgroundColor: 'rgba(0,0,0, .9)'
+					}}
+				>
+					<ActivityIndicator animating size="large" color={'#fff'} />
+					{/* <ActivityIndicator animating size="large" /> */}
+				</View>
+			) : showMovieDataArray && showMovieDataArray.length > 0 ? (
 				<FlatList
 					removeClippedSubviews={true}
 					data={showMovieDataArray}
