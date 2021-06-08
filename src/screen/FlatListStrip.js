@@ -227,9 +227,9 @@ const FlatListStrip = (props) => {
 				{title ? (
 					<Text
 						style={{
-							color: '#fff',
-							fontSize: 16,
-							fontWeight: '600',
+							color: '#FFFAFA',
+							fontSize: 20,
+							fontWeight: '500',
 							marginTop: 10,
 							marginBottom: 10,
 							marginLeft: 15,

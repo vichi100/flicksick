@@ -23,18 +23,13 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import * as Font from 'expo-font';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Carousel, { Pagination } from './react-native-snap-carousel/index';
-import { sliderWidth, itemWidth } from './styles/SliderEntry.style';
-import SliderEntry from './components/SliderEntry';
-import styles, { colors } from './styles/index.style';
-import { ENTRIES1, ENTRIES2 } from './static/entries';
-import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setUserContactDict } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import FriendsDisplay from './FriendsDisplay';
+import Snackbar from '../screen/components/SnackbarComponent';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -57,9 +52,25 @@ const Friends = (props) => {
 	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
 	const [ refreshing, setRefreshing ] = useState(false);
 	const [ category, setCategory ] = useState('all');
+	const [ errorMessage, setErrorMessage ] = useState('');
+	const [ isVisible, setIsVisible ] = useState(false);
+
+	const dismissSnackBar = () => {
+		setIsVisible(false);
+	};
 
 	const displayFriendMovieList = (item) => {
 		console.log(item);
+		if (item.status === 'off') {
+			setErrorMessage(
+				<Text>
+					Your friend is not using Flick / Sick.{' '}
+					<Text style={{ color: 'rgba(0,191,255, .9)', fontSize: 16, fontWeight: '600' }}>Invite </Text>him |
+				</Text>
+			);
+			setIsVisible(true);
+			return;
+		}
 		if (selectedFriendMobile !== item.mobile) {
 			setSelectedFriendMobile(item.mobile);
 			setSelectedFriendName(item.name);
@@ -118,7 +129,7 @@ const Friends = (props) => {
 								textAlign: 'center'
 							}}
 						>
-							Invite | Block
+							Invite
 						</Text>
 					</View>
 					{item.status === 'on' ? (
@@ -409,83 +420,95 @@ const Friends = (props) => {
 
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
-			<View style={{ marginBottom: 5 }}>
-				<TextInput
-					style={{
-						width: '98%',
-						height: 40,
-						borderWidth: 0.2,
-						paddingLeft: 20,
-						margin: 5,
-						// marginBottom: 5,
-						borderRadius: 10,
-						borderColor: '#00FFFF',
-						backgroundColor: '#000',
-						color: '#A9A9A9'
-					}}
-					onChangeText={(text) => searchFilterFunction(text)}
-					value={search}
-					underlineColorAndroid="transparent"
-					placeholder="Search by name or mobile"
-					inlineImageLeft="search_icon"
-					placeholderTextColor={'#A9A9A9'}
-				/>
-				<View style={{ position: 'absolute', top: 15, right: 10 }}>
-					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
+			<View>
+				<View style={{ marginBottom: 5 }}>
+					<TextInput
+						style={{
+							width: '98%',
+							height: 40,
+							borderWidth: 0.2,
+							paddingLeft: 20,
+							margin: 5,
+							// marginBottom: 5,
+							borderRadius: 10,
+							borderColor: '#00FFFF',
+							backgroundColor: '#000',
+							color: '#A9A9A9'
+						}}
+						onChangeText={(text) => searchFilterFunction(text)}
+						value={search}
+						underlineColorAndroid="transparent"
+						placeholder="Search by name or mobile"
+						inlineImageLeft="search_icon"
+						placeholderTextColor={'#A9A9A9'}
+					/>
+					<View style={{ position: 'absolute', top: 15, right: 10 }}>
+						<AntDesign name="search1" color={'#A9A9A9'} size={20} />
+					</View>
 				</View>
-			</View>
-			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
-				<Text
-					style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
-					numberOfLines={1}
-				>
-					{selectedFriendName}
-				</Text>
-				<Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text>
-				<FlatList
-					horizontal
-					data={categoryData}
-					//data defined in constructor
-					// ItemSeparatorComponent={ItemSeparatorView}
-					//Item Separator View
-					renderItem={(item) => renderCategoryItem(item)}
-					keyExtractor={(item, index) => index.toString()}
-				/>
-				{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
+				<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
+					<Text
+						style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
+						numberOfLines={1}
+					>
+						{selectedFriendName}
+					</Text>
+					<Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text>
+					<FlatList
+						horizontal
+						data={categoryData}
+						//data defined in constructor
+						// ItemSeparatorComponent={ItemSeparatorView}
+						//Item Separator View
+						renderItem={(item) => renderCategoryItem(item)}
+						keyExtractor={(item, index) => index.toString()}
+					/>
+					{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Crime</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Mystery</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
+				</View>
+				<View style={{ margin: 7 }} />
+
+				<FlatListStrip
+					data={props.trendingCurrentWeek}
+					title={null}
+					navigation={navigation}
+					horizontalFlag={true}
+					numColumns={1}
+					imageHight={200}
+					imageWidth={160}
+				/>
+
+				{/* <ScrollView> */}
+				<FlatList
+					// horizontal
+					removeClippedSubviews={true}
+					data={allFriendsDataArray}
+					// renderItem={rowItem}
+					renderItem={({ item }) => <RowX item={item} />}
+					extraData={allFriendsDataArray}
+					keyExtractor={rowKeyExt}
+					// onEndReached={() => handleLoadMore()}
+					// onEndReachedThreshold={0}
+					// ListFooterComponent={renderFooter}
+					// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+					// scrollEnabled={!loadingMore}
+				/>
+				{/* </ScrollView> */}
+				{/* <View style={{ marginBottom: 90 }} /> */}
+				{/* <View style={{ marginTop: 0 }}> */}
+
+				{/* </View> */}
+				<Snackbar
+					visible={isVisible}
+					textMessage={errorMessage}
+					position={'top'}
+					actionHandler={() => dismissSnackBar()}
+					actionText="OK"
+				/>
 			</View>
-			<View style={{ margin: 7 }} />
-
-			<FlatListStrip
-				data={props.trendingCurrentWeek}
-				title={null}
-				navigation={navigation}
-				horizontalFlag={true}
-				numColumns={1}
-				imageHight={200}
-				imageWidth={160}
-			/>
-
-			{/* <ScrollView> */}
-			<FlatList
-				// horizontal
-				removeClippedSubviews={true}
-				data={allFriendsDataArray}
-				// renderItem={rowItem}
-				renderItem={({ item }) => <RowX item={item} />}
-				extraData={allFriendsDataArray}
-				keyExtractor={rowKeyExt}
-				// onEndReached={() => handleLoadMore()}
-				// onEndReachedThreshold={0}
-				// ListFooterComponent={renderFooter}
-				// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-				// scrollEnabled={!loadingMore}
-			/>
-			{/* </ScrollView> */}
-			{/* <View style={{ marginBottom: 90 }} /> */}
 		</SafeAreaView>
 	);
 };

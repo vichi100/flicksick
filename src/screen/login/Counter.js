@@ -1,11 +1,12 @@
 import React from 'react';
 import { Switch, StyleSheet, View, Button, Text, ScrollView } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 class Counter extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			count: 10
+			count: 120
 		};
 	}
 
@@ -25,6 +26,10 @@ class Counter extends React.Component {
 		}
 	};
 
+	resend = () => {
+		this.props.resendOTP();
+	};
+
 	render() {
 		return this.state.count > 0 ? (
 			<View
@@ -40,16 +45,18 @@ class Counter extends React.Component {
 				<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>s</Text>
 			</View>
 		) : (
-			<View
-				style={{
-					flexDirection: 'row',
-					margin: 20,
-					justifyContent: 'center',
-					alignItem: 'center'
-				}}
-			>
-				<Text style={{ color: '#00BFFF' }}>Resend OTP</Text>
-			</View>
+			<TouchableHighlight onPress={() => this.resend()}>
+				<View
+					style={{
+						flexDirection: 'row',
+						margin: 20,
+						justifyContent: 'center',
+						alignItem: 'center'
+					}}
+				>
+					<Text style={{ color: '#00BFFF' }}>Resend OTP</Text>
+				</View>
+			</TouchableHighlight>
 		);
 	}
 }

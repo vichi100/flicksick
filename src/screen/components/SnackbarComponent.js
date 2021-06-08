@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, Animated, Easing, ViewPropTypes } from 'react-native';
+import { StyleSheet, Text, Animated, Easing, ViewPropTypes, SafeAreaView } from 'react-native';
 import Touchable from './Touchable';
 
 /* Values are from https://material.io/guidelines/motion/duration-easing.html#duration-easing-dynamic-durations */

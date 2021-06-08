@@ -10,6 +10,7 @@ import {
 	FlatList,
 	Image,
 	TouchableOpacity,
+	TouchableHighlight,
 	ActivityIndicator
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -48,6 +49,10 @@ const Home = (props) => {
 	const carouselRef = useRef(null);
 	const [ homeData, setHomeData ] = useState(null);
 	const [ loading, setLoading ] = useState(false);
+	const [ releaseDate, setReleaseDate ] = useState(new Date().getFullYear());
+	const [ yearsArray, setYearsArray ] = useState([]);
+	const [ topMoviesOfTheYear, setTopMoviesOfTheYear ] = useState([]);
+	const [ loadingTop, setLoadingTop ] = useState(false);
 
 	const setSlider1ActiveSlideX = (index) => {
 		setSlider1ActiveSlide(index);
@@ -101,6 +106,72 @@ const Home = (props) => {
 		getHomeScreenData();
 	}, []);
 
+	const generateYearsBetween = (startYear = 2000, endYear) => {
+		const endDate = endYear || new Date().getFullYear();
+		let years = [];
+		// console.log('endDate: ', endDate);
+		while (startYear <= endDate) {
+			years.push(startYear);
+			startYear++;
+		}
+		return years.reverse();
+	};
+
+	useEffect(
+		() => {
+			// console.log('releaseDate: ', releaseDate);
+			setLoadingTop(true);
+			getTopMoviesOfTheYear(releaseDate);
+		},
+		[ releaseDate ]
+	);
+
+	const getTopMoviesOfTheYear = (releaseDate) => {
+		const obj = {
+			releaseDate: releaseDate
+		};
+		axios('http://192.168.0.100:3000/getTopMoviesOfTheYear', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				// console.log(response.data);
+				setTopMoviesOfTheYear(response.data);
+				setLoadingTop(false);
+			},
+			(error) => {
+				console.log(error);
+				setLoading(false);
+			}
+		);
+	};
+
+	const renderReleaseDate = ({ item }) => {
+		// console.log(item);
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: 'center',
+					marginRight: 20,
+					marginLeft: 20
+				}}
+			>
+				<TouchableHighlight onPress={() => setReleaseDate(item)}>
+					{item.toString().toUpperCase() === releaseDate.toString().toUpperCase() ? (
+						<Text style={{ color: '#40E0D0', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					) : (
+						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					)}
+				</TouchableHighlight>
+			</View>
+		);
+	};
+
 	return loading ? (
 		<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0, .9)' }}>
 			<ActivityIndicator animating size="large" color={'#fff'} />
@@ -150,7 +221,6 @@ const Home = (props) => {
 							</View>
 						</View>
 					</View>
-
 					{homeData &&
 						homeData.map((item) => {
 							if (num === 0) {
@@ -169,17 +239,58 @@ const Home = (props) => {
 								/>
 							);
 						})}
-					{/* <FlatListStrip
-					data={props.trendingToday}
-					title={'Trending Today'}
-					navigation={navigation}
-					horizontalFlag={true}
-					numColumns={1}
-					imageHight={200}
-					imageWidth={160}
-				/>
 
-				<FlatListStrip
+					<View>
+						<View style={{ flexDirection: 'row' }}>
+							<Text
+								style={{
+									color: '#FFFAFA',
+									fontSize: 20,
+									fontWeight: '500',
+									marginTop: 10,
+									marginBottom: 10,
+									marginLeft: 15,
+									marginRight: 15,
+									padding: 0,
+									borderColor: '#fff'
+								}}
+							>
+								Top Of the year
+							</Text>
+							<FlatList
+								horizontal
+								data={generateYearsBetween()}
+								renderItem={(item) => renderReleaseDate(item)}
+								keyExtractor={(item, index) => index.toString()}
+							/>
+						</View>
+						{loadingTop ? (
+							<View
+								style={{
+									flex: 1,
+									height: 200,
+									justifyContent: 'center',
+									alignItems: 'center',
+									backgroundColor: 'rgba(0,0,0, .9)'
+								}}
+							>
+								<ActivityIndicator animating size="large" color={'#fff'} />
+								{/* <ActivityIndicator animating size="large" /> */}
+							</View>
+						) : (
+							<FlatListStrip
+								data={topMoviesOfTheYear}
+								title={''}
+								navigation={navigation}
+								horizontalFlag={true}
+								numColumns={1}
+								imageHight={200}
+								imageWidth={160}
+							/>
+						)}
+					</View>
+
+					{/* <FlatListStrip
 					data={props.trendingCurrentWeek}
 					title={'Most Watched This Week'}
 					navigation={navigation}
@@ -188,7 +299,6 @@ const Home = (props) => {
 					imageHight={200}
 					imageWidth={160}
 				/> */}
-
 					<View style={{ marginBottom: 10 }} />
 				</ScrollView>
 			) : (

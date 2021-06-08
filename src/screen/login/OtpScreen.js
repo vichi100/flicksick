@@ -28,16 +28,21 @@ const OtpScreen = (props) => {
 
 	useEffect(() => {
 		setLoading(true);
-		generateOTP();
+		const otpX = Math.floor(Math.random() * 900000) + 100000;
+		const mobileX = props.countryCode + props.userMobile;
+		generateOTP(otpX, mobileX);
 	}, []);
 
-	const generateOTP = () => {
-		const num = Math.floor(Math.random() * 900000) + 100000;
+	const resendOTP = () => {
 		const mobileX = props.countryCode + props.userMobile;
-		setOTP(num);
+		generateOTP(otp, mobileX);
+	};
+
+	const generateOTP = (otpX, mobileX) => {
+		setOTP(otpX);
 		const obj = {
 			mobile: mobileX,
-			otp: num
+			otp: otpX
 		};
 		axios
 			.post(
@@ -176,7 +181,7 @@ const OtpScreen = (props) => {
 
 				<View style={{ margin: 20 }}>
 					{/* <Text>Resend OTP in </Text> */}
-					<Counter />
+					<Counter resendOTP={resendOTP} />
 					{/* <Text>s</Text> */}
 					{/* <Button title="NEXT" onPress={() => onSubmit()} /> */}
 				</View>

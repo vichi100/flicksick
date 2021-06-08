@@ -30,6 +30,8 @@ import { setFSIdToGetDetails } from '../reducers/Action';
 import { WebView } from 'react-native-webview';
 import { useScrollToTop } from '@react-navigation/native';
 import FlatListStrip from './FlatListStrip';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import * as Linking from 'expo-linking';
 // https://entertainmenthub.netlify.app/
 
 // https://api.themoviedb.org/3/trending/all/day?api_key=26ba5e77849587dbd7df199727859189&page=1
@@ -58,6 +60,16 @@ const useHookWithRefCallback = () => {
 	return [ setRef ];
 };
 
+const OTTProviderDict = {
+	netflix: require('../../assets/img/netflix.jpeg'),
+	prime: require('../../assets/img/prime.jpeg'),
+	erosnow: require('../../assets/img/erosnow.jpeg'),
+	hotstar: require('../../assets/img/hotstar.jpeg'),
+	jiocinema: require('../../assets/img/jiocinema.jpeg'),
+	sonyliv: require('../../assets/img/sonyliv.jpeg'),
+	zee5: require('../../assets/img/zee5.jpeg')
+};
+
 const MovieDetails = (props) => {
 	const { navigation } = props;
 	const scrollViewRef = useRef();
@@ -69,15 +81,8 @@ const MovieDetails = (props) => {
 	const [ trailerURI, setTrailerURI ] = useState(null);
 	const carouselRef = useRef(null);
 	const [ visible, setVisible ] = useState(false);
-	const [ OTTProvidesList, setOTTProvidesList ] = useState([
-		require('../../assets/img/netflix.jpeg'),
-		require('../../assets/img/prime.jpeg'),
-		require('../../assets/img/erosnow.jpeg'),
-		require('../../assets/img/hotstar.jpeg'),
-		require('../../assets/img/jiocinema.jpeg'),
-		require('../../assets/img/sonyliv.jpeg'),
-		require('../../assets/img/zee5.jpeg')
-	]);
+	// const [ OTTProvideLink, setOTTProvideLink ] = useState(null);
+	const [ OTTProvidesList, setOTTProvidesList ] = useState([]);
 
 	// const video = React.useRef(null);
 	const [ status, setStatus ] = React.useState({});
@@ -132,17 +137,40 @@ const MovieDetails = (props) => {
 		}).then(
 			(response) => {
 				// console.log(response.data);
-				setMovieDetails(response.data);
+				const movieDetails = response.data;
+				setMovieDetails(movieDetails);
 				if (response.data) {
-					{
-						console.log(response.data.genres.length);
-						const genresX = [];
-						response.data.genres.map((item) => {
-							// console.log(item.name);
-							genresX.push(item.name);
+					console.log(response.data.genres.length);
+					const genresX = [];
+					response.data.genres.map((item) => {
+						// console.log(item.name);
+						genresX.push(item.name);
+					});
+					setGenres(genresX);
+
+					// streaming info
+					const OTTArrayObj = [];
+					const ott = movieDetails.streaming_info;
+					console.log(JSON.stringify(ott));
+					var ottURL = null;
+					ott.map((item) => {
+						console.log('item: ', item);
+						Object.keys(item).map((key) => {
+							console.log('key: ', key);
+							const ottCountry = item[key];
+							console.log(JSON.stringify(ottCountry));
+							ottURL = ottCountry['in'].link;
+							const OTTObj = {
+								provider: key,
+								url: ottURL,
+								image: OTTProviderDict[key]
+							};
+							OTTArrayObj.push(OTTObj);
+							console.log(JSON.stringify(ottURL));
 						});
-						setGenres(genresX);
-					}
+					});
+
+					setOTTProvidesList(OTTArrayObj);
 				}
 			},
 			(error) => {
@@ -252,24 +280,30 @@ const MovieDetails = (props) => {
 		setTrailerURI('https://www.youtube.com/embed/' + trailerLink);
 		setIsVisible(true);
 	};
+	const openOTT = (ottURL) => {
+		Linking.openURL(ottURL);
+	};
 
 	const renderOTTProvider = ({ item }) => {
 		// console.log(item);
 		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					marginRight: 20,
-					borderWidth: 0.5,
-					borderColor: '#fff',
-					padding: 10,
-					borderRadius: 10
-				}}
-			>
-				{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
-				<Image source={item} style={{ width: 40, height: 40 }} />
-			</View>
+			// movieDetails
+			<TouchableHighlight onPress={() => openOTT(item.url)}>
+				<View
+					style={{
+						flex: 1,
+						justifyContent: 'center',
+						marginRight: 20,
+						borderWidth: 0.4,
+						borderColor: '#fff',
+						padding: 10,
+						borderRadius: 10
+					}}
+				>
+					{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
+					<Image source={item.image} style={{ width: 40, height: 40 }} />
+				</View>
+			</TouchableHighlight>
 		);
 	};
 
@@ -344,9 +378,12 @@ const MovieDetails = (props) => {
 							<Text style={{ fontSize: 18, fontWeight: '600', color: '#fff', width: '80%' }}>
 								{movieDetails.title || movieDetails.original_title}
 							</Text>
-							<Text style={{ fontSize: 18, fontWeight: '600', color: '#FFA500' }}>
-								{movieDetails.adult ? 'A' : 'UA'}
-							</Text>
+							<View style={{ flexDirection: 'row' }}>
+								<Text style={{ fontSize: 18, fontWeight: '600', color: '#FFA500' }}>
+									{movieDetails.age ? movieDetails.age : 'NA'}
+								</Text>
+								<Text style={{ color: '#A9A9A9', paddingTop: 5 }}>Age</Text>
+							</View>
 						</View>
 
 						<View
@@ -366,7 +403,7 @@ const MovieDetails = (props) => {
 									width: '80%'
 								}}
 							>
-								{genres.join(' ,')}
+								{genres.join(', ')}
 							</Text>
 							<Text
 								style={{
@@ -376,7 +413,7 @@ const MovieDetails = (props) => {
 									paddingTop: 5
 								}}
 							>
-								{movieDetails.runtime + ' min'}
+								{movieDetails.media_type === 'movie' ? movieDetails.runtime + ' min' : null}
 							</Text>
 						</View>
 
@@ -448,8 +485,8 @@ const MovieDetails = (props) => {
 										<Text
 											style={{
 												color: '#fff',
-												fontSize: 14,
-												fontWeight: '500',
+												fontSize: 20,
+												fontWeight: '600',
 												textAlign: 'center'
 											}}
 										>
@@ -476,8 +513,8 @@ const MovieDetails = (props) => {
 										<Text
 											style={{
 												color: '#fff',
-												fontSize: 14,
-												fontWeight: '500',
+												fontSize: 20,
+												fontWeight: '600',
 												textAlign: 'center'
 											}}
 										>
@@ -505,8 +542,8 @@ const MovieDetails = (props) => {
 										<Text
 											style={{
 												color: '#fff',
-												fontSize: 14,
-												fontWeight: '500',
+												fontSize: 20,
+												fontWeight: '600',
 												textAlign: 'center'
 											}}
 										>
@@ -667,7 +704,7 @@ const MovieDetails = (props) => {
 								<Text style={{ color: '#fff', textAlign: 'center', fontSize: 16, fontWeight: '500' }}>
 									Watch On
 								</Text>
-								<View style={{ marginLeft: 10, marginRight: 10 }}>
+								<View style={{ marginLeft: 20, marginRight: 10 }}>
 									<FlatList
 										horizontal
 										data={OTTProvidesList}

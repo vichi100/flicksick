@@ -43,8 +43,12 @@ const Search = (props) => {
 	const [ fsId, setFSId ] = useState(null);
 	const [ movieTitle, setMovieTitle ] = useState(null);
 	const [ modalVisible, setModalVisible ] = useState(false);
-	const [ category, setCategory ] = useState('all');
+	const [ genres, setGenres ] = useState('all');
+	const [ releaseDate, setReleaseDate ] = useState('all');
 	const [ loading, setLoading ] = useState(false);
+	const [ releaseDateArray, setReleaseDateArray ] = useState([]);
+	const [ genresObj, setGenresObj ] = useState([]);
+	const [ genresArray, setGenresArray ] = useState([]);
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
@@ -103,8 +107,29 @@ const Search = (props) => {
 					marginRight: 20
 				}}
 			>
-				<TouchableHighlight onPress={() => setCategory(item)}>
-					{item.toString().toUpperCase() === category.toUpperCase() ? (
+				<TouchableHighlight onPress={() => setGenres(item)}>
+					{item.toString().toUpperCase() === genres.toUpperCase() ? (
+						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					) : (
+						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					)}
+				</TouchableHighlight>
+			</View>
+		);
+	};
+
+	const renderReleaseDate = ({ item }) => {
+		// console.log(item);
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: 'center',
+					marginRight: 20
+				}}
+			>
+				<TouchableHighlight onPress={() => setReleaseDate(item)}>
+					{item.toString().toUpperCase() === releaseDate.toString().toUpperCase() ? (
 						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
 					) : (
 						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
@@ -237,23 +262,34 @@ const Search = (props) => {
 	useEffect(
 		() => {
 			setLoading(true);
-			if (category !== 'all') {
-				console.log(category);
-				setShowMovieDataArray([]);
-				setMovieDataArray([]);
+			if (
+				genres.toUpperCase() !== 'all'.toUpperCase() ||
+				releaseDate.toString().toUpperCase() !== 'all'.toUpperCase()
+			) {
+				console.log('change');
+				console.log(genres);
+				setStartId(0);
+				// setEndId(0);
+				showMovieDataArray.splice(0, showMovieDataArray.length);
+				movieDataArray.splice(0, movieDataArray.length);
+				// movieDataArray = [];
+				// setShowMovieDataArray([]);
+				// setMovieDataArray([]);
 			}
 			if (search.length === 0) {
-				fetchOnScrollDownMovies();
+				fetchOnScrollDownMovies(0);
 			}
 		},
-		[ category ]
+		[ genres, releaseDate ]
 	);
 
-	const fetchOnScrollDownMovies = () => {
+	const fetchOnScrollDownMovies = (startIdX) => {
 		setLoadingMore(true);
+		console.log('startId: ', startIdX);
 		const obj = {
-			id: startId,
-			category: category
+			id: startIdX,
+			genres: genres,
+			releaseDate: releaseDate
 		};
 		axios('http://192.168.0.100:3000/fetchOnScrollDownMovies', {
 			method: 'post',
@@ -271,7 +307,7 @@ const Search = (props) => {
 					setMovieDataArray(tempData);
 					setShowMovieDataArray(tempData);
 					setStartId(tempData[tempData.length - 1]._id); // start for next scroll down
-					setEndId(tempData[0]._id); // start for next pull down
+					// setEndId(tempData[0]._id); // start for next pull down
 				}
 				setLoadingMore(false);
 				setRefreshing(false);
@@ -326,7 +362,7 @@ const Search = (props) => {
 
 		if (!onEndReachedCalledDuringMomentum && !loadingMore) {
 			setLoadingMore(true);
-			fetchOnScrollDownMovies();
+			fetchOnScrollDownMovies(startId);
 			setOnEndReachedCalledDuringMomentum(true);
 		}
 	};
@@ -360,6 +396,41 @@ const Search = (props) => {
 		fetchOnScrollUpMovies();
 	};
 
+	useEffect(() => {
+		getUtilData();
+	}, []);
+
+	const getUtilData = () => {
+		const obj = {
+			id: '123'
+		};
+		axios('http://192.168.0.100:3000/getUtilData', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		})
+			.then((response) => {
+				const result = response.data;
+				// console.log(result[0].years);
+				setGenresObj(result[0].genres);
+				setReleaseDateArray([ 'All', ...result[0].years ]);
+				const temp = Object.values(result[0].genres).sort();
+
+				const arr = temp.filter(function(item) {
+					return item.toUpperCase() !== 'Adult'.toUpperCase();
+				});
+				const xx = [ 'All', ...arr ];
+				setGenresArray(xx);
+				// console.log(Object.values(result[0].genres));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
 			<View style={{ marginBottom: 5 }}>
@@ -387,11 +458,18 @@ const Search = (props) => {
 					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
 				</View>
 			</View>
-			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom: 15, marginTop: 2 }}>
+			<View style={{ marginLeft: 15, marginRight: 15, marginBottom: 15, marginTop: 2 }}>
 				<FlatList
 					horizontal
-					data={categoryData}
+					data={genresArray}
 					renderItem={(item) => renderCategoryItem(item)}
+					keyExtractor={(item, index) => index.toString()}
+				/>
+				<View style={{ marginTop: 15 }} />
+				<FlatList
+					horizontal
+					data={releaseDateArray}
+					renderItem={(item) => renderReleaseDate(item)}
 					keyExtractor={(item, index) => index.toString()}
 				/>
 			</View>
@@ -409,35 +487,38 @@ const Search = (props) => {
 					{/* <ActivityIndicator animating size="large" /> */}
 				</View>
 			) : showMovieDataArray && showMovieDataArray.length > 0 ? (
-				<FlatList
-					removeClippedSubviews={true}
-					data={showMovieDataArray}
-					// renderItem={(item) => renderMovieItem(item)}
-					renderItem={(item) => renderMovieItem(item)}
-					keyExtractor={(item, index) => index.toString()}
-					onEndReached={() => handleLoadMore()}
-					onEndReachedThreshold={0}
-					initialNumToRender={10}
-					ListFooterComponent={renderFooter}
-					numColumns={2}
-					onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-					scrollEnabled={!loadingMore}
-					// refreshControl={
-					// 	<RefreshControl
-					// 		refreshing={refreshing}
-					// 		onRefresh={handleRefresh}
-					// 		tintColor={'#fff'}
-					// 		// colors={[ 'gray', 'orange' ]}
-					// 	/>
-					// }
-					// onRefresh={() => handleRefresh()}
-					// refreshing={refreshing}
-					// enabled={true}
-				/>
+				<View style={{ flex: 1 }}>
+					<FlatList
+						removeClippedSubviews={true}
+						data={showMovieDataArray}
+						// renderItem={(item) => renderMovieItem(item)}
+						renderItem={(item) => renderMovieItem(item)}
+						keyExtractor={(item, index) => index.toString()}
+						onEndReached={() => handleLoadMore()}
+						onEndReachedThreshold={0.5}
+						initialNumToRender={10}
+						ListFooterComponent={renderFooter}
+						numColumns={2}
+						onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+						// scrollEnabled={!loadingMore}
+						extraData={showMovieDataArray}
+						// refreshControl={
+						// 	<RefreshControl
+						// 		refreshing={refreshing}
+						// 		onRefresh={handleRefresh}
+						// 		tintColor={'#fff'}
+						// 		// colors={[ 'gray', 'orange' ]}
+						// 	/>
+						// }
+						// onRefresh={() => handleRefresh()}
+						// refreshing={refreshing}
+						// enabled={true}
+					/>
+				</View>
 			) : (
 				<View style={{ justifyContent: 'center', flex: 1 }}>
 					<Text style={{ color: '#DCDCDC', textAlign: 'center', fontSize: 16 }}>
-						Sorry !!! no movie for <Text style={{ color: '#F4A460' }}>{category}</Text> category
+						Sorry !!! no movie for <Text style={{ color: '#F4A460' }}>{genres}</Text> category
 					</Text>
 				</View>
 			)}
