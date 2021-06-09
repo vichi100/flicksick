@@ -27,6 +27,7 @@ import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/
 import Row from './Row';
 import SeenModal from './SeenModal';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { SERVER_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -69,7 +70,7 @@ const Search = (props) => {
 		const obj = {
 			title: titleX
 		};
-		axios('http://192.168.0.100:3000/searchMovieByTitle', {
+		axios(SERVER_URL + '/searchMovieByTitle', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -291,7 +292,7 @@ const Search = (props) => {
 			genres: genres,
 			releaseDate: releaseDate
 		};
-		axios('http://192.168.0.100:3000/fetchOnScrollDownMovies', {
+		axios(SERVER_URL + '/fetchOnScrollDownMovies', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -326,7 +327,7 @@ const Search = (props) => {
 		const obj = {
 			id: endId
 		};
-		axios('http://192.168.0.100:3000/fetchOnScrollUpMovies', {
+		axios(SERVER_URL + '/fetchOnScrollUpMovies', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -404,7 +405,7 @@ const Search = (props) => {
 		const obj = {
 			id: '123'
 		};
-		axios('http://192.168.0.100:3000/getUtilData', {
+		axios(SERVER_URL + '/getUtilData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -414,7 +415,7 @@ const Search = (props) => {
 		})
 			.then((response) => {
 				const result = response.data;
-				// console.log(result[0].years);
+				// console.log('years: ', result[0].years);
 				setGenresObj(result[0].genres);
 				setReleaseDateArray([ 'All', ...result[0].years ]);
 				const temp = Object.values(result[0].genres).sort();

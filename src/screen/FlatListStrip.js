@@ -26,6 +26,7 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import SearchDisplay from './SearchDisplay';
+import { SERVER_URL } from './utils/constants';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
 const FlatListStrip = (props) => {
@@ -68,6 +69,7 @@ const FlatListStrip = (props) => {
 		if (!props.userDetails) {
 			navigation.navigate('Login');
 			setModalVisible(false);
+			setDisplayError(false);
 			return;
 		}
 
@@ -77,7 +79,7 @@ const FlatListStrip = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios('http://192.168.0.100:3000/addRatingAndSeenFlag', {
+		axios(SERVER_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -223,11 +225,11 @@ const FlatListStrip = (props) => {
 
 	return (
 		<View>
-			<View>
+			<View style={{ marginTop: 15 }}>
 				{title ? (
 					<Text
 						style={{
-							color: '#FFFAFA',
+							color: '#DCDCDC',
 							fontSize: 20,
 							fontWeight: '500',
 							marginTop: 10,
@@ -306,17 +308,17 @@ const FlatListStrip = (props) => {
 								marginBottom: 10,
 								textAlign: 'center',
 								color: 'rgba(255,255,255,.9)',
-								fontSize: 15,
+								fontSize: 16,
 								fontWeight: '600'
 							}}
 						>
-							What you feel about movie / series ?
+							What you feel about ?
 						</Text>
 						<Text
 							style={{
 								marginBottom: 15,
 								textAlign: 'center',
-								color: 'rgba(255,255,255,.9)',
+								color: 'rgba(218,165,32,.9)',
 								fontSize: 16,
 								fontWeight: '600'
 							}}
@@ -361,6 +363,7 @@ const FlatListStrip = (props) => {
 								// stylesX={{ ...stylesX.cancelButton }}
 								onPress={() => {
 									setModalVisible(!modalVisible);
+									setDisplayError(false);
 									setRatingIndex(-1);
 								}}
 							>

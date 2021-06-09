@@ -32,6 +32,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import FlatListStrip from './FlatListStrip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
+import { SERVER_URL } from './utils/constants';
 // https://entertainmenthub.netlify.app/
 
 // https://api.themoviedb.org/3/trending/all/day?api_key=26ba5e77849587dbd7df199727859189&page=1
@@ -127,7 +128,7 @@ const MovieDetails = (props) => {
 		const obj = {
 			id: props.fsIdToGetDetails
 		};
-		axios('http://192.168.0.100:3000/getMovieDetailData', {
+		axios(SERVER_URL + '/getMovieDetailData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

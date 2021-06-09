@@ -30,6 +30,7 @@ import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import FriendsDisplay from './FriendsDisplay';
 import Snackbar from '../screen/components/SnackbarComponent';
+import { SERVER_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -275,7 +276,7 @@ const Friends = (props) => {
 			id: props.userDetails.mobile,
 			contact_dict: contactObjDict
 		};
-		axios('http://192.168.0.100:3000/saveNewContact', {
+		axios(SERVER_URL + '/saveNewContact', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -300,7 +301,7 @@ const Friends = (props) => {
 		const obj = {
 			id: props.userDetails.mobile
 		};
-		axios('http://192.168.0.100:3000/getFriendsData', {
+		axios(SERVER_URL + '/getFriendsData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

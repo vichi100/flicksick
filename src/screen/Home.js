@@ -31,6 +31,7 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
+import { SERVER_URL } from './utils/constants';
 // import {setDataFor} from "../reducers/Action"
 
 // https://entertainmenthub.netlify.app/
@@ -77,7 +78,7 @@ const Home = (props) => {
 		const obj = {
 			id: '123'
 		};
-		axios('http://192.168.0.100:3000/getHomeScreenData', {
+		axios(SERVER_URL + '/getHomeScreenData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -130,7 +131,7 @@ const Home = (props) => {
 		const obj = {
 			releaseDate: releaseDate
 		};
-		axios('http://192.168.0.100:3000/getTopMoviesOfTheYear', {
+		axios(SERVER_URL + '/getTopMoviesOfTheYear', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -156,6 +157,7 @@ const Home = (props) => {
 			<View
 				style={{
 					flex: 1,
+					marginTop: 10,
 					justifyContent: 'center',
 					marginRight: 20,
 					marginLeft: 20
@@ -184,11 +186,11 @@ const Home = (props) => {
 					<View>
 						<Text
 							style={{
-								color: 'rgba(255, 255, 255, 1)',
-								marginTop: 10,
+								color: '#DCDCDC',
+								marginTop: 15,
 								marginBottom: 10,
 								textAlign: 'center',
-								fontSize: 16,
+								fontSize: 20,
 								fontWeight: '600'
 							}}
 						>
@@ -241,14 +243,14 @@ const Home = (props) => {
 						})}
 
 					<View>
-						<View style={{ flexDirection: 'row' }}>
+						<View style={{ flexDirection: 'row', marginTop: 15 }}>
 							<Text
 								style={{
-									color: '#FFFAFA',
+									color: '#DCDCDC',
 									fontSize: 20,
 									fontWeight: '500',
 									marginTop: 10,
-									marginBottom: 10,
+									// marginBottom: 10,
 									marginLeft: 15,
 									marginRight: 15,
 									padding: 0,

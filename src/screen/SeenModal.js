@@ -25,6 +25,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
+import { SERVER_URL } from './utils/constants';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
 const SeenModal = (props) => {
@@ -48,6 +49,7 @@ const SeenModal = (props) => {
 		if (!userId && mobile) {
 			navigation.navigate('Login');
 			props.setModalVisible(false);
+			setDisplayError(false);
 			return;
 		}
 
@@ -57,7 +59,7 @@ const SeenModal = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios('http://192.168.0.100:3000/addRatingAndSeenFlag', {
+		axios(SERVER_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -121,17 +123,17 @@ const SeenModal = (props) => {
 							marginBottom: 10,
 							textAlign: 'center',
 							color: 'rgba(255,255,255,.9)',
-							fontSize: 15,
+							fontSize: 16,
 							fontWeight: '600'
 						}}
 					>
-						What you feel about movie / series ?
+						What you feel about ?
 					</Text>
 					<Text
 						style={{
 							marginBottom: 15,
 							textAlign: 'center',
-							color: 'rgba(255,255,255,.9)',
+							color: 'rgba(218,165,32,.9)',
 							fontSize: 16,
 							fontWeight: '600'
 						}}
@@ -176,6 +178,7 @@ const SeenModal = (props) => {
 							// stylesX={{ ...stylesX.cancelButton }}
 							onPress={() => {
 								props.setModalVisible(!modalVisible);
+								setDisplayError(false);
 								setRatingIndex(-1);
 							}}
 						>

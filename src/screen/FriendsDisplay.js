@@ -32,6 +32,7 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setUserContactDict } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
+import { SERVER_URL } from './utils/constants';
 
 export default class FriendsDisplay extends PureComponent {
 	constructor(props) {

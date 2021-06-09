@@ -21,6 +21,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import axios from 'axios';
+import { SERVER_URL } from './utils/constants';
 
 // import Share from "react-native-share";
 

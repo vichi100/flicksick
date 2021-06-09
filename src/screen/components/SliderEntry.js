@@ -11,6 +11,7 @@ import { setFSIdToGetDetails } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
+import { SERVER_URL } from '../utils/constants';
 
 // https://snack.expo.io/@vichi/45c79d   image overlay text
 
@@ -218,8 +219,10 @@ const SliderEntry = (props) => {
 		}
 		if (!props.userDetails) {
 			// navigation.navigate('Login');
-			props.navigateTo('Login');
+
 			setModalVisible(false);
+			setDisplayError(false);
+			props.navigateTo('Login');
 			return;
 		}
 
@@ -229,7 +232,7 @@ const SliderEntry = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios('http://192.168.0.100:3000/addRatingAndSeenFlag', {
+		axios(SERVER_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -301,17 +304,17 @@ const SliderEntry = (props) => {
 								marginBottom: 10,
 								textAlign: 'center',
 								color: 'rgba(255,255,255,.9)',
-								fontSize: 15,
+								fontSize: 18,
 								fontWeight: '600'
 							}}
 						>
-							What you feel about movie / series ?
+							What you feel about ?
 						</Text>
 						<Text
 							style={{
 								marginBottom: 15,
 								textAlign: 'center',
-								color: 'rgba(255,255,255,.9)',
+								color: 'rgba(218,165,32,.9)',
 								fontSize: 16,
 								fontWeight: '600'
 							}}
@@ -356,6 +359,7 @@ const SliderEntry = (props) => {
 								// stylesX={{ ...stylesX.cancelButton }}
 								onPress={() => {
 									setModalVisible(!modalVisible);
+									setDisplayError(false);
 									setRatingIndex(-1);
 								}}
 							>

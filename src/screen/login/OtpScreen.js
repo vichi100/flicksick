@@ -19,6 +19,7 @@ import axios from 'axios';
 import { setUserDetails } from '../../reducers/Action';
 import OTPTextView from './OTPTextView';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { SERVER_URL } from '../utils/constants';
 
 const OtpScreen = (props) => {
 	const { navigation } = props;
@@ -46,7 +47,7 @@ const OtpScreen = (props) => {
 		};
 		axios
 			.post(
-				'http://192.168.0.100:3000/generateOTP',
+				SERVER_URL + '/generateOTP',
 				// SERVER_URL + "/addNewResidentialRentProperty",
 				// await AsyncStorage.getItem("property")
 				// JSON.stringify({ vichi: "vchi" })
@@ -78,7 +79,7 @@ const OtpScreen = (props) => {
 		};
 		axios
 			.post(
-				'http://192.168.0.100:3000/getUserDetails',
+				SERVER_URL + '/getUserDetails',
 				// SERVER_URL + "/addNewResidentialRentProperty",
 				// await AsyncStorage.getItem("property")
 				// JSON.stringify({ vichi: "vchi" })
