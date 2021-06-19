@@ -11,7 +11,8 @@ import {
 	Image,
 	TouchableOpacity,
 	TouchableHighlight,
-	ActivityIndicator
+	ActivityIndicator,
+	Dimensions
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -24,8 +25,6 @@ import Carousel, { Pagination } from './react-native-snap-carousel/index';
 import { sliderWidth, itemWidth } from './styles/SliderEntry.style';
 import SliderEntry from './components/SliderEntry';
 import styles, { colors } from './styles/index.style';
-import { ENTRIES1, ENTRIES2 } from './static/entries';
-import { scrollInterpolators, animatedStyles } from './utils/animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
@@ -54,6 +53,14 @@ const Home = (props) => {
 	const [ yearsArray, setYearsArray ] = useState([]);
 	const [ topMoviesOfTheYear, setTopMoviesOfTheYear ] = useState([]);
 	const [ loadingTop, setLoadingTop ] = useState(false);
+	const [ category, setCategory ] = useState('RomCom');
+	const [ movieByCategory, setMovieByCategory ] = useState([]);
+	const [ loadingCategoryMovies, setLoadingCategoryMovies ] = useState(false);
+	const [ categoryMappingData, setCategoryMappingData ] = useState([]);
+	const [ categoryNamesArray, setCategoryNamesArray ] = useState([]);
+
+	const flatListRef = useRef(null);
+	const movieCategoryRef = useRef(null);
 
 	const setSlider1ActiveSlideX = (index) => {
 		setSlider1ActiveSlide(index);
@@ -96,7 +103,7 @@ const Home = (props) => {
 				// props.setDataFor(response.data['trending_current_week']);
 			},
 			(error) => {
-				console.log(error);
+				console.log('getHomeScreenData: ', error);
 				setLoading(false);
 			}
 		);
@@ -105,9 +112,10 @@ const Home = (props) => {
 	useEffect(() => {
 		setLoading(true);
 		getHomeScreenData();
+		generateYearsBetween();
 	}, []);
 
-	const generateYearsBetween = (startYear = 2000, endYear) => {
+	const generateYearsBetween = (startYear = 1990, endYear) => {
 		const endDate = endYear || new Date().getFullYear();
 		let years = [];
 		// console.log('endDate: ', endDate);
@@ -115,7 +123,9 @@ const Home = (props) => {
 			years.push(startYear);
 			startYear++;
 		}
-		return years.reverse();
+		const x = years.reverse();
+		setYearsArray(x);
+		return x;
 	};
 
 	useEffect(
@@ -145,10 +155,22 @@ const Home = (props) => {
 				setLoadingTop(false);
 			},
 			(error) => {
-				console.log(error);
+				console.log('getTopMoviesOfTheYear: ', error);
 				setLoading(false);
 			}
 		);
+	};
+
+	const scrollToIndex = (item) => {
+		setReleaseDate(item);
+		flatListRef.current.scrollToIndex({
+			index:
+				yearsArray.indexOf(item) < yearsArray.length - 1
+					? yearsArray.indexOf(item) + 1
+					: yearsArray.indexOf(item),
+			animated: true,
+			viewPosition: 0.5
+		});
 	};
 
 	const renderReleaseDate = ({ item }) => {
@@ -163,7 +185,7 @@ const Home = (props) => {
 					marginLeft: 20
 				}}
 			>
-				<TouchableHighlight onPress={() => setReleaseDate(item)}>
+				<TouchableHighlight onPress={() => scrollToIndex(item)}>
 					{item.toString().toUpperCase() === releaseDate.toString().toUpperCase() ? (
 						<Text style={{ color: '#40E0D0', fontSize: 16, fontWeight: '500' }}>{item}</Text>
 					) : (
@@ -171,6 +193,122 @@ const Home = (props) => {
 					)}
 				</TouchableHighlight>
 			</View>
+		);
+	};
+
+	useEffect(() => {
+		console.log('getCategoryMappingData: ');
+		getCategoryMappingData();
+	}, []);
+
+	const getCategoryMappingData = () => {
+		const obj = {
+			category: '-1'
+		};
+		axios(SERVER_URL + '/getUtilData', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				console.log(response.data[0].category);
+				const categoryDictArray = response.data[0].category;
+				setCategoryMappingData(categoryDictArray);
+				const categoryArray = [];
+				categoryDictArray.map((item) => {
+					const name = item.category;
+					categoryArray.push(name);
+				});
+				console.log(categoryArray);
+				setCategoryNamesArray(categoryArray);
+			},
+			(error) => {
+				console.log('getCategoryMappingData: ', error);
+				setLoading(false);
+			}
+		);
+	};
+
+	const scrollToIndexForMovieCategory = (item) => {
+		setCategory(item);
+		movieCategoryRef.current.scrollToIndex({
+			index:
+				categoryNamesArray.indexOf(item) < categoryNamesArray.length - 1
+					? categoryNamesArray.indexOf(item) + 1
+					: categoryNamesArray.indexOf(item),
+			animated: true,
+			viewPosition: 0.01
+		});
+	};
+	const renderMovieCategory = ({ item }) => {
+		// console.log(item);
+		return (
+			<View
+				style={{
+					flex: 1,
+					marginTop: 15,
+					justifyContent: 'center',
+					marginRight: 20,
+					marginLeft: 20,
+					marginBottom: 3
+				}}
+			>
+				<TouchableHighlight onPress={() => scrollToIndexForMovieCategory(item)}>
+					{item.toString().toUpperCase() === category.toString().toUpperCase() ? (
+						<Text style={{ color: '#40E0D0', fontSize: 18, fontWeight: '500' }}>{item}</Text>
+					) : (
+						<Text style={{ color: '#808080', fontSize: 16, fontWeight: '500' }}>{item}</Text>
+					)}
+				</TouchableHighlight>
+			</View>
+		);
+	};
+
+	useEffect(
+		() => {
+			console.log('category: ', categoryMappingData.length);
+			if (category && categoryMappingData.length > 0) {
+				setLoadingCategoryMovies(true);
+				const categoryX = category;
+				getMovieByCategory(categoryX);
+			}
+		},
+		[ category, categoryMappingData ]
+	);
+
+	const getMovieByCategory = (categoryX) => {
+		console.log('getMovieByCategory: ', categoryX);
+		var document = null;
+		categoryMappingData.map((item) => {
+			if (item.category === categoryX) {
+				document = item.document;
+			}
+		});
+		console.log('document: ', document);
+		const obj = {
+			category: categoryX,
+			document: document
+		};
+		axios(SERVER_URL + '/getMovieByCategory', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				// console.log(response.data);
+				setMovieByCategory(response.data);
+				setLoadingCategoryMovies(false);
+			},
+			(error) => {
+				console.log('getMovieByCategory: ', error);
+				setLoading(false);
+			}
 		);
 	};
 
@@ -244,6 +382,51 @@ const Home = (props) => {
 
 					<View>
 						<View style={{ flexDirection: 'row', marginTop: 15 }}>
+							<FlatList
+								ref={movieCategoryRef}
+								horizontal
+								data={categoryNamesArray}
+								renderItem={(item) => renderMovieCategory(item)}
+								keyExtractor={(item, index) => index.toString()}
+								snapToAlignment={'center'}
+								getItemLayout={(data, index) =>
+									// Max 5 items visibles at once
+									({
+										length: Dimensions.get('window').width / 5,
+										offset: Dimensions.get('window').width / 5 * index,
+										index
+									})}
+								snapToInterval={Dimensions.get('window').width / 5}
+							/>
+						</View>
+						{loadingCategoryMovies ? (
+							<View
+								style={{
+									flex: 1,
+									height: 200,
+									justifyContent: 'center',
+									alignItems: 'center',
+									backgroundColor: 'rgba(0,0,0, .9)'
+								}}
+							>
+								<ActivityIndicator animating size="large" color={'#fff'} />
+								{/* <ActivityIndicator animating size="large" /> */}
+							</View>
+						) : (
+							<FlatListStrip
+								data={movieByCategory}
+								title={''}
+								navigation={navigation}
+								horizontalFlag={true}
+								numColumns={1}
+								imageHight={200}
+								imageWidth={160}
+							/>
+						)}
+					</View>
+
+					<View>
+						<View style={{ flexDirection: 'row', marginTop: 15 }}>
 							<Text
 								style={{
 									color: '#DCDCDC',
@@ -260,8 +443,19 @@ const Home = (props) => {
 								Top Of the year
 							</Text>
 							<FlatList
+								ref={flatListRef}
 								horizontal
-								data={generateYearsBetween()}
+								data={yearsArray}
+								snapToAlignment={'center'}
+								getItemLayout={(data, index) =>
+									// Max 5 items visibles at once
+									({
+										length: Dimensions.get('window').width / 5,
+										offset: Dimensions.get('window').width / 5 * index,
+										index
+									})}
+								snapToInterval={Dimensions.get('window').width / 5}
+								// pagingEnabled={true}
 								renderItem={(item) => renderReleaseDate(item)}
 								keyExtractor={(item, index) => index.toString()}
 							/>
@@ -292,15 +486,6 @@ const Home = (props) => {
 						)}
 					</View>
 
-					{/* <FlatListStrip
-					data={props.trendingCurrentWeek}
-					title={'Most Watched This Week'}
-					navigation={navigation}
-					horizontalFlag={true}
-					numColumns={1}
-					imageHight={200}
-					imageWidth={160}
-				/> */}
 					<View style={{ marginBottom: 10 }} />
 				</ScrollView>
 			) : (
