@@ -85,6 +85,7 @@ const MovieDetails = (props) => {
 	// const [ OTTProvideLink, setOTTProvideLink ] = useState(null);
 	const [ OTTProvidesList, setOTTProvidesList ] = useState([]);
 	const [ ratingDict, setRatingDict ] = useState(null);
+	const [ fsMovieRating, setFsMovieRating ] = useState(null);
 
 	// const video = React.useRef(null);
 	const [ status, setStatus ] = React.useState({});
@@ -113,6 +114,110 @@ const MovieDetails = (props) => {
 
 	useEffect(
 		() => {
+			if (props.movieDetails) {
+				getFSMovieRating(props.movieDetails.fs_id);
+			}
+		},
+		[ props.movieDetails ]
+	);
+
+	const getFSMovieRating = (fsId) => {
+		const obj = {
+			fs_id: fsId
+		};
+		axios(SERVER_URL + '/getFSMovieRating', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then((response) => {
+			console.log(response.data);
+			const fsRating = response.data;
+			const tempFSRating = {};
+			if (fsRating && fsRating.total_votes > 10) {
+				const totalVotes = fsRating.total_votes;
+				Object.keys(fsRating).map((key) => {
+					const value = fsRating[key];
+					const percent = value * 100 / totalVotes;
+					tempFSRating[key] = percent;
+				});
+			} else {
+				const movieDetails = props.movieDetails;
+				var totalSumOfRating = 0;
+				var count = 0;
+				movieDetails.ratings.map((item) => {
+					const name = item.source;
+					var rating = null;
+					if (name === 'Rotten Tomatoes') {
+						rating = item.value.slice(0, 2);
+					} else if (name === 'Internet Movie Database') {
+						if (item.value.indexOf('.') > -1) {
+							rating = Number(item.value.slice(0, 3)) * 10;
+						} else {
+							rating = Number(item.value.slice(0, 1)) * 10;
+						}
+					} else if (name === 'Metacritic') {
+						rating = item.value.slice(0, 2);
+					}
+
+					totalSumOfRating = totalSumOfRating + Number(rating);
+					count = count + 1;
+					// console.log(name, item.value);
+				});
+				// console.log('sum1', totalSumOfRating);
+				// console.log('count1', count);
+				if (movieDetails.tmdb_rating) {
+					totalSumOfRating = totalSumOfRating + Number(movieDetails.tmdb_rating);
+					count = count + 1;
+				}
+				// console.log('sum2', totalSumOfRating);
+				// console.log('count2', count);
+				if (movieDetails.imdb_rating) {
+					totalSumOfRating = totalSumOfRating + Number(movieDetails.imdb_rating);
+					count = count + 1;
+				}
+				// console.log('sum3', totalSumOfRating);
+				// console.log('count3', count);
+				const avg = totalSumOfRating / count;
+				tempFSRating['loved_it'] = parseInt(avg);
+				const remaining = 100 - avg;
+				const x = splitNParts(remaining, 3);
+				const arrX = [ ...x ];
+				if (avg < 50) {
+					const b = arrX.sort();
+					// console.log(JSON.stringify(b));
+					tempFSRating['dumb_but_entertaining'] = parseInt(b[0]);
+					tempFSRating['just_time_pass'] = parseInt(b[1]);
+					tempFSRating['worthless'] = parseInt(b[2]);
+					console.log(JSON.stringify(tempFSRating));
+				} else {
+					tempFSRating['dumb_but_entertaining'] = parseInt(arrX[0]);
+					tempFSRating['just_time_pass'] = parseInt(arrX[1]);
+					tempFSRating['worthless'] = parseInt(arrX[2]);
+					console.log(JSON.stringify(tempFSRating));
+				}
+				setFsMovieRating(tempFSRating);
+			}
+		});
+		// .catch((err) => {
+		// 	console.log('getFSMovieRating# ', err);
+		// });
+	};
+
+	function* splitNParts(num, parts) {
+		let sumParts = 0;
+		for (let i = 0; i < parts - 1; i++) {
+			const pn = Math.fround(Math.random() * (num - sumParts));
+			yield pn;
+			sumParts += pn;
+		}
+		yield num - sumParts;
+	}
+
+	useEffect(
+		() => {
 			// console.log(scrollViewRef.current);
 			// if (scrollViewRef.current) {
 			// 	getMovieDetails();
@@ -126,8 +231,6 @@ const MovieDetails = (props) => {
 		// console.log(props.movieDetails);
 		const movieDetails = props.movieDetails;
 		setMovieDetails(movieDetails);
-		// if (response.data) {
-		// console.log(response.data.genres.length);
 		const genresX = [];
 		movieDetails.genres.map((item) => {
 			// console.log(item.name);
@@ -166,74 +269,6 @@ const MovieDetails = (props) => {
 			tempRatingDict[name] = rating;
 		});
 		setRatingDict(tempRatingDict);
-		// }
-	};
-
-	const getMovieDetailsX = () => {
-		// scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
-		// console.log('getMovieDetails called');
-
-		const obj = {
-			id: props.fsIdToGetDetails
-		};
-		axios(SERVER_URL + '/getMovieDetailData', {
-			method: 'post',
-			headers: {
-				'Content-type': 'Application/json',
-				Accept: 'Application/json'
-			},
-			data: obj
-		}).then(
-			(response) => {
-				console.log(props.movieDetails);
-				const movieDetails = props.movieDetails;
-				setMovieDetails(movieDetails);
-				if (response.data) {
-					console.log(response.data.genres.length);
-					const genresX = [];
-					response.data.genres.map((item) => {
-						// console.log(item.name);
-						genresX.push(item.name);
-					});
-					setGenres(genresX);
-
-					// streaming info
-					const OTTArrayObj = [];
-					const ott = movieDetails.streaming_info;
-					console.log(JSON.stringify(ott));
-					var ottURL = null;
-					ott.map((item) => {
-						console.log('item: ', item);
-						Object.keys(item).map((key) => {
-							console.log('key: ', key);
-							const ottCountry = item[key];
-							console.log(JSON.stringify(ottCountry));
-							ottURL = ottCountry['in'].link;
-							const OTTObj = {
-								provider: key,
-								url: ottURL,
-								image: OTTProviderDict[key]
-							};
-							OTTArrayObj.push(OTTObj);
-							console.log(JSON.stringify(ottURL));
-						});
-					});
-
-					setOTTProvidesList(OTTArrayObj);
-					const tempRatingDict = {};
-					response.data.ratings.map((item) => {
-						const name = item.source;
-						const rating = item.value.slice(0, 2);
-
-						tempRatingDict[name] = rating;
-					});
-					setRatingDict(tempRatingDict);
-				}
-			},
-			(error) => {
-				console.log(error);
-			}
-		);
 	};
 
 	const renderViewLess = (onPress) => {
@@ -673,7 +708,7 @@ const MovieDetails = (props) => {
 										<Text
 											style={{ color: 'rgba(255,105,180, .9)', fontSize: 22, fontWeight: '700' }}
 										>
-											70%
+											{fsMovieRating && fsMovieRating.loved_it}%
 										</Text>
 									</View>
 									<Text
@@ -693,7 +728,7 @@ const MovieDetails = (props) => {
 										{/* <MaterialCommunityIcons name="stack-overflow" color={'#00FFFF'} size={20} /> */}
 										<View style={{ marginLeft: 0 }} />
 										<Text style={{ color: 'rgba(255,140,0, .8)', fontSize: 22, fontWeight: '700' }}>
-											40%
+											{fsMovieRating && fsMovieRating.dumb_but_entertaining}%
 										</Text>
 									</View>
 									<Text
@@ -716,7 +751,7 @@ const MovieDetails = (props) => {
 										<Text
 											style={{ color: 'rgba(64,224,208, .6)', fontSize: 22, fontWeight: '700' }}
 										>
-											10%
+											{fsMovieRating && fsMovieRating.just_time_pass}%
 										</Text>
 									</View>
 									<Text
@@ -738,7 +773,7 @@ const MovieDetails = (props) => {
 										<Text
 											style={{ color: 'rgba(245,222,179, .6)', fontSize: 22, fontWeight: '700' }}
 										>
-											5%
+											{fsMovieRating && fsMovieRating.worthless}%
 										</Text>
 									</View>
 									<Text
