@@ -32,7 +32,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import FlatListStrip from './FlatListStrip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 // https://entertainmenthub.netlify.app/
 
 // https://api.themoviedb.org/3/trending/all/day?api_key=26ba5e77849587dbd7df199727859189&page=1
@@ -84,6 +84,7 @@ const MovieDetails = (props) => {
 	const [ visible, setVisible ] = useState(false);
 	// const [ OTTProvideLink, setOTTProvideLink ] = useState(null);
 	const [ OTTProvidesList, setOTTProvidesList ] = useState([]);
+	const [ ratingDict, setRatingDict ] = useState(null);
 
 	// const video = React.useRef(null);
 	const [ status, setStatus ] = React.useState({});
@@ -122,6 +123,53 @@ const MovieDetails = (props) => {
 	);
 
 	const getMovieDetails = () => {
+		// console.log(props.movieDetails);
+		const movieDetails = props.movieDetails;
+		setMovieDetails(movieDetails);
+		// if (response.data) {
+		// console.log(response.data.genres.length);
+		const genresX = [];
+		movieDetails.genres.map((item) => {
+			// console.log(item.name);
+			genresX.push(item.name);
+		});
+		setGenres(genresX);
+
+		// streaming info
+		const OTTArrayObj = [];
+		const ott = movieDetails.streaming_info;
+		console.log(JSON.stringify(ott));
+		var ottURL = null;
+		ott.map((item) => {
+			console.log('item: ', item);
+			Object.keys(item).map((key) => {
+				console.log('key: ', key);
+				const ottCountry = item[key];
+				console.log(JSON.stringify(ottCountry));
+				ottURL = ottCountry['in'].link;
+				const OTTObj = {
+					provider: key,
+					url: ottURL,
+					image: OTTProviderDict[key]
+				};
+				OTTArrayObj.push(OTTObj);
+				console.log(JSON.stringify(ottURL));
+			});
+		});
+
+		setOTTProvidesList(OTTArrayObj);
+		const tempRatingDict = {};
+		movieDetails.ratings.map((item) => {
+			const name = item.source;
+			const rating = item.value.slice(0, 2);
+
+			tempRatingDict[name] = rating;
+		});
+		setRatingDict(tempRatingDict);
+		// }
+	};
+
+	const getMovieDetailsX = () => {
 		// scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
 		// console.log('getMovieDetails called');
 
@@ -137,8 +185,8 @@ const MovieDetails = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				// console.log(response.data);
-				const movieDetails = response.data;
+				console.log(props.movieDetails);
+				const movieDetails = props.movieDetails;
 				setMovieDetails(movieDetails);
 				if (response.data) {
 					console.log(response.data.genres.length);
@@ -172,6 +220,14 @@ const MovieDetails = (props) => {
 					});
 
 					setOTTProvidesList(OTTArrayObj);
+					const tempRatingDict = {};
+					response.data.ratings.map((item) => {
+						const name = item.source;
+						const rating = item.value.slice(0, 2);
+
+						tempRatingDict[name] = rating;
+					});
+					setRatingDict(tempRatingDict);
 				}
 			},
 			(error) => {
@@ -203,7 +259,10 @@ const MovieDetails = (props) => {
 				<View style={{ marginLeft: 5, flex: 1 }}>
 					<Image
 						source={{
-							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
+							uri:
+								item.poster_path.indexOf('image') > -1
+									? FLICKSICK_IMAGE_URL + item.poster_path
+									: TMDB_IMAGE_URL + item.poster_path
 						}}
 						style={{ width: 160, height: 200, alignSelf: 'center' }}
 						resizeMode={'cover'}
@@ -321,7 +380,12 @@ const MovieDetails = (props) => {
 						}}
 					>
 						<Image
-							source={{ uri: 'https://image.tmdb.org/t/p/w300' + movieDetails.backdrop_path }}
+							source={{
+								uri:
+									movieDetails.backdrop_path.indexOf('image') > -1
+										? FLICKSICK_IMAGE_URL + movieDetails.backdrop_path
+										: TMDB_IMAGE_URL + movieDetails.backdrop_path
+							}}
 							style={{ flexGrow: 1 }}
 							resizeMode={'cover'}
 						/>
@@ -519,7 +583,13 @@ const MovieDetails = (props) => {
 												textAlign: 'center'
 											}}
 										>
-											{Number(movieDetails.rotten_tomatoes_rating) / 10 || 'NA'}
+											{movieDetails.rotten_tomatoes_rating ? (
+												Number(movieDetails.rotten_tomatoes_rating) / 10
+											) : ratingDict && ratingDict['Rotten Tomatoes'] ? (
+												Number(ratingDict['Rotten Tomatoes']) / 10
+											) : (
+												'NA'
+											)}
 										</Text>
 									</View>
 									<Image
@@ -747,7 +817,7 @@ const MovieDetails = (props) => {
 							title={'Recommendations'}
 							navigation={navigation}
 						/> */}
-								<FlatListStrip
+								{/* <FlatListStrip enable this later
 									data={props.trendingToday}
 									title={'Recommendations'}
 									navigation={navigation}
@@ -755,7 +825,7 @@ const MovieDetails = (props) => {
 									numColumns={1}
 									imageHight={200}
 									imageWidth={160}
-								/>
+								/> */}
 							</View>
 						</View>
 					</ScrollView>
@@ -825,7 +895,8 @@ const MovieDetails = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails
+	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
+	movieDetails: state.AppReducer.movieDetails
 });
 
 // const mapDispatchToProps = () => ({

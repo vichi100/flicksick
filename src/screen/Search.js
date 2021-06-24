@@ -27,7 +27,7 @@ import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/
 import Row from './Row';
 import SeenModal from './SeenModal';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -147,7 +147,10 @@ const Search = (props) => {
 				<View style={{ marginLeft: 5, marginBottom: 5 }}>
 					<Image
 						source={{
-							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
+							uri:
+								item.poster_path.indexOf('image') > -1
+									? FLICKSICK_IMAGE_URL + item.poster_path
+									: TMDB_IMAGE_URL + item.poster_path
 						}}
 						// style={{ width: '100%', height: '100%' }}
 						style={{ width: '100%', height: 230, alignSelf: 'center' }}

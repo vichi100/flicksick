@@ -23,10 +23,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
+import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import SearchDisplay from './SearchDisplay';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
 const FlatListStrip = (props) => {
@@ -50,8 +50,9 @@ const FlatListStrip = (props) => {
 		setDisplayError(false);
 	};
 
-	const myNavigation = (fsId) => {
+	const myNavigation = (fsId, movieData) => {
 		props.setFSIdToGetDetails(fsId);
+		props.setMovieDetails(movieData);
 		navigateTo();
 	};
 
@@ -106,12 +107,15 @@ const FlatListStrip = (props) => {
 				activeOpacity={1}
 				style={{ flex: 1 }}
 				// style={styles.slideInnerContainer}
-				onPress={() => myNavigation(item.fs_id)}
+				onPress={() => myNavigation(item.fs_id, item)}
 			>
 				<View style={{ marginLeft: 5, marginBottom: 5 }}>
 					<Image
 						source={{
-							uri: 'https://image.tmdb.org/t/p/w300' + item.poster_path
+							uri:
+								item.poster_path.indexOf('image') > -1
+									? FLICKSICK_IMAGE_URL + item.poster_path
+									: TMDB_IMAGE_URL + item.poster_path
 						}}
 						style={{ width: imageWidth || 160, height: imageHight || 200, alignSelf: 'center' }}
 						resizeMode={'cover'}
@@ -251,6 +255,8 @@ const FlatListStrip = (props) => {
 						//Item Separator View
 						renderItem={({ item }) => <Row item={item} />}
 						keyExtractor={(item, index) => index.toString()}
+						removeClippedSubviews={true}
+						enableEmptySections={false}
 					/>
 				) : (
 					<FlatList
@@ -413,7 +419,8 @@ const mapStateToProps = (state) => ({
 	// trendingToday: state.AppReducer.trendingToday,
 	// trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
-	userDetails: state.AppReducer.userDetails
+	userDetails: state.AppReducer.userDetails,
+	movieDetails: state.AppReducer.movieDetails
 });
 
 // const mapDispatchToProps = () => ({
@@ -423,6 +430,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setTrendingTodayX,
 	setDataFor,
-	setFSIdToGetDetails
+	setFSIdToGetDetails,
+	setMovieDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FlatListStrip);

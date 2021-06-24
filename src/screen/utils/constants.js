@@ -1,7 +1,10 @@
 export const RATTING_ARRAY = [ 'Loved it', 'Dumb but entertaining', 'Just time pass', 'Worthless' ];
-export const SERVER_URL = 'http://192.168.0.100:3000';
-// export const SERVER_DEV_URL = "http://192.168.0.100:3000"
-// export const SERVER_PROD_URL = 'http://flicksickapi.com:3000';
+export const SERVER_URL = 'http://flicksickapi.com';
+export const FLICKSICK_IMAGE_URL = 'http://flicksickserver.com';
+export const TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
+
+// export const SERVER_DEV_URL = "http://192.168.0.100:3090"
+// export const SERVER_PROD_URL = 'http://flicksickapi.com';
 // mongo "mongodb+srv://cluster0.emt5x.mongodb.net/flicksick_india" --username vichi
 
 // romcom: romance + comady

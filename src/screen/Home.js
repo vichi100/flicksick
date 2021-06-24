@@ -233,6 +233,7 @@ const Home = (props) => {
 	};
 
 	const scrollToIndexForMovieCategory = (item) => {
+		console.log('categoty2: ', categoryNamesArray.indexOf(item));
 		setCategory(item);
 		movieCategoryRef.current.scrollToIndex({
 			index:
@@ -240,7 +241,7 @@ const Home = (props) => {
 					? categoryNamesArray.indexOf(item) + 1
 					: categoryNamesArray.indexOf(item),
 			animated: true,
-			viewPosition: 0.01
+			viewPosition: 0.5
 		});
 	};
 	const renderMovieCategory = ({ item }) => {
@@ -269,7 +270,7 @@ const Home = (props) => {
 
 	useEffect(
 		() => {
-			console.log('category: ', categoryMappingData.length);
+			// console.log('category: ', categoryMappingData.length);
 			if (category && categoryMappingData.length > 0) {
 				setLoadingCategoryMovies(true);
 				const categoryX = category;
@@ -280,7 +281,7 @@ const Home = (props) => {
 	);
 
 	const getMovieByCategory = (categoryX) => {
-		console.log('getMovieByCategory: ', categoryX);
+		// console.log('getMovieByCategory: ', categoryX);
 		var document = null;
 		categoryMappingData.map((item) => {
 			if (item.category === categoryX) {
@@ -389,13 +390,13 @@ const Home = (props) => {
 								renderItem={(item) => renderMovieCategory(item)}
 								keyExtractor={(item, index) => index.toString()}
 								snapToAlignment={'center'}
-								getItemLayout={(data, index) =>
-									// Max 5 items visibles at once
-									({
-										length: Dimensions.get('window').width / 5,
-										offset: Dimensions.get('window').width / 5 * index,
-										index
-									})}
+								// getItemLayout={(data, index) =>
+								// 	// Max 5 items visibles at once
+								// 	({
+								// 		length: Dimensions.get('window').width / 5,
+								// 		offset: Dimensions.get('window').width / 5 * index,
+								// 		index
+								// 	})}
 								snapToInterval={Dimensions.get('window').width / 5}
 							/>
 						</View>
@@ -538,3 +539,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 //siyfiy:
 
 // action, adventure, animation, biography, comedy, crime, horror, sci-fi, thriller, rom-com
+
+// https://stackoverflow.com/questions/43510061/how-do-i-center-an-item-within-a-react-native-listview

@@ -7,11 +7,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { setFSIdToGetDetails } from '../../reducers/Action';
+import { setFSIdToGetDetails, setMovieDetails } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
-import { SERVER_URL } from '../utils/constants';
+import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from '../utils/constants';
 
 // https://snack.expo.io/@vichi/45c79d   image overlay text
 
@@ -85,7 +85,12 @@ const SliderEntry = (props) => {
 				}}
 			>
 				<Image
-					source={{ uri: 'https://image.tmdb.org/t/p/w300' + data.poster_path }}
+					source={{
+						uri:
+							data.poster_path.indexOf('image') > -1
+								? FLICKSICK_IMAGE_URL + data.poster_path
+								: TMDB_IMAGE_URL + data.poster_path
+					}}
 					style={{ flexGrow: 1 }}
 					resizeMode={'cover'}
 				/>
@@ -205,9 +210,10 @@ const SliderEntry = (props) => {
 		);
 	};
 
-	const navigateTo = (fsId) => {
+	const navigateTo = (fsId, movieData) => {
 		// console.log("navi");
 		props.setFSIdToGetDetails(fsId);
+		props.setMovieDetails(movieData);
 		props.navigateTo('MovieDetails');
 	};
 
@@ -253,7 +259,11 @@ const SliderEntry = (props) => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} style={styles.slideInnerContainer} onPress={() => navigateTo(data.fs_id)}>
+		<TouchableOpacity
+			activeOpacity={1}
+			style={styles.slideInnerContainer}
+			onPress={() => navigateTo(data.fs_id, data)}
+		>
 			{/* <View style={styles.shadow} /> */}
 			<View style={[ styles.imageContainer, even ? styles.imageContainerEven : {} ]}>
 				{image()}
@@ -416,7 +426,8 @@ const mapStateToProps = (state) => ({
 //   setTrendingCurrentWeekY,
 // });
 const mapDispatchToProps = {
-	setFSIdToGetDetails
+	setFSIdToGetDetails,
+	setMovieDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SliderEntry);
 

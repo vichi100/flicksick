@@ -63,3 +63,11 @@ export const setCountry = (payload) => {
 		payload
 	};
 };
+
+export const setMovieDetails = (payload) => {
+	// console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_MOVIE_DETAILS,
+		payload
+	};
+};

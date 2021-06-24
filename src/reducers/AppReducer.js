@@ -8,7 +8,8 @@ const initialState = {
 	userMobile: null,
 	userContactDict: null,
 	countryCode: null,
-	country: null
+	country: null,
+	movieDetails: null
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -65,6 +66,12 @@ const AppReducer = (state = initialState, action) => {
 			return {
 				...state,
 				country: action.payload
+			};
+		case ACTION_TYPES.SET_MOVIE_DETAILS:
+			// // console.log("SET_MOVIE_DETAILS");
+			return {
+				...state,
+				movieDetails: action.payload
 			};
 
 		default:
