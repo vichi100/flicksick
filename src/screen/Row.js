@@ -23,7 +23,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
+import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
 import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 
 const Row = (props) => {
@@ -36,9 +36,10 @@ const Row = (props) => {
 		props.setMovieTitle(movie.title);
 	};
 
-	const myNavigation = (fsId) => {
-		console.log(fsId);
+	const myNavigation = (fsId, movieData) => {
+		// console.log(fsId);
 		props.setFSIdToGetDetails(fsId);
+		props.setMovieDetails(movieData);
 		navigateTo();
 	};
 
@@ -47,7 +48,7 @@ const Row = (props) => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => myNavigation(item.fs_id)}>
+		<TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => myNavigation(item.fs_id, item)}>
 			<View style={{ marginLeft: 5, marginBottom: 5 }}>
 				<Image
 					source={{
@@ -174,6 +175,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setTrendingTodayX,
 	setDataFor,
-	setFSIdToGetDetails
+	setFSIdToGetDetails,
+	setMovieDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Row);
