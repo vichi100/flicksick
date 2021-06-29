@@ -1,5 +1,5 @@
 export const RATTING_ARRAY = [ 'Loved it', 'Dumb but entertaining', 'Just time pass', 'Worthless' ];
-export const SERVER_URL = 'http://flicksickapi.com';
+export const SERVER_URL = 'http://192.168.0.101:3090';
 export const FLICKSICK_IMAGE_URL = 'http://flicksickserver.com';
 export const TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
 
