@@ -12,7 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 // import Ionicons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeStackNav from './HomeStackNav';
-import FriendsPure from '../screen/FriendsPure';
+// import FriendsPure from '../screen/FriendsPure';
 import Friends from '../screen/Friends';
 import Profile from '../screen/Profile';
 import Search from '../screen/Search';

@@ -27,7 +27,7 @@ import SliderEntry from './components/SliderEntry';
 import styles, { colors } from './styles/index.style';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
+import { setTrending, setMovieByFriend, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import { SERVER_URL } from './utils/constants';
@@ -94,8 +94,9 @@ const Home = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				// console.log(response.data);
+				// console.log('response.data', response.data);
 				setHomeData(response.data);
+				props.setMovieByFriend(response.data[0].data);
 				setLoading(false);
 				// props.setTrendingTodayX(response.data['trending_today']);
 				// props.setDataFor(response.data['trending_current_week']);
@@ -512,8 +513,8 @@ const mapStateToProps = (state) => ({
 //   setTrendingCurrentWeekY,
 // });
 const mapDispatchToProps = {
-	setTrendingTodayX,
-	setDataFor,
+	setTrending,
+	setMovieByFriend,
 	setFSIdToGetDetails
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

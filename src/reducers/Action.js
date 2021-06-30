@@ -1,9 +1,9 @@
 import { ACTION_TYPES } from './ActionType';
 
-export const setTrendingTodayX = (payload) => {
+export const setTrending = (payload) => {
 	// console.log("payload", payload);
 	return {
-		type: ACTION_TYPES.SET_TRENDING_TODAY,
+		type: ACTION_TYPES.SET_TRENDING,
 		payload
 	};
 };
@@ -16,10 +16,10 @@ export const setFSIdToGetDetails = (payload) => {
 	};
 };
 
-export const setDataFor = (payload) => {
+export const setMovieByFriend = (payload) => {
 	// console.log('payload', payload);
 	return {
-		type: ACTION_TYPES.SET_DATA_FOR,
+		type: ACTION_TYPES.SET_MOVIE_BY_FRIENDS,
 		payload
 	};
 };

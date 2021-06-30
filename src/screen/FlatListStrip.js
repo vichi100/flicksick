@@ -104,6 +104,7 @@ const FlatListStrip = (props) => {
 
 	const Row = ({ item }) => {
 		// getFSMovieRating(item);
+		// console.log('friends: ', JSON.stringify(item));
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
@@ -115,7 +116,7 @@ const FlatListStrip = (props) => {
 					<Image
 						source={{
 							uri:
-								item.poster_path.indexOf('image') > -1
+								item.poster_path && item.poster_path.indexOf('image') > -1
 									? FLICKSICK_IMAGE_URL + item.poster_path
 									: TMDB_IMAGE_URL + item.poster_path
 						}}

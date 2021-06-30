@@ -1,8 +1,8 @@
 import { ACTION_TYPES } from './ActionType';
 
 const initialState = {
-	trendingToday: [],
-	trendingCurrentWeek: [],
+	trending: [],
+	movieByFriends: [],
 	fsIdToGetDetails: null,
 	userDetails: null,
 	userMobile: null,
@@ -13,18 +13,18 @@ const initialState = {
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case ACTION_TYPES.SET_TRENDING_TODAY:
+		case ACTION_TYPES.SET_TRENDING:
 			// // console.log("SET_RESTAURANT_DETAILS");
 			return {
 				...state,
-				trendingToday: action.payload
+				trending: action.payload
 			};
 
-		case ACTION_TYPES.SET_DATA_FOR:
+		case ACTION_TYPES.SET_MOVIE_BY_FRIENDS:
 			// // console.log("SET_RESTAURANT_DETAILS");
 			return {
 				...state,
-				trendingCurrentWeek: action.payload
+				movieByFriends: action.payload
 			};
 
 		case ACTION_TYPES.SET_FS_ID_GET_DETAILS:

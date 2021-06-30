@@ -142,10 +142,10 @@ const Profile = (props) => {
 							)}
 						</Title>
 						<Caption style={styles.caption}>
-							{props.userDetails.user_details && props.userDetails.user_details.company_name ? (
-								props.userDetails.user_details.company_name
+							{props.userDetails.user_details && props.userDetails.user_details.mobile ? (
+								props.userDetails.user_details.mobile
 							) : (
-								'+91 9833097595'
+								''
 							)}
 						</Caption>
 					</View>

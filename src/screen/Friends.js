@@ -454,8 +454,8 @@ const Friends = (props) => {
 					>
 						{selectedFriendName}
 					</Text>
-					<Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text>
-					<FlatList
+					{/* <Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text> */}
+					{/* <FlatList
 						horizontal
 						data={categoryData}
 						//data defined in constructor
@@ -463,17 +463,17 @@ const Friends = (props) => {
 						//Item Separator View
 						renderItem={(item) => renderCategoryItem(item)}
 						keyExtractor={(item, index) => index.toString()}
-					/>
+					/> */}
 					{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Crime</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Mystery</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
 				</View>
-				<View style={{ margin: 7 }} />
+				{/* <View style={{ margin: 7 }} /> */}
 
 				<FlatListStrip
-					data={props.trendingCurrentWeek}
+					data={props.movieByFriends}
 					title={null}
 					navigation={navigation}
 					horizontalFlag={true}
@@ -516,7 +516,7 @@ const Friends = (props) => {
 
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
-	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
+	movieByFriends: state.AppReducer.movieByFriends,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
 	userDetails: state.AppReducer.userDetails,
 	userContactDict: state.AppReducer.userContactDict
