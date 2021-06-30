@@ -12,6 +12,7 @@ import { setFSIdToGetDetails, setMovieDetails } from '../../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
 import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from '../utils/constants';
+import { getFSMovieRating } from '../utils/methods';
 
 // https://snack.expo.io/@vichi/45c79d   image overlay text
 
@@ -97,17 +98,17 @@ const SliderEntry = (props) => {
 				<View
 					style={{
 						position: 'absolute',
-						top: 0,
-						left: 0,
+						// top: 0,
+						// right: 0,
 						// height: 100,
 						// width: 70,
 						// backgroundColor: "rgba(0,0,0, .4)",
-						borderTopRightRadius: 10,
-						borderBottomRightRadius: 10,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
+						// borderTopRightRadius: 10,
+						// borderBottomRightRadius: 10,
+						// flexDirection: 'row',
+						// justifyContent: 'space-between',
 						padding: 5,
-						width: '100%',
+						// width: '100%',
 						height: '100%'
 						// bo
 						// paddingLeft: 15,
@@ -126,22 +127,31 @@ const SliderEntry = (props) => {
               justifyContent: "space-between",
             }}
           > */}
-					<View style={{ flexDirection: 'row' }}>
+					{/* <View style={{ flexDirection: 'row' }}>
 						<AntDesign name="eyeo" color={'#7CFC00'} size={20} />
 						<View style={{ marginLeft: 5 }} />
 						<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>100</Text>
-					</View>
-					<View style={{ flexDirection: 'row' }}>
+					</View> */}
+					{/* <View style={{ flexDirection: 'row' }}>
 						<Entypo name="list" color={'#00FFFF'} size={20} />
 						<View style={{ marginLeft: 5 }} />
 						<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>250</Text>
-					</View>
-					<View style={{ flexDirection: 'row' }}>
+					</View> */}
+					{/* <View style={{ flexDirection: 'row' }}>
 						<AntDesign name="hearto" color={'red'} size={20} />
 						<View style={{ marginLeft: 5 }} />
-						<Text style={{ color: '#fff', fontSize: 14, fontWeight: '500' }}>90%</Text>
-					</View>
+						<Text style={{ color: '#F5F5F5', fontSize: 14, fontWeight: '500' }}>
+							{getFSMovieRating(data)}%
+						</Text>
+					</View> */}
 					{/* </LinearGradient> */}
+				</View>
+				<View style={{ flexDirection: 'row', position: 'absolute', top: 5, right: 5 }}>
+					<AntDesign name="hearto" color={'red'} size={20} />
+					<View style={{ marginLeft: 5 }} />
+					<Text style={{ color: '#F5F5F5', fontSize: 14, fontWeight: '900' }}>
+						{getFSMovieRating(data).loved_it}%
+					</Text>
 				</View>
 				<View style={{ flexDirection: 'row' }}>
 					<View style={{ position: 'absolute', bottom: 15, left: 10 }}>

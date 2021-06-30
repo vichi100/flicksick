@@ -25,6 +25,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
 import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import { getFSMovieRating } from './utils/methods';
 
 const Row = (props) => {
 	const { item, navigation } = props;
@@ -95,7 +96,9 @@ const Row = (props) => {
 					>
 						<AntDesign name="hearto" color={'red'} size={18} />
 						<View style={{ marginLeft: 5 }} />
-						<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>90%</Text>
+						<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>
+							{getFSMovieRating(item).loved_it}%
+						</Text>
 					</View>
 				</View>
 				<View style={{ position: 'absolute', bottom: 5, left: 5 }}>
