@@ -33,7 +33,7 @@ const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action',
 
 const Search = (props) => {
 	const { navigation } = props;
-	const [ search, setSearch ] = useState('');
+	const [ searchText, setSearchText ] = useState('');
 	const [ startId, setStartId ] = useState('0');
 	const [ endId, setEndId ] = useState('0');
 	const [ movieDataArray, setMovieDataArray ] = useState([]);
@@ -51,22 +51,28 @@ const Search = (props) => {
 	const [ genresObj, setGenresObj ] = useState([]);
 	const [ genresArray, setGenresArray ] = useState([]);
 
-	const searchFilterFunction = (text) => {
+	const setSearchTerm = (text) => {
+		setLoading(false);
+		setSearchText(text);
+		if (text.length === 0) {
+			setShowMovieDataArray(movieDataArray);
+		}
+	};
+
+	const searchFilterFunction = () => {
 		// Check if searched text is not blank
-		console.log(text);
-		if (text.length > 1) {
-			searchMovie(text);
-			setSearch(text);
+		console.log(searchText);
+		if (searchText.length > 1) {
+			searchMovie(searchText);
 		} else {
 			// Inserted text is blank
 			// Update FilteredDataSource with masterDataSource
 			setShowMovieDataArray(movieDataArray);
-			setSearch(text);
 		}
 	};
 
 	const searchMovie = (titleX) => {
-		setLoadingMore(true);
+		setLoading(true);
 		const obj = {
 			title: titleX
 		};
@@ -85,11 +91,11 @@ const Search = (props) => {
 
 				setShowMovieDataArray(result);
 				// }
-				setLoadingMore(false);
+				setLoading(false);
 				setRefreshing(false);
 			},
 			(error) => {
-				setLoadingMore(false);
+				setLoading(false);
 				console.log(error);
 			}
 		);
@@ -280,7 +286,7 @@ const Search = (props) => {
 				// setShowMovieDataArray([]);
 				// setMovieDataArray([]);
 			}
-			if (search.length === 0) {
+			if (searchText.length === 0) {
 				fetchOnScrollDownMovies(0);
 			}
 		},
@@ -451,16 +457,27 @@ const Search = (props) => {
 						backgroundColor: '#000',
 						color: '#A9A9A9'
 					}}
-					onChangeText={(text) => searchFilterFunction(text)}
-					value={search}
+					onChangeText={(text) => setSearchTerm(text)}
+					value={searchText}
 					underlineColorAndroid="transparent"
-					placeholder="Search by movie / series name or cast"
-					inlineImageLeft="search_icon"
+					placeholder="Search by moviex / series name or cast"
+					// inlineImageLeft="search_icon"
 					placeholderTextColor={'#A9A9A9'}
 				/>
-				<View style={{ position: 'absolute', top: 15, right: 10 }}>
-					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
-				</View>
+				{searchText ? (
+					<View style={{ position: 'absolute', top: 7, right: 5 }}>
+						<TouchableHighlight
+							onPress={() => searchFilterFunction()}
+							style={{ backgroundColor: '#3CB371', borderRadius: 10 }}
+						>
+							<Text style={{ color: '#ffffff', padding: 8 }}>Search</Text>
+						</TouchableHighlight>
+					</View>
+				) : (
+					<View style={{ position: 'absolute', top: 15, right: 10 }}>
+						<AntDesign name="search1" color={'#A9A9A9'} size={20} />
+					</View>
+				)}
 			</View>
 			<View style={{ marginLeft: 15, marginRight: 15, marginBottom: 15, marginTop: 2 }}>
 				<FlatList
