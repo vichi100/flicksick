@@ -59,7 +59,12 @@ class SnackbarComponent extends Component {
 						this.props.textMessage()
 					) : (
 						<Text
-							style={[ this.props.messageStyle, styles.textMessage, { color: this.props.messageColor } ]}
+							style={[
+								this.props.messageStyle,
+								styles.textMessage,
+								{ color: this.props.messageColor },
+								{ marginTop: 15 }
+							]}
 						>
 							{this.props.textMessage}
 						</Text>
@@ -67,7 +72,12 @@ class SnackbarComponent extends Component {
 					{this.props.actionHandler !== null && !!this.props.actionText ? (
 						<Touchable onPress={this.props.actionHandler}>
 							<Text
-								style={[ this.props.actionStyle, styles.actionText, { color: this.props.accentColor } ]}
+								style={[
+									this.props.actionStyle,
+									styles.actionText,
+									{ color: this.props.accentColor },
+									{ marginTop: 15 }
+								]}
 							>
 								{this.props.actionText.toUpperCase()}
 							</Text>

@@ -75,7 +75,8 @@ const OtpScreen = (props) => {
 		console.log('onSubmit: ', mobileX);
 		const userObj = {
 			mobile: mobileX,
-			country: props.country
+			country: props.country,
+			country_code: props.countryCode
 		};
 		axios
 			.post(

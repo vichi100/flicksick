@@ -59,10 +59,11 @@ const Login = (props) => {
 		// AsyncStorage.setItem("agent_details", JSON.stringify(agentDetails));
 
 		AsyncStorage.clear();
+
 		// userDetailsStr: { "user_details": { "user_type": "agent", "id": "15476a82-997a-4bef-bf1b-b1236f6c177e", "expo_token": null, "name": null, "company_name": null, "mobile": "9833097595", "address": null, "city": null, "access_rights": "all", "works_for": ["15476a82-997a-4bef-bf1b-b1236f6c177e"] } }
 
 		const userDetailsStr = await AsyncStorage.getItem('user_details');
-		// console.log("userDetailsStr: " + userDetailsStr);
+		console.log('userDetailsStr: ' + JSON.stringify(userDetailsStr));
 		if (userDetailsStr !== null) {
 			props.setUserDetails(JSON.parse(userDetailsStr));
 		}

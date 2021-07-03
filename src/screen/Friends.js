@@ -61,14 +61,21 @@ const Friends = (props) => {
 	};
 
 	const displayFriendMovieList = (item) => {
-		console.log(item);
+		// console.log(item);
 		if (item.status === 'off') {
 			setErrorMessage(
-				<Text>
-					Your friend is not using Flick / Sick.{' '}
-					<Text style={{ color: 'rgba(0,191,255, .9)', fontSize: 16, fontWeight: '600' }}>Invite </Text>him |
+				// <SafeAreaView>
+				<Text style={{ marginTop: 10 }}>
+					Your friend is not using Flick/Sick. Click{' '}
+					<Text style={{ color: 'rgba(0,191,255, .9)', fontSize: 16, fontWeight: '600' }}>Invite </Text> |
 				</Text>
+				// </SafeAreaView>
 			);
+			setIsVisible(true);
+			return;
+		}
+		if (item.status === 'invited') {
+			setErrorMessage(<Text style={{ marginTop: 10 }}>Your friend is not using Flick/Sick yet.</Text>);
 			setIsVisible(true);
 			return;
 		}
@@ -81,6 +88,55 @@ const Friends = (props) => {
 			setSelectedFriendName('All Friends');
 			setCategory('all');
 		}
+	};
+
+	const updateFriendsDataArray = (inviteeMobile) => {
+		const temp = [];
+		allFriendsDataArray.map((item) => {
+			if (item.mobile === inviteeMobile) {
+				item.status = 'invited';
+			}
+			temp.push(item);
+		});
+		setAllFriendsDataArray(temp);
+		// console.log('friends size2: ', Object.keys(dictData).length);
+		// Object.keys(dictData).map((item) => {
+		// 	const name = dictData[item];
+		// 	const mobile = item;
+		// 	const friendObj = {
+		// 		name: name,
+		// 		mobile: mobile,
+		// 		status: status
+		// 	};
+		// 	allFriendsDataArrayX.push(friendObj);
+		// 	// console.log(allFriendsDataArrayX.length);
+		// });
+	};
+
+	const sendInvitation = (invitee) => {
+		const obj = {
+			invitee_name: invitee.name,
+			invitee_mobile: invitee.mobile,
+			user_mobile: props.userDetails.mobile
+		};
+		axios(SERVER_URL + '/sendInvitation', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				// console.log(response.data);
+				if (response.data === 'success') {
+					updateFriendsDataArray(invitee.mobile);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	};
 
 	const RowX = ({ item }) => {
@@ -121,17 +177,31 @@ const Friends = (props) => {
 								{item.mobile}
 							</Text>
 						</View>
-
-						<Text
-							style={{
-								color: 'rgba(0,191,255, .9)',
-								fontSize: 16,
-								fontWeight: '600',
-								textAlign: 'center'
-							}}
-						>
-							Invite
-						</Text>
+						<TouchableHighlight onPress={() => sendInvitation(item)}>
+							{item.status === 'invited' ? (
+								<Text
+									style={{
+										color: 'rgba(60,179,113, .9)',
+										fontSize: 16,
+										fontWeight: '600',
+										textAlign: 'center'
+									}}
+								>
+									Invited
+								</Text>
+							) : (
+								<Text
+									style={{
+										color: 'rgba(0,191,255, .9)',
+										fontSize: 16,
+										fontWeight: '600',
+										textAlign: 'center'
+									}}
+								>
+									Invite
+								</Text>
+							)}
+						</TouchableHighlight>
 					</View>
 					{item.status === 'on' ? (
 						<View>
@@ -140,6 +210,10 @@ const Friends = (props) => {
 					) : item.status === 'off' ? (
 						<View>
 							<FontAwesome name="circle" color={'#FF8C00'} size={17} />
+						</View>
+					) : item.status === 'invited' ? (
+						<View>
+							<FontAwesome name="circle" color={'#FF8C00'} size={15} />
 						</View>
 					) : (
 						<View>
@@ -155,7 +229,7 @@ const Friends = (props) => {
 		return <FriendsDisplay item={item} displayFriendMovieList={(item) => displayFriendMovieList(item)} />;
 	};
 
-	const rowKeyExt = (item, index) => item.mobile;
+	const rowKeyExt = (item, index) => item.mobile + index;
 
 	const areEqual = (prevProps, nextProps) => {
 		// return false prevProps.text & nextProps.text are not equal.
@@ -171,11 +245,13 @@ const Friends = (props) => {
 
 	const searchFilterFunction = (text) => {
 		// Check if searched text is not blank
-		if (text) {
+		// console.log('text: ', text);
+		if (text.trim().length > 0) {
+			console.log('text1: ', text);
 			// setAllFriendsDataArrayMain([ ...allFriendsDataArray ]);
 			// Inserted text is not blank
 			// Filter the masterDataSource and update FilteredDataSource
-			const newData = allFriendsDataArray.filter(function(item) {
+			const newData = allFriendsDataArrayMain.filter(function(item) {
 				// Applying filter for the inserted text in search bar
 				const itemData = item.name + item.mobile;
 				const textData = text.toUpperCase();
@@ -184,9 +260,10 @@ const Friends = (props) => {
 			setAllFriendsDataArray(newData);
 			setSearch(text);
 		} else {
+			console.log('text2: ', text);
 			// Inserted text is blank
 			// Update FilteredDataSource with masterDataSource
-			setAllFriendsDataArray(allFriendsDataArrayMain);
+			setAllFriendsDataArray([ ...allFriendsDataArrayMain ]);
 			// setAllFriendsDataArrayMain(null);
 			setSearch(text);
 		}
@@ -238,7 +315,9 @@ const Friends = (props) => {
 		() => {
 			if (contactData && props.userDetails) {
 				contactData.map((item) => {
-					createContactDict(item);
+					try {
+						createContactDict(item);
+					} catch (err) {}
 				});
 				saveNewContact();
 			}
@@ -249,10 +328,11 @@ const Friends = (props) => {
 	const createContactDict = (item) => {
 		if (item['phoneNumbers'] && item['phoneNumbers'][0]) {
 			// console.log(item['phoneNumbers'][0].number);
+			// console.log('countryCode: ', props.countryCode);
 			const name = item.name;
 			var mobile = item['phoneNumbers'][0].number.replace(/ /g, '');
 			mobile = mobile.replace(/-/g, '');
-			const countryCode = item['phoneNumbers'][0].countryCode;
+			// const countryCode = item['phoneNumbers'][0].countryCode;
 
 			if (mobile.length >= 10) {
 				if (mobile.indexOf('+') > -1) {
@@ -262,8 +342,12 @@ const Friends = (props) => {
 					if (mobile.length > 10) {
 						const lenX = mobile.length;
 						var temp = mobile.slice(lenX - 10, lenX);
-						// console.log('+91' + temp);
-						contactObjDict['+91' + temp] = name;
+
+						contactObjDict[props.userDetails.country_code + temp] = name;
+						// console.log(props.userDetails.country_code + temp, name);
+					} else if (mobile.length === 10) {
+						contactObjDict[props.userDetails.country_code + mobile] = name;
+						// console.log(props.userDetails.country_code + mobile, name);
 					}
 				}
 			}
@@ -317,6 +401,10 @@ const Friends = (props) => {
 				if (Object.keys(result).length > 0) {
 					// setFriendOn(result.friends_on);
 					// console.log('friends size', Object.keys(result.friends_on).length);
+					if (result.invitation_sent) {
+						createFriendsDataArray(result.invitation_sent, 'invited', allFriendsDataArrayX);
+					}
+
 					if (result.friends_on) {
 						createFriendsDataArray(result.friends_on, 'on', allFriendsDataArrayX);
 					}
@@ -367,7 +455,7 @@ const Friends = (props) => {
 
 	// allFriendsDataArray
 	const fetchOnScrollDownMovies = () => {
-		console.log('fetchOnScrollDownMovies1: ', allFriendsDataArray.length);
+		// console.log('fetchOnScrollDownMovies1: ', allFriendsDataArray.length);
 		const subData = allFriendsDataArrayMain.slice(endIndex, endIndex + 10);
 		// if (allFriendsDataArray.length > 50) {
 		// 	const x = allFriendsDataArray.length - 50;
@@ -421,41 +509,41 @@ const Friends = (props) => {
 
 	return (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
-			<View>
-				<View style={{ marginBottom: 5 }}>
-					<TextInput
-						style={{
-							width: '98%',
-							height: 40,
-							borderWidth: 0.2,
-							paddingLeft: 20,
-							margin: 5,
-							// marginBottom: 5,
-							borderRadius: 10,
-							borderColor: '#00FFFF',
-							backgroundColor: '#000',
-							color: '#A9A9A9'
-						}}
-						onChangeText={(text) => searchFilterFunction(text)}
-						value={search}
-						underlineColorAndroid="transparent"
-						placeholder="Search by name or mobile"
-						inlineImageLeft="search_icon"
-						placeholderTextColor={'#A9A9A9'}
-					/>
-					<View style={{ position: 'absolute', top: 15, right: 10 }}>
-						<AntDesign name="search1" color={'#A9A9A9'} size={20} />
-					</View>
+			{/* <View> */}
+			<View style={{ marginBottom: 5 }}>
+				<TextInput
+					style={{
+						width: '98%',
+						height: 40,
+						borderWidth: 0.2,
+						paddingLeft: 20,
+						margin: 5,
+						// marginBottom: 5,
+						borderRadius: 10,
+						borderColor: '#00FFFF',
+						backgroundColor: '#000',
+						color: '#A9A9A9'
+					}}
+					onChangeText={(text) => searchFilterFunction(text)}
+					value={search}
+					underlineColorAndroid="transparent"
+					placeholder="Search by name or mobile"
+					inlineImageLeft="search_icon"
+					placeholderTextColor={'#A9A9A9'}
+				/>
+				<View style={{ position: 'absolute', top: 15, right: 10 }}>
+					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
 				</View>
-				<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
-					<Text
-						style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
-						numberOfLines={1}
-					>
-						{selectedFriendName}
-					</Text>
-					{/* <Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text> */}
-					{/* <FlatList
+			</View>
+			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
+				<Text
+					style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
+					numberOfLines={1}
+				>
+					{selectedFriendName}
+				</Text>
+				{/* <Text style={{ color: '#FFA500', fontSize: 16, fontWeight: '500' }}>{' |'} </Text> */}
+				{/* <FlatList
 						horizontal
 						data={categoryData}
 						//data defined in constructor
@@ -464,52 +552,53 @@ const Friends = (props) => {
 						renderItem={(item) => renderCategoryItem(item)}
 						keyExtractor={(item, index) => index.toString()}
 					/> */}
-					{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
+				{/* <Text style={{ color: '#F5F5F5', margin: 10 }}>Action</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Crime</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Mystery</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>RomCom</Text>
 					<Text style={{ color: '#F5F5F5', margin: 10 }}>Sports</Text> */}
-				</View>
-				{/* <View style={{ margin: 7 }} /> */}
-
-				<FlatListStrip
-					data={props.movieByFriends}
-					title={null}
-					navigation={navigation}
-					horizontalFlag={true}
-					numColumns={1}
-					imageHight={200}
-					imageWidth={160}
-				/>
-
-				{/* <ScrollView> */}
-				<FlatList
-					// horizontal
-					removeClippedSubviews={true}
-					data={allFriendsDataArray}
-					// renderItem={rowItem}
-					renderItem={({ item }) => <RowX item={item} />}
-					extraData={allFriendsDataArray}
-					keyExtractor={rowKeyExt}
-					// onEndReached={() => handleLoadMore()}
-					// onEndReachedThreshold={0}
-					// ListFooterComponent={renderFooter}
-					// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-					// scrollEnabled={!loadingMore}
-				/>
-				{/* </ScrollView> */}
-				{/* <View style={{ marginBottom: 90 }} /> */}
-				{/* <View style={{ marginTop: 0 }}> */}
-
-				{/* </View> */}
-				<Snackbar
-					visible={isVisible}
-					textMessage={errorMessage}
-					position={'top'}
-					actionHandler={() => dismissSnackBar()}
-					actionText="OK"
-				/>
 			</View>
+			{/* <View style={{ margin: 7 }} /> */}
+
+			<FlatListStrip
+				data={props.movieByFriends}
+				title={null}
+				navigation={navigation}
+				horizontalFlag={true}
+				numColumns={1}
+				imageHight={200}
+				imageWidth={160}
+			/>
+
+			{/* <ScrollView> */}
+			<FlatList
+				// horizontal
+				removeClippedSubviews={true}
+				data={allFriendsDataArray}
+				// renderItem={rowItem}
+				renderItem={({ item }) => <RowX item={item} />}
+				extraData={allFriendsDataArray}
+				keyExtractor={rowKeyExt}
+
+				// onEndReached={() => handleLoadMore()}
+				// onEndReachedThreshold={0}
+				// ListFooterComponent={renderFooter}
+				// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+				// scrollEnabled={!loadingMore}
+			/>
+			{/* </ScrollView> */}
+			{/* <View style={{ marginBottom: 200 }} /> */}
+			{/* <View style={{ marginTop: 0 }}> */}
+
+			{/* </View> */}
+			<Snackbar
+				visible={isVisible}
+				textMessage={errorMessage}
+				position={'top'}
+				actionHandler={() => dismissSnackBar()}
+				actionText="OK"
+			/>
+			{/* </View> */}
 		</SafeAreaView>
 	);
 };
@@ -519,7 +608,8 @@ const mapStateToProps = (state) => ({
 	movieByFriends: state.AppReducer.movieByFriends,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
 	userDetails: state.AppReducer.userDetails,
-	userContactDict: state.AppReducer.userContactDict
+	userContactDict: state.AppReducer.userContactDict,
+	countryCode: state.AppReducer.countryCode
 });
 
 // const mapDispatchToProps = () => ({
@@ -532,42 +622,3 @@ const mapDispatchToProps = {
 	setUserContactDict
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Friends);
-
-const dataX = [
-	{
-		name: 'Miyah Myles',
-		mobile: '9833097591'
-	},
-	{
-		name: 'June Cha',
-		mobile: '9833097592'
-	},
-	{
-		name: 'Iida Niskanen',
-		mobile: '9833097593'
-	},
-	{
-		name: 'Renee Sims',
-		mobile: '9833097594'
-	},
-	{
-		name: 'Jonathan Nu\u00f1ez',
-		mobile: '9833097595'
-	},
-	{
-		name: 'Sasha Ho',
-		mobile: '9833097596'
-	},
-	{
-		name: 'Abdullah Hadley',
-		mobile: '9833097597'
-	},
-	{
-		name: 'Thomas Stock',
-		mobile: '9833097598'
-	},
-	{
-		name: 'Veeti Seppanen',
-		mobile: '9833097599'
-	}
-];
