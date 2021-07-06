@@ -25,7 +25,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL } from './utils/constants';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
 const SeenModal = (props) => {
@@ -59,7 +59,7 @@ const SeenModal = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios(SERVER_URL + '/addRatingAndSeenFlag', {
+		axios(SERVER_MOVIE_API_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

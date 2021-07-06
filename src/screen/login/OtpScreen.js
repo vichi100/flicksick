@@ -19,7 +19,7 @@ import axios from 'axios';
 import { setUserDetails } from '../../reducers/Action';
 import OTPTextView from './OTPTextView';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import { SERVER_URL } from '../utils/constants';
+import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL } from '../utils/constants';
 
 const OtpScreen = (props) => {
 	const { navigation } = props;
@@ -41,14 +41,15 @@ const OtpScreen = (props) => {
 
 	const generateOTP = (otpX, mobileX) => {
 		setOTP(otpX);
+		console.log('otp: ', otpX);
 		const obj = {
 			mobile: mobileX,
 			otp: otpX
 		};
 		axios
 			.post(
-				SERVER_URL + '/generateOTP',
-				// SERVER_URL + "/addNewResidentialRentProperty",
+				SERVER_USER_API_URL + '/generateOTP',
+				// SERVER_MOVIE_API_URL + "/addNewResidentialRentProperty",
 				// await AsyncStorage.getItem("property")
 				// JSON.stringify({ vichi: "vchi" })
 				obj
@@ -80,8 +81,8 @@ const OtpScreen = (props) => {
 		};
 		axios
 			.post(
-				SERVER_URL + '/getUserDetails',
-				// SERVER_URL + "/addNewResidentialRentProperty",
+				SERVER_USER_API_URL + '/getUserDetails',
+				// SERVER_MOVIE_API_URL + "/addNewResidentialRentProperty",
 				// await AsyncStorage.getItem("property")
 				// JSON.stringify({ vichi: "vchi" })
 				userObj

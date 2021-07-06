@@ -30,7 +30,7 @@ import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import FriendsDisplay from './FriendsDisplay';
 import Snackbar from '../screen/components/SnackbarComponent';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -119,7 +119,7 @@ const Friends = (props) => {
 			invitee_mobile: invitee.mobile,
 			user_mobile: props.userDetails.mobile
 		};
-		axios(SERVER_URL + '/sendInvitation', {
+		axios(SERVER_USER_API_URL + '/sendInvitation', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -198,7 +198,7 @@ const Friends = (props) => {
 										textAlign: 'center'
 									}}
 								>
-									Invite
+									{item.status === 'on' ? null : 'Invite'}
 								</Text>
 							)}
 						</TouchableHighlight>
@@ -360,7 +360,7 @@ const Friends = (props) => {
 			id: props.userDetails.mobile,
 			contact_dict: contactObjDict
 		};
-		axios(SERVER_URL + '/saveNewContact', {
+		axios(SERVER_USER_API_URL + '/saveNewContact', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -369,7 +369,10 @@ const Friends = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				// console.log(response.data);
+				if (response.data) {
+					const result = response.data;
+					generateFriendsArray(result);
+				}
 			},
 			(error) => {
 				console.log(error);
@@ -385,7 +388,7 @@ const Friends = (props) => {
 		const obj = {
 			id: props.userDetails.mobile
 		};
-		axios(SERVER_URL + '/getFriendsData', {
+		axios(SERVER_USER_API_URL + '/getFriendsData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -396,35 +399,7 @@ const Friends = (props) => {
 			(response) => {
 				// console.log(response.data.friends_off);
 				const result = response.data;
-				const allFriendsDataArrayX = [];
-				// console.log('size: ', Object.keys(result).length);
-				if (Object.keys(result).length > 0) {
-					// setFriendOn(result.friends_on);
-					// console.log('friends size', Object.keys(result.friends_on).length);
-					if (result.invitation_sent) {
-						createFriendsDataArray(result.invitation_sent, 'invited', allFriendsDataArrayX);
-					}
-
-					if (result.friends_on) {
-						createFriendsDataArray(result.friends_on, 'on', allFriendsDataArrayX);
-					}
-
-					// setFriendOff(result.friends_off);
-					if (result.friends_off) {
-						createFriendsDataArray(result.friends_off, 'off', allFriendsDataArrayX);
-					}
-
-					// setFriendBlocked(result.friends_blocked);
-					if (result.friends_blocked) {
-						createFriendsDataArray(result.friends_blocked, 'blocked', allFriendsDataArrayX);
-					}
-				} else {
-					// setFriendOff(contactObjDict);
-					createFriendsDataArray(contactObjDict, 'off', allFriendsDataArrayX);
-				}
-				const temp = allFriendsDataArrayX.slice(startIndex, endIndex);
-				setAllFriendsDataArray(allFriendsDataArrayX);
-				setAllFriendsDataArrayMain(allFriendsDataArrayX);
+				generateFriendsArray(result);
 				// const start = startIndex;
 				// const end = endIndex;
 				// const temp = allFriendsDataArrayX.slice(start, end);
@@ -436,6 +411,38 @@ const Friends = (props) => {
 				console.log(error);
 			}
 		);
+	};
+
+	const generateFriendsArray = (result) => {
+		const allFriendsDataArrayX = [];
+		// console.log('size: ', Object.keys(result).length);
+		if (Object.keys(result).length > 0) {
+			// setFriendOn(result.friends_on);
+			// console.log('friends size', Object.keys(result.friends_on).length);
+			if (result.invitation_sent) {
+				createFriendsDataArray(result.invitation_sent, 'invited', allFriendsDataArrayX);
+			}
+
+			if (result.friends_on) {
+				createFriendsDataArray(result.friends_on, 'on', allFriendsDataArrayX);
+			}
+
+			// setFriendOff(result.friends_off);
+			if (result.friends_off) {
+				createFriendsDataArray(result.friends_off, 'off', allFriendsDataArrayX);
+			}
+
+			// setFriendBlocked(result.friends_blocked);
+			if (result.friends_blocked) {
+				createFriendsDataArray(result.friends_blocked, 'blocked', allFriendsDataArrayX);
+			}
+		} else {
+			// setFriendOff(contactObjDict);
+			createFriendsDataArray(contactObjDict, 'off', allFriendsDataArrayX);
+		}
+		const temp = allFriendsDataArrayX.slice(startIndex, endIndex);
+		setAllFriendsDataArray(allFriendsDataArrayX);
+		setAllFriendsDataArrayMain(allFriendsDataArrayX);
 	};
 
 	const createFriendsDataArray = (dictData, status, allFriendsDataArrayX) => {

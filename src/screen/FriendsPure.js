@@ -33,7 +33,7 @@ import { setTrendingTodayX, setDataFor, setUserContactDict } from '../reducers/A
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import FriendsDisplay from './FriendsDisplay';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -144,7 +144,7 @@ class FriendsPure extends PureComponent {
 			id: this.props.userDetails.mobile,
 			contact_dict: this.state.contactObjDict
 		};
-		axios(SERVER_URL + '/saveNewContact', {
+		axios(SERVER_MOVIE_API_URL + '/saveNewContact', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -169,7 +169,7 @@ class FriendsPure extends PureComponent {
 		const obj = {
 			id: this.props.userDetails.mobile
 		};
-		axios(SERVER_URL + '/getFriendsData', {
+		axios(SERVER_MOVIE_API_URL + '/getFriendsData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

@@ -30,7 +30,7 @@ import { connect } from 'react-redux';
 import { setTrending, setMovieByFriend, setFSIdToGetDetails } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
-import { SERVER_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL } from './utils/constants';
 // import {setDataFor} from "../reducers/Action"
 
 // https://entertainmenthub.netlify.app/
@@ -85,7 +85,7 @@ const Home = (props) => {
 		const obj = {
 			id: '123'
 		};
-		axios(SERVER_URL + '/getHomeScreenData', {
+		axios(SERVER_MOVIE_API_URL + '/getHomeScreenData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -142,7 +142,7 @@ const Home = (props) => {
 		const obj = {
 			releaseDate: releaseDate
 		};
-		axios(SERVER_URL + '/getTopMoviesOfTheYear', {
+		axios(SERVER_MOVIE_API_URL + '/getTopMoviesOfTheYear', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -198,7 +198,7 @@ const Home = (props) => {
 	};
 
 	useEffect(() => {
-		console.log('getCategoryMappingData: ');
+		// console.log('getCategoryMappingData: ');
 		getCategoryMappingData();
 	}, []);
 
@@ -206,7 +206,7 @@ const Home = (props) => {
 		const obj = {
 			category: '-1'
 		};
-		axios(SERVER_URL + '/getUtilData', {
+		axios(SERVER_MOVIE_API_URL + '/getUtilData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -215,7 +215,7 @@ const Home = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				console.log(response.data[0].category);
+				// console.log(response.data[0].category);
 				const categoryDictArray = response.data[0].category;
 				setCategoryMappingData(categoryDictArray);
 				const categoryArray = [];
@@ -223,7 +223,7 @@ const Home = (props) => {
 					const name = item.category;
 					categoryArray.push(name);
 				});
-				console.log(categoryArray);
+				// console.log(categoryArray);
 				setCategoryNamesArray(categoryArray);
 			},
 			(error) => {
@@ -234,7 +234,7 @@ const Home = (props) => {
 	};
 
 	const scrollToIndexForMovieCategory = (item) => {
-		console.log('categoty2: ', categoryNamesArray.indexOf(item));
+		// console.log('categoty2: ', categoryNamesArray.indexOf(item));
 		setCategory(item);
 		movieCategoryRef.current.scrollToIndex({
 			index:
@@ -294,7 +294,7 @@ const Home = (props) => {
 			category: categoryX,
 			document: document
 		};
-		axios(SERVER_URL + '/getMovieByCategory', {
+		axios(SERVER_MOVIE_API_URL + '/getMovieByCategory', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

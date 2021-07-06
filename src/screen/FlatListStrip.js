@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import SearchDisplay from './SearchDisplay';
-import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 import { getFSMovieRating } from './utils/methods';
 
 const RATTING_ARRAY = [ 'Loved It', 'Dumb But Entertaining', 'Just Time Pass', 'Worthless' ];
@@ -82,7 +82,7 @@ const FlatListStrip = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios(SERVER_URL + '/addRatingAndSeenFlag', {
+		axios(SERVER_MOVIE_API_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

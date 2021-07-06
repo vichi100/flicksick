@@ -27,7 +27,7 @@ import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/
 import Row from './Row';
 import SeenModal from './SeenModal';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 
 const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
 
@@ -76,7 +76,7 @@ const Search = (props) => {
 		const obj = {
 			title: titleX
 		};
-		axios(SERVER_URL + '/searchMovieByTitle', {
+		axios(SERVER_MOVIE_API_URL + '/searchMovieByTitle', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -301,7 +301,7 @@ const Search = (props) => {
 			genres: genres,
 			releaseDate: releaseDate
 		};
-		axios(SERVER_URL + '/fetchOnScrollDownMovies', {
+		axios(SERVER_MOVIE_API_URL + '/fetchOnScrollDownMovies', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -336,7 +336,7 @@ const Search = (props) => {
 		const obj = {
 			id: endId
 		};
-		axios(SERVER_URL + '/fetchOnScrollUpMovies', {
+		axios(SERVER_MOVIE_API_URL + '/fetchOnScrollUpMovies', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',
@@ -414,7 +414,7 @@ const Search = (props) => {
 		const obj = {
 			id: '123'
 		};
-		axios(SERVER_URL + '/getUtilData', {
+		axios(SERVER_MOVIE_API_URL + '/getUtilData', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

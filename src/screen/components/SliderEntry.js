@@ -11,7 +11,7 @@ import { setFSIdToGetDetails, setMovieDetails } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
-import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from '../utils/constants';
+import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from '../utils/constants';
 import { getFSMovieRating } from '../utils/methods';
 
 // https://snack.expo.io/@vichi/45c79d   image overlay text
@@ -248,7 +248,7 @@ const SliderEntry = (props) => {
 			fs_id: fsId,
 			rating_code: ratingIndex
 		};
-		axios(SERVER_URL + '/addRatingAndSeenFlag', {
+		axios(SERVER_MOVIE_API_URL + '/addRatingAndSeenFlag', {
 			method: 'post',
 			headers: {
 				'Content-type': 'Application/json',

@@ -24,7 +24,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
-import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 import { getFSMovieRating } from './utils/methods';
 
 const Row = (props) => {

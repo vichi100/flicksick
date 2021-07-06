@@ -28,15 +28,22 @@ import {
 import { TextInput, Provider } from 'react-native-paper';
 import Dropdown from '../components/dropDown/Dropdown';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Snackbar from '../components/SnackbarComponent';
 
 const countryList = [ { value: 'IN ( +91 )' }, { value: 'US ( +1 )' }, { value: 'UK ( +44 )' } ];
 
 const Login = (props) => {
 	const { navigation } = props;
 	const [ showDropDown, setShowDropDown ] = useState(false);
-	const [ country, setCountry ] = useState();
-	const [ mobile, setMobile ] = useState();
+	const [ country, setCountry ] = useState(null);
+	const [ mobile, setMobile ] = useState(null);
 	const [ otp, setOTP ] = useState('');
+	const [ errorMessage, setErrorMessage ] = useState('');
+	const [ isVisible, setIsVisible ] = useState(false);
+
+	const dismissSnackBar = () => {
+		setIsVisible(false);
+	};
 	// const [ userDetails, setUserDetailsX ] = useState(null);
 
 	useEffect(
@@ -58,7 +65,7 @@ const Login = (props) => {
 	const getUserDetails = async () => {
 		// AsyncStorage.setItem("agent_details", JSON.stringify(agentDetails));
 
-		// AsyncStorage.clear();
+		AsyncStorage.clear();
 
 		// userDetailsStr: { "user_details": { "user_type": "agent", "id": "15476a82-997a-4bef-bf1b-b1236f6c177e", "expo_token": null, "name": null, "company_name": null, "mobile": "9833097595", "address": null, "city": null, "access_rights": "all", "works_for": ["15476a82-997a-4bef-bf1b-b1236f6c177e"] } }
 
@@ -75,7 +82,16 @@ const Login = (props) => {
 
 	const onNext = () => {
 		console.log(mobile);
-
+		if (country === null) {
+			setErrorMessage('Select Country Please!');
+			setIsVisible(true);
+			return;
+		}
+		if (mobile === null || mobile.trim().length === 0) {
+			setErrorMessage('Enter Mobile Number Please!');
+			setIsVisible(true);
+			return;
+		}
 		props.setUserMobile(mobile);
 		navigation.navigate('OtpScreen');
 	};
@@ -84,8 +100,15 @@ const Login = (props) => {
 	// 	console.log(item);
 	// };
 
+	const setMobileNumber = (text) => {
+		setMobile(text);
+		setIsVisible(false);
+	};
+
 	const onChangeText = (text) => {
 		console.log(text);
+		setCountry(text);
+		setIsVisible(false);
 		if (text.indexOf('IN') > -1) {
 			props.setCountry('IN');
 			props.setCountryCode('+91');
@@ -136,7 +159,7 @@ const Login = (props) => {
 								}}
 								label="Mobile"
 								value={mobile}
-								onChangeText={(text) => setMobile(text)}
+								onChangeText={(text) => setMobileNumber(text)}
 								width={200}
 								height={20}
 								keyboardType={'numeric'}
@@ -175,6 +198,13 @@ const Login = (props) => {
 					<Text style={{ color: '#fff' }}>{'Skip >>'}</Text>
 				</TouchableOpacity>
 			</View>
+			<Snackbar
+				visible={isVisible}
+				textMessage={errorMessage}
+				position={'top'}
+				actionHandler={() => dismissSnackBar()}
+				actionText="OK"
+			/>
 		</SafeAreaView>
 	);
 };

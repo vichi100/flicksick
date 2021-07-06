@@ -32,7 +32,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import FlatListStrip from './FlatListStrip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
-import { SERVER_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
 import { getFSMovieRating } from './utils/methods';
 // https://entertainmenthub.netlify.app/
 
