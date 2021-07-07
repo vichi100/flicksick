@@ -132,7 +132,7 @@ const Profile = (props) => {
 					justifyContent: 'center',
 					marginRight: 20,
 					borderWidth: 0.8,
-					borderColor: '#DCDCDC',
+					borderColor: '#696969',
 					padding: 10,
 					borderRadius: 10
 				}}
@@ -192,9 +192,9 @@ const Profile = (props) => {
 				</View>
 				<TouchableRipple
 					onPress={() => setModalVisible(true)}
-					style={{ marginTop: 10, position: 'absolute', top: 0, right: 10 }}
+					style={{ marginTop: 10, position: 'absolute', top: 10, right: 10 }}
 				>
-					<Feather name="edit" color="#A9A9A9" size={23} />
+					<Feather name="edit" color="#696969" size={23} />
 				</TouchableRipple>
 			</View>
 
