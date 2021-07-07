@@ -55,6 +55,7 @@ const Friends = (props) => {
 	const [ category, setCategory ] = useState('all');
 	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ isVisible, setIsVisible ] = useState(false);
+	const [ movieArray, setMovieArray ] = useState(props.movieByFriends);
 
 	const dismissSnackBar = () => {
 		setIsVisible(false);
@@ -83,11 +84,37 @@ const Friends = (props) => {
 			setSelectedFriendMobile(item.mobile);
 			setSelectedFriendName(item.name);
 			setCategory('all');
+			getFriendMovieList(item.mobile);
 		} else {
 			setSelectedFriendMobile(null);
 			setSelectedFriendName('All Friends');
 			setCategory('all');
+			setMovieArray(props.movieByFriends);
 		}
+	};
+
+	const getFriendMovieList = (selectedFriendMobile) => {
+		const obj = {
+			mobile: selectedFriendMobile
+		};
+		axios(SERVER_MOVIE_API_URL + '/getFriendMovieList', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				// console.log(response.data);
+				if (response.data) {
+					setMovieArray(response.data);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	};
 
 	const updateFriendsDataArray = (inviteeMobile) => {
@@ -568,7 +595,7 @@ const Friends = (props) => {
 			{/* <View style={{ margin: 7 }} /> */}
 
 			<FlatListStrip
-				data={props.movieByFriends}
+				data={movieArray}
 				title={null}
 				navigation={navigation}
 				horizontalFlag={true}

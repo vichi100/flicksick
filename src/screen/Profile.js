@@ -10,7 +10,8 @@ import {
 	FlatList,
 	Image
 } from 'react-native';
-import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
+import { Avatar } from 'react-native-elements';
+import { Title, Caption, Text, TouchableRipple } from 'react-native-paper';
 import { connect } from 'react-redux';
 // import Button from "../components/Button";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -117,11 +118,20 @@ const Profile = (props) => {
 			}}
 		>
 			<View style={styles.userInfoSection}>
-				<View style={{ flexDirection: 'row', marginTop: 15 }}>
-					<Avatar.Image
-						source={{
-							uri: 'https://api.adorable.io/avatars/80/abott@adorable.png'
-						}}
+				<View style={{ flexDirection: 'row', marginTop: 25 }}>
+					<Avatar
+						// source={{
+						// 	uri: 'https://api.adorable.io/avatars/800/abott@adorable.png'
+						// }}
+						avatarStyle={{ borderWidth: 0.7, borderColor: '#00FFFF' }}
+						rounded
+						title={
+							props.userDetails.name ? (
+								<Text style={{ color: '#D3D3D3' }}>props.userDetails.name[0]</Text>
+							) : (
+								<Text style={{ color: '#D3D3D3' }}>G</Text>
+							)
+						}
 						size={80}
 					/>
 					<View style={{ marginLeft: 20 }}>
@@ -131,22 +141,14 @@ const Profile = (props) => {
 								{
 									marginTop: 15,
 									marginBottom: 5,
-									color: '#fff'
+									color: '#DCDCDC'
 								}
 							]}
 						>
-							{props.userDetails.user_details && props.userDetails.user_details.name ? (
-								props.userDetails.user_details.name
-							) : (
-								'Guest'
-							)}
+							{props.userDetails && props.userDetails.name ? props.userDetails.name : 'Guest'}
 						</Title>
 						<Caption style={styles.caption}>
-							{props.userDetails.user_details && props.userDetails.user_details.mobile ? (
-								props.userDetails.user_details.mobile
-							) : (
-								''
-							)}
+							{props.userDetails && props.userDetails.mobile ? props.userDetails.mobile : null}
 						</Caption>
 					</View>
 				</View>
@@ -184,7 +186,7 @@ const Profile = (props) => {
 				</View>
 			) : null}
 
-			<View style={styles.menuWrapper}>
+			<View style={{}}>
 				<TouchableRipple onPress={() => onShare()}>
 					<View style={styles.menuItem}>
 						<Icon name="share-outline" color="#FF6347" size={25} />
@@ -194,7 +196,7 @@ const Profile = (props) => {
 				<View>
 					<View style={styles.menuItem}>
 						<FontAwesome5 name="play" color="#FF6347" size={25} />
-						<Text style={styles.menuItemText}>Your OTT Partners</Text>
+						<Text style={styles.menuItemText}>OTT Platforms</Text>
 					</View>
 					<View style={{ marginLeft: 50 }}>
 						<FlatList
@@ -209,7 +211,7 @@ const Profile = (props) => {
 					</View>
 				</View>
 
-				<TouchableRipple onPress={() => makeCall()}>
+				<TouchableRipple onPress={() => makeCall()} style={{ marginTop: 10 }}>
 					<View style={styles.menuItem}>
 						<AntDesign name="customerservice" color="#FF6347" size={25} />
 						<Text style={styles.menuItemText}>Support</Text>
