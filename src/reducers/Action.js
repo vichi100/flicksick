@@ -71,3 +71,11 @@ export const setMovieDetails = (payload) => {
 		payload
 	};
 };
+
+export const setUtilData = (payload) => {
+	// console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_UTIL_DATA,
+		payload
+	};
+};

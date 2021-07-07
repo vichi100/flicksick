@@ -62,16 +62,6 @@ const useHookWithRefCallback = () => {
 	return [ setRef ];
 };
 
-const OTTProviderDict = {
-	netflix: require('../../assets/img/netflix.jpeg'),
-	prime: require('../../assets/img/prime.jpeg'),
-	erosnow: require('../../assets/img/erosnow.jpeg'),
-	hotstar: require('../../assets/img/hotstar.jpeg'),
-	jiocinema: require('../../assets/img/jiocinema.jpeg'),
-	sonyliv: require('../../assets/img/sonyliv.jpeg'),
-	zee5: require('../../assets/img/zee5.jpeg')
-};
-
 const MovieDetails = (props) => {
 	const { navigation } = props;
 	const scrollViewRef = useRef();
@@ -161,10 +151,11 @@ const MovieDetails = (props) => {
 				const ottCountry = item[key];
 				console.log(JSON.stringify(ottCountry));
 				ottURL = ottCountry['in'].link;
+				console.log(FLICKSICK_IMAGE_URL + props.utilData.ott_provider[key]);
 				const OTTObj = {
 					provider: key,
 					url: ottURL,
-					image: OTTProviderDict[key]
+					image: FLICKSICK_IMAGE_URL + props.utilData.ott_provider[key]
 				};
 				OTTArrayObj.push(OTTObj);
 				console.log(JSON.stringify(ottURL));
@@ -308,7 +299,13 @@ const MovieDetails = (props) => {
 					}}
 				>
 					{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
-					<Image source={item.image} style={{ width: 40, height: 40 }} />
+					{/* <Image source={item.image} style={{ width: 40, height: 40 }} /> */}
+					<Image
+						source={{
+							uri: item.image
+						}}
+						style={{ width: 40, height: 40 }}
+					/>
 				</View>
 			</TouchableHighlight>
 		);
@@ -843,7 +840,8 @@ const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
-	movieDetails: state.AppReducer.movieDetails
+	movieDetails: state.AppReducer.movieDetails,
+	utilData: state.AppReducer.utilData
 });
 
 // const mapDispatchToProps = () => ({

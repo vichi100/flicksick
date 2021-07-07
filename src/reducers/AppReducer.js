@@ -9,7 +9,8 @@ const initialState = {
 	userContactDict: null,
 	countryCode: null,
 	country: null,
-	movieDetails: null
+	movieDetails: null,
+	utilData: null
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -72,6 +73,13 @@ const AppReducer = (state = initialState, action) => {
 			return {
 				...state,
 				movieDetails: action.payload
+			};
+
+		case ACTION_TYPES.SET_UTIL_DATA:
+			// // console.log("SET_UTIL_DATA");
+			return {
+				...state,
+				utilData: action.payload
 			};
 
 		default:

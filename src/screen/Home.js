@@ -27,7 +27,7 @@ import SliderEntry from './components/SliderEntry';
 import styles, { colors } from './styles/index.style';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrending, setMovieByFriend, setFSIdToGetDetails } from '../reducers/Action';
+import { setTrending, setMovieByFriend, setFSIdToGetDetails, setUtilData } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
 import { SERVER_MOVIE_API_URL } from './utils/constants';
@@ -225,6 +225,7 @@ const Home = (props) => {
 				});
 				// console.log(categoryArray);
 				setCategoryNamesArray(categoryArray);
+				props.setUtilData(response.data[0]);
 			},
 			(error) => {
 				console.log('getCategoryMappingData: ', error);
@@ -515,7 +516,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setTrending,
 	setMovieByFriend,
-	setFSIdToGetDetails
+	setFSIdToGetDetails,
+	setUtilData
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 

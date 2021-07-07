@@ -8,8 +8,7 @@ import {
 	Share,
 	Linking,
 	FlatList,
-	Image,
-	AsyncStorage
+	Image
 } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { Title, Caption, Text, TouchableRipple } from 'react-native-paper';
@@ -22,9 +21,10 @@ import { TextInput, Provider } from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
-import { setUserDetails } from '../reducers/Action';
+
 import axios from 'axios';
-import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL, FLICKSICK_IMAGE_URL } from './utils/constants';
+import { SERVER_MOVIE_API_URL } from './utils/constants';
+
 // import Share from "react-native-share";
 
 // import files from '../assets/filesBase64';
@@ -62,41 +62,11 @@ const Profile = (props) => {
 
 	const [ name, setName ] = useState(null);
 
-	const updateName = () => {
-		if (name === null) {
-			return;
-		}
-		const obj = {
-			name: name,
-			mobile: props.userDetails.mobile
-		};
-		axios(SERVER_USER_API_URL + '/updateName', {
-			method: 'post',
-			headers: {
-				'Content-type': 'Application/json',
-				Accept: 'Application/json'
-			},
-			data: obj
-		}).then(
-			(response) => {
-				// console.log(response.data);
-				if (response.data === 'success') {
-					save();
-				}
-				setModalVisible(false);
-			},
-			(error) => {
-				setModalVisible(false);
-				console.log(error);
-			}
-		);
-	};
+	// selectedList = [ require('../../assets/img/netflix.jpeg'), require('../../assets/img/prime.jpeg') ];
 
-	const save = async () => {
-		props.userDetails.name = name;
-		AsyncStorage.setItem('user_details', JSON.stringify(props.userDetails));
-		// props.setUserDetails(userData);
-	};
+	// useEffect(() => {
+	//   // console.log(JSON.stringify(props.userDetails));
+	// }, [props.userDetails]);
 
 	const makeCall = async () => {
 		const url = 'tel://9833097595';
@@ -124,26 +94,21 @@ const Profile = (props) => {
 	};
 
 	const renderOTTProvider = ({ item }) => {
-		// console.log(item);
+		console.log(item);
 		return (
 			<View
 				style={{
 					flex: 1,
 					justifyContent: 'center',
 					marginRight: 20,
-					borderWidth: 0.8,
-					borderColor: '#DCDCDC',
+					borderWidth: 0.5,
+					borderColor: '#fff',
 					padding: 10,
 					borderRadius: 10
 				}}
 			>
 				{/* <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text> */}
-				<Image
-					source={{
-						uri: FLICKSICK_IMAGE_URL + item
-					}}
-					style={{ width: 40, height: 40 }}
-				/>
+				<Image source={item} style={{ width: 40, height: 40 }} />
 			</View>
 		);
 	};
@@ -165,7 +130,7 @@ const Profile = (props) => {
 						rounded
 						title={
 							props.userDetails.name ? (
-								<Text style={{ color: '#D3D3D3' }}>{props.userDetails.name[0]}</Text>
+								<Text style={{ color: '#D3D3D3' }}>props.userDetails.name[0]</Text>
 							) : (
 								<Text style={{ color: '#D3D3D3' }}>G</Text>
 							)
@@ -213,7 +178,7 @@ const Profile = (props) => {
 					<View style={{ marginLeft: 50 }}>
 						<FlatList
 							horizontal
-							data={Object.values(props.utilData.ott_provider)}
+							data={OTTProvidesList}
 							//data defined in constructor
 							// ItemSeparatorComponent={ItemSeparatorView}
 							//Item Separator View
@@ -242,74 +207,43 @@ const Profile = (props) => {
 					</View>
 				</TouchableRipple>
 			</View>
-
 			<Modal
 				animationType="slide"
 				transparent={true}
 				visible={modalVisible}
 				onRequestClose={() => {
-					// Alert.alert("Modal has been closed.");
+					// Alert.alert('Modal has been closed.');
 					setModalVisible(false);
 				}}
 			>
-				<View
-					style={{
-						flex: 1,
-						justifyContent: 'center',
-						alignContent: 'center',
-						marginTop: 22,
-						marginBottom: 20
-					}}
-				>
-					<View
-						style={{
-							margin: 20,
-							height: 200,
-							backgroundColor: '#000',
-							borderRadius: 20,
-							borderColor: 'rgba(105,105,105, .8)',
-							borderWidth: 0.5,
-							padding: 35,
-							alignItems: 'center',
-							shadowColor: '#000',
-							shadowOffset: {
-								width: 0,
-								height: 2
-							},
-							shadowOpacity: 0.25,
-							shadowRadius: 3.84,
-							elevation: 5
-						}}
-					>
-						<View style={{ height: 30, width: 300 }}>
-							<TextInput
-								mode="outlined"
-								style={{
-									backgroundColor: 'rgba(0,0,0, 0.8)',
-									// borderColor: 'rgba(128,128,128, .9)',
-									// borderWidth: 1,
-									padding: 0
-									// height: 20
-									// marginLeft: 20
-								}}
-								label="Name"
-								value={name}
-								onChangeText={(text) => setName(text)}
-								width={300}
-								// height={5}
-								// keyboardType={'numeric'}
-								returnKeyType={'done'}
-								theme={{
-									colors: {
-										placeholder: 'rgba(220,220,220,.9)',
-										text: 'white',
-										primary: 'rgba(0,191,255, .9)',
-										underlineColor: 'rgba(0,0,0, 0.8)',
-										backgroundColor: 'rgba(0,0,0, 0.8)'
-									}
-								}}
-							/>
-						</View>
+				<View style={styles.centeredView1}>
+					<View style={styles.modalView}>
+						<TextInput
+							mode="outlined"
+							style={{
+								backgroundColor: 'rgba(0,0,0, 0.8)',
+								borderColor: 'rgba(128,128,128, .9)',
+								// borderWidth: 1,
+								padding: 0
+								// marginLeft: 20
+							}}
+							label="Name"
+							value={name}
+							onChangeText={(text) => setName(text)}
+							width={300}
+							// height={20}
+							keyboardType={'numeric'}
+							returnKeyType={'done'}
+							theme={{
+								colors: {
+									placeholder: 'rgba(220,220,220,.9)',
+									text: 'white',
+									primary: 'rgba(0,191,255, .9)',
+									underlineColor: 'rgba(0,0,0, 0.8)',
+									backgroundColor: 'rgba(0,0,0, 0.8)'
+								}
+							}}
+						/>
 
 						<View
 							style={{
@@ -317,44 +251,27 @@ const Profile = (props) => {
 								flexDirection: 'row',
 								right: 0,
 								bottom: 0,
-								marginTop: 20,
-								marginBottom: 15,
-								paddingRight: 20
+								// marginTop: 20,
+								marginBottom: 20,
+								padding: 20
 								// justifyContent: "flex-end"
 							}}
 						>
 							<TouchableHighlight
-								// stylesX={{ ...stylesX.cancelButton }}
+								style={{ ...styles.cancelButton }}
 								onPress={() => {
 									setModalVisible(!modalVisible);
 								}}
 							>
-								<Text
-									style={{
-										marginBottom: 15,
-										marginRight: 20,
-										textAlign: 'center',
-										color: '#fff'
-									}}
-								>
-									Cancel
-								</Text>
+								<Text style={styles.textStyle}>Cancel</Text>
 							</TouchableHighlight>
 							<TouchableHighlight
-								// styles={{ ...stylesX.applyButton }}
+								style={{ ...styles.applyButton }}
 								onPress={() => {
-									updateName();
+									deleteAgentAccount();
 								}}
 							>
-								<Text
-									style={{
-										marginBottom: 15,
-										textAlign: 'center',
-										color: '#fff'
-									}}
-								>
-									Apply
-								</Text>
+								<Text style={styles.textStyle}>Apply</Text>
 							</TouchableHighlight>
 						</View>
 					</View>
@@ -365,13 +282,12 @@ const Profile = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-	userDetails: state.AppReducer.userDetails,
-	utilData: state.AppReducer.utilData
+	userDetails: state.AppReducer.userDetails
 });
 
 const mapDispatchToProps = {
 	// setUserMobile,
-	setUserDetails
+	// setUserDetails,
 	// setPropReminderList
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
