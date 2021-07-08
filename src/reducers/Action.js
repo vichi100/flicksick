@@ -81,9 +81,17 @@ export const setUtilData = (payload) => {
 };
 
 export const setLoginMessage = (payload) => {
-	console.log('payload', payload);
+	// console.log('payload', payload);
 	return {
 		type: ACTION_TYPES.SET_LOGIN_MESSAGE,
+		payload
+	};
+};
+
+export const setSeenMovies = (payload) => {
+	// console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_SEEN_MOVIES,
 		payload
 	};
 };

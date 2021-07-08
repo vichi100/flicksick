@@ -97,7 +97,7 @@ const Row = (props) => {
 						<AntDesign name="hearto" color={'red'} size={18} />
 						<View style={{ marginLeft: 5 }} />
 						<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>
-							{getFSMovieRating(item).loved_it}%
+							{getFSMovieRating(item) && getFSMovieRating(item).loved_it}%
 						</Text>
 					</View>
 				</View>
@@ -149,16 +149,20 @@ const Row = (props) => {
 						>
 							Seen |
 						</Text>
-						<Text
-							style={{
-								color: '#00FF00',
-								fontSize: 10,
-								fontWeight: '700',
-								textTransform: 'capitalize'
-							}}
-						>
-							{' ?'}
-						</Text>
+						{props.seenMovies[item.fs_id] === 1 ? (
+							<AntDesign name="check" color={'#00FF00'} size={12} />
+						) : (
+							<Text
+								style={{
+									color: '#00FF00',
+									fontSize: 10,
+									fontWeight: '700',
+									textTransform: 'capitalize'
+								}}
+							>
+								{' ?'}
+							</Text>
+						)}
 						{/* <Ionicons name="checkmark" color={'#00FF00'} size={12} /> */}
 					</View>
 				</TouchableOpacity>
@@ -172,7 +176,8 @@ const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
-	userDetails: state.AppReducer.userDetails
+	userDetails: state.AppReducer.userDetails,
+	seenMovies: state.AppReducer.seenMovies
 });
 
 const mapDispatchToProps = {

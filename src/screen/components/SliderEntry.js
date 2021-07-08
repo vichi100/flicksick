@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { setFSIdToGetDetails, setMovieDetails, setLoginMessage } from '../../reducers/Action';
+import { setFSIdToGetDetails, setMovieDetails, setLoginMessage, setSeenMovies } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
@@ -27,7 +27,7 @@ const SliderEntry = (props) => {
 	const [ displayError, setDisplayError ] = useState(false);
 
 	const openRating = (movie) => {
-		console.log('rating', movie);
+		// console.log('rating', movie);
 		setModalVisible(true);
 		setFSId(movie.fs_id);
 		setMovieName(movie.title);
@@ -150,7 +150,7 @@ const SliderEntry = (props) => {
 					<AntDesign name="hearto" color={'red'} size={20} />
 					<View style={{ marginLeft: 5 }} />
 					<Text style={{ color: '#F5F5F5', fontSize: 14, fontWeight: '900' }}>
-						{getFSMovieRating(data).loved_it}%
+						{getFSMovieRating(data) && getFSMovieRating(data).loved_it}%
 					</Text>
 				</View>
 				<View style={{ flexDirection: 'row' }}>
@@ -202,16 +202,20 @@ const SliderEntry = (props) => {
 							>
 								Seen |
 							</Text>
-							<Text
-								style={{
-									color: '#00FF00',
-									fontSize: 12,
-									fontWeight: '700',
-									textTransform: 'capitalize'
-								}}
-							>
-								{' ?'}
-							</Text>
+							{props.seenMovies[data.fs_id] === 1 ? (
+								<AntDesign name="check" color={'#00FF00'} size={12} />
+							) : (
+								<Text
+									style={{
+										color: '#00FF00',
+										fontSize: 12,
+										fontWeight: '700',
+										textTransform: 'capitalize'
+									}}
+								>
+									{' ?'}
+								</Text>
+							)}
 							{/* <Ionicons name="checkmark" color={'#00FF00'} size={15} /> */}
 						</TouchableOpacity>
 					</View>
@@ -257,7 +261,10 @@ const SliderEntry = (props) => {
 			data: obj
 		}).then(
 			(response) => {
-				console.log(response.data);
+				// console.log(response.data);
+				const temp = { ...props.seenMovies };
+				temp[fsId] = 1;
+				props.setSeenMovies(temp);
 				setRatingIndex(-1);
 			},
 			(error) => {
@@ -428,7 +435,8 @@ const SliderEntry = (props) => {
 const mapStateToProps = (state) => ({
 	trendingToday: state.AppReducer.trendingToday,
 	trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
-	userDetails: state.AppReducer.userDetails
+	userDetails: state.AppReducer.userDetails,
+	seenMovies: state.AppReducer.seenMovies
 });
 
 // const mapDispatchToProps = () => ({
@@ -438,7 +446,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	setFSIdToGetDetails,
 	setMovieDetails,
-	setLoginMessage
+	setLoginMessage,
+	setSeenMovies
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SliderEntry);
 

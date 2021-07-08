@@ -23,7 +23,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setLoginMessage } from '../reducers/Action';
+import { setLoginMessage, setSeenMovies } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import { SERVER_MOVIE_API_URL } from './utils/constants';
 
@@ -40,14 +40,14 @@ const SeenModal = (props) => {
 	};
 
 	const addRatingAndSeenFlag = () => {
-		console.log('addRatingAndSeenFlag called', JSON.stringify(mobile));
+		// console.log('addRatingAndSeenFlag called', JSON.stringify(mobile));
 		if (ratingIndex === -1) {
 			setDisplayError(true);
 			return;
 		}
 
 		if (!userId && !mobile) {
-			console.log('addRatingAndSeenFlag called');
+			// console.log('addRatingAndSeenFlag called');
 			props.setLoginMessage('Please login before start rating');
 			navigation.navigate('Login');
 			props.setModalVisible(false);
@@ -72,6 +72,10 @@ const SeenModal = (props) => {
 			(response) => {
 				// console.log(response.data);
 				setRatingIndex(-1);
+				const temp = { ...props.seenMovies };
+				temp[fsId] = 1;
+				props.setSeenMovies(temp);
+				// console.log('temp: ', JSON.stringify(temp));
 			},
 			(error) => {
 				console.log(error);
@@ -223,8 +227,13 @@ const SeenModal = (props) => {
 	);
 };
 
+const mapStateToProps = (state) => ({
+	seenMovies: state.AppReducer.seenMovies
+});
+
 const mapDispatchToProps = {
-	setLoginMessage
+	setLoginMessage,
+	setSeenMovies
 };
 
-export default connect(null, mapDispatchToProps)(SeenModal);
+export default connect(mapStateToProps, mapDispatchToProps)(SeenModal);

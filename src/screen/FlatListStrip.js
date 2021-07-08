@@ -28,7 +28,8 @@ import {
 	setDataFor,
 	setFSIdToGetDetails,
 	setMovieDetails,
-	setLoginMessage
+	setLoginMessage,
+	setSeenMovies
 } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import SearchDisplay from './SearchDisplay';
@@ -100,6 +101,9 @@ const FlatListStrip = (props) => {
 			(response) => {
 				// console.log(response.data);
 				setRatingIndex(-1);
+				const temp = { ...props.seenMovies };
+				temp[fsId] = 1;
+				props.setSeenMovies(temp);
 			},
 			(error) => {
 				console.log(error);
@@ -112,6 +116,8 @@ const FlatListStrip = (props) => {
 	const Row = ({ item }) => {
 		// getFSMovieRating(item);
 		// console.log('friends: ', JSON.stringify(item));
+		const isExist = props.seenMovies[item.fs_id];
+		// console.log('friends: ', isExist);
 		return (
 			<TouchableOpacity
 				activeOpacity={1}
@@ -164,7 +170,7 @@ const FlatListStrip = (props) => {
 							<AntDesign name="hearto" color={'red'} size={18} />
 							<View style={{ marginLeft: 5 }} />
 							<Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>
-								{getFSMovieRating(item).loved_it}%
+								{getFSMovieRating(item) && getFSMovieRating(item).loved_it}%
 							</Text>
 						</View>
 					</View>
@@ -216,16 +222,20 @@ const FlatListStrip = (props) => {
 							>
 								Seen |
 							</Text>
-							<Text
-								style={{
-									color: '#00FF00',
-									fontSize: 10,
-									fontWeight: '700',
-									textTransform: 'capitalize'
-								}}
-							>
-								{' ?'}
-							</Text>
+							{isExist === 1 ? (
+								<AntDesign name="check" color={'#00FF00'} size={12} />
+							) : (
+								<Text
+									style={{
+										color: '#00FF00',
+										fontSize: 10,
+										fontWeight: '700',
+										textTransform: 'capitalize'
+									}}
+								>
+									{' ?'}
+								</Text>
+							)}
 							{/* <AntDesign name="question" color={'#00FF00'} size={12} /> */}
 						</View>
 					</TouchableOpacity>
@@ -432,7 +442,8 @@ const mapStateToProps = (state) => ({
 	// trendingCurrentWeek: state.AppReducer.trendingCurrentWeek,
 	fsIdToGetDetails: state.AppReducer.fsIdToGetDetails,
 	userDetails: state.AppReducer.userDetails,
-	movieDetails: state.AppReducer.movieDetails
+	movieDetails: state.AppReducer.movieDetails,
+	seenMovies: state.AppReducer.seenMovies
 });
 
 // const mapDispatchToProps = () => ({
@@ -444,6 +455,7 @@ const mapDispatchToProps = {
 	setDataFor,
 	setFSIdToGetDetails,
 	setMovieDetails,
-	setLoginMessage
+	setLoginMessage,
+	setSeenMovies
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FlatListStrip);

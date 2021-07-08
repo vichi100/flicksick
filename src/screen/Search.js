@@ -92,6 +92,7 @@ const Search = (props) => {
 				setShowMovieDataArray(result);
 				// }
 				setLoading(false);
+				console.log('setLoading false1');
 				setRefreshing(false);
 			},
 			(error) => {
@@ -272,6 +273,7 @@ const Search = (props) => {
 	useEffect(
 		() => {
 			setLoading(true);
+			console.log('setLoading true');
 			if (
 				genres.toUpperCase() !== 'all'.toUpperCase() ||
 				releaseDate.toString().toUpperCase() !== 'all'.toUpperCase()
@@ -280,15 +282,19 @@ const Search = (props) => {
 				console.log(genres);
 				setStartId(0);
 				// setEndId(0);
-				showMovieDataArray.splice(0, showMovieDataArray.length);
-				movieDataArray.splice(0, movieDataArray.length);
+				// console.log('showMovieDataArray', JSON.stringify(showMovieDataArray));
+				showMovieDataArray.splice(0, showMovieDataArray.length); // just to refresh the screen
+				movieDataArray.splice(0, movieDataArray.length); // just to refresh the screen
 				// movieDataArray = [];
 				// setShowMovieDataArray([]);
 				// setMovieDataArray([]);
 			}
-			if (searchText.length === 0) {
-				fetchOnScrollDownMovies(0);
-			}
+			// setLoading(false);
+			// if (searchText.length === 0) {
+			// 	fetchOnScrollDownMovies(0);
+			// }
+
+			fetchOnScrollDownMovies(0);
 		},
 		[ genres, releaseDate ]
 	);
@@ -322,6 +328,7 @@ const Search = (props) => {
 				setLoadingMore(false);
 				setRefreshing(false);
 				setLoading(false);
+				console.log('setLoading false2');
 			},
 			(error) => {
 				setLoadingMore(false);

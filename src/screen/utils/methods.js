@@ -74,7 +74,7 @@ export const getFSMovieRating = (itemX) => {
 			tempFSRating['worthless'] = parseInt(arrX[2]);
 			// console.log(JSON.stringify(tempFSRating));
 		}
-		// console.log(JSON.stringify(tempFSRating));
-		return tempFSRating;
+		// console.log('tempFSRating', JSON.stringify(tempFSRating));
+		return tempFSRating || {};
 	}
 };

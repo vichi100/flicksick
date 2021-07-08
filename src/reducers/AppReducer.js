@@ -11,7 +11,8 @@ const initialState = {
 	country: null,
 	movieDetails: null,
 	utilData: null,
-	loginMessage: null
+	loginMessage: null,
+	seenMovies: {}
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -88,7 +89,13 @@ const AppReducer = (state = initialState, action) => {
 				...state,
 				loginMessage: action.payload
 			};
-		
+
+		case ACTION_TYPES.SET_SEEN_MOVIES:
+			// // console.log("SET_SEEN_MOVIES");
+			return {
+				...state,
+				seenMovies: action.payload
+			};
 
 		default:
 			// console.log("Default");
