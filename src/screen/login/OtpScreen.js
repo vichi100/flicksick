@@ -106,6 +106,10 @@ const OtpScreen = (props) => {
 		props.setUserDetails(userData);
 	};
 
+	const onSkip = () => {
+		navigation.navigate('BottomTabScreen');
+	};
+
 	return loading ? (
 		<View
 			style={{
@@ -189,6 +193,11 @@ const OtpScreen = (props) => {
 					{/* <Button title="NEXT" onPress={() => onSubmit()} /> */}
 				</View>
 			</ScrollView>
+			<View style={{ position: 'absolute', bottom: 15, right: 15 }}>
+				<TouchableOpacity onPress={() => onSkip()}>
+					<Text style={{ color: '#fff' }}>{'Skip >>'}</Text>
+				</TouchableOpacity>
+			</View>
 		</SafeAreaView>
 	);
 };

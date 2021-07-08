@@ -23,7 +23,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setFSIdToGetDetails } from '../reducers/Action';
+import { setLoginMessage } from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import { SERVER_MOVIE_API_URL } from './utils/constants';
 
@@ -40,13 +40,15 @@ const SeenModal = (props) => {
 	};
 
 	const addRatingAndSeenFlag = () => {
-		// console.log('addRatingAndSeenFlag called', props.userDetails);
+		console.log('addRatingAndSeenFlag called', JSON.stringify(mobile));
 		if (ratingIndex === -1) {
 			setDisplayError(true);
 			return;
 		}
 
-		if (!userId && mobile) {
+		if (!userId && !mobile) {
+			console.log('addRatingAndSeenFlag called');
+			props.setLoginMessage('Please login before start rating');
 			navigation.navigate('Login');
 			props.setModalVisible(false);
 			setDisplayError(false);
@@ -221,4 +223,8 @@ const SeenModal = (props) => {
 	);
 };
 
-export default SeenModal;
+const mapDispatchToProps = {
+	setLoginMessage
+};
+
+export default connect(null, mapDispatchToProps)(SeenModal);

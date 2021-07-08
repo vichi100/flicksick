@@ -65,7 +65,7 @@ const Login = (props) => {
 	const getUserDetails = async () => {
 		// AsyncStorage.setItem("agent_details", JSON.stringify(agentDetails));
 
-		// AsyncStorage.clear();
+		AsyncStorage.clear();
 
 		// userDetailsStr: { "user_details": { "user_type": "agent", "id": "15476a82-997a-4bef-bf1b-b1236f6c177e", "expo_token": null, "name": null, "company_name": null, "mobile": "9833097595", "address": null, "city": null, "access_rights": "all", "works_for": ["15476a82-997a-4bef-bf1b-b1236f6c177e"] } }
 
@@ -133,6 +133,12 @@ const Login = (props) => {
 							/>
 							<Text style={{ color: '#fff', textAlign: 'center', fontSize: 30 }}>Flick / Sick</Text>
 						</View>
+
+						{props.loginMessage ? (
+							<Text style={{ color: '#A9A9A9', textAlign: 'center', fontSize: 16, marginTop: 20 }}>
+								{props.loginMessage}
+							</Text>
+						) : null}
 
 						{/* <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}>
 				<Image source={require('../../../assets/img/flicksick.png')} style={{ width: 100, height: 100 }} />
@@ -211,7 +217,8 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => ({
 	userMobileNumber: state.AppReducer.userMobileNumber,
-	userDetails: state.AppReducer.userDetails
+	userDetails: state.AppReducer.userDetails,
+	loginMessage: state.AppReducer.loginMessage
 });
 const mapDispatchToProps = {
 	setUserMobile,

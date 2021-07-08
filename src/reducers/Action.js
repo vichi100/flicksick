@@ -79,3 +79,11 @@ export const setUtilData = (payload) => {
 		payload
 	};
 };
+
+export const setLoginMessage = (payload) => {
+	console.log('payload', payload);
+	return {
+		type: ACTION_TYPES.SET_LOGIN_MESSAGE,
+		payload
+	};
+};

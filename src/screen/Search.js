@@ -546,8 +546,8 @@ const Search = (props) => {
 			<SeenModal
 				fsId={fsId}
 				movieTitle={movieTitle}
-				userId={props.userDetails.id}
-				mobile={props.userDetails.mobile}
+				userId={props.userDetails && props.userDetails.id}
+				mobile={props.userDetails && props.userDetails.mobile}
 				modalVisible={modalVisible}
 				setModalVisible={(vFlag) => setModalVisible(vFlag)}
 				navigation={navigation}

@@ -22,7 +22,7 @@ import { TextInput, Provider } from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
-import { setUserDetails } from '../reducers/Action';
+import { setUserDetails, setLoginMessage } from '../reducers/Action';
 import axios from 'axios';
 import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL, FLICKSICK_IMAGE_URL } from './utils/constants';
 // import Share from "react-native-share";
@@ -62,6 +62,15 @@ const Profile = (props) => {
 
 	const [ name, setName ] = useState(null);
 
+	const setModalVisibleX = () => {
+		if (props.userDetails === null) {
+			props.setLoginMessage('Please login before change name');
+			navigation.navigate('Login');
+			return;
+		}
+		setModalVisible(true);
+	};
+
 	const updateName = () => {
 		if (name === null) {
 			return;
@@ -96,6 +105,12 @@ const Profile = (props) => {
 		props.userDetails.name = name;
 		AsyncStorage.setItem('user_details', JSON.stringify(props.userDetails));
 		// props.setUserDetails(userData);
+	};
+
+	const openInBrowser = async () => {
+		console.log('openInBrowser');
+		const url = 'http://flicksickapp.com/privacy';
+		Linking.openURL(url);
 	};
 
 	const makeCall = async () => {
@@ -164,7 +179,7 @@ const Profile = (props) => {
 						avatarStyle={{ borderWidth: 0.7, borderColor: '#00FFFF' }}
 						rounded
 						title={
-							props.userDetails.name ? (
+							props.userDetails && props.userDetails.name ? (
 								<Text style={{ color: '#D3D3D3' }}>{props.userDetails.name[0]}</Text>
 							) : (
 								<Text style={{ color: '#D3D3D3' }}>G</Text>
@@ -191,7 +206,7 @@ const Profile = (props) => {
 					</View>
 				</View>
 				<TouchableRipple
-					onPress={() => setModalVisible(true)}
+					onPress={() => setModalVisibleX()}
 					style={{ marginTop: 10, position: 'absolute', top: 10, right: 10 }}
 				>
 					<Feather name="edit" color="#696969" size={23} />
@@ -235,7 +250,7 @@ const Profile = (props) => {
 						<Text style={styles.menuItemText}>Settings</Text>
 					</View>
 				</TouchableRipple> */}
-				<TouchableRipple onPress={() => {}}>
+				<TouchableRipple onPress={() => openInBrowser()}>
 					<View style={styles.menuItem}>
 						<MaterialIcons name="local-police" color="#FF6347" size={25} />
 						<Text style={styles.menuItemText}>Privacy Policy</Text>
@@ -371,8 +386,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
 	// setUserMobile,
-	setUserDetails
-	// setPropReminderList
+	setUserDetails,
+	setLoginMessage
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 

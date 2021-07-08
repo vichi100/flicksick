@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { setFSIdToGetDetails, setMovieDetails } from '../../reducers/Action';
+import { setFSIdToGetDetails, setMovieDetails, setLoginMessage } from '../../reducers/Action';
 // import { RATTING_ARRAY } from '../utils/constants';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
@@ -235,7 +235,7 @@ const SliderEntry = (props) => {
 		}
 		if (!props.userDetails) {
 			// navigation.navigate('Login');
-
+			props.setLoginMessage('Please login before start rating');
 			setModalVisible(false);
 			setDisplayError(false);
 			props.navigateTo('Login');
@@ -437,7 +437,8 @@ const mapStateToProps = (state) => ({
 // });
 const mapDispatchToProps = {
 	setFSIdToGetDetails,
-	setMovieDetails
+	setMovieDetails,
+	setLoginMessage
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SliderEntry);
 

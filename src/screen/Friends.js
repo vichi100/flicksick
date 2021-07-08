@@ -412,6 +412,9 @@ const Friends = (props) => {
 	}, []);
 
 	const getFriendsData = () => {
+		if (props.userDetails === null) {
+			return;
+		}
 		const obj = {
 			id: props.userDetails.mobile
 		};
@@ -541,7 +544,20 @@ const Friends = (props) => {
 		);
 	};
 
-	return (
+	const navigateTo = () => {
+		navigation.navigate('Login');
+	};
+
+	return props.userDetails === null ? (
+		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1, justifyContent: 'center' }}>
+			<Text style={{ color: '#fff', textAlign: 'center', fontSize: 16 }}>
+				Please login to check what your friends are recommending
+			</Text>
+			<TouchableHighlight onPress={() => navigateTo()}>
+				<Text style={{ color: '#6495ED', textAlign: 'center', fontSize: 18, marginTop: 20 }}>Login</Text>
+			</TouchableHighlight>
+		</SafeAreaView>
+	) : (
 		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
 			{/* <View> */}
 			<View style={{ marginBottom: 5 }}>

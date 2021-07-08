@@ -23,7 +23,13 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setTrendingTodayX, setDataFor, setFSIdToGetDetails, setMovieDetails } from '../reducers/Action';
+import {
+	setTrendingTodayX,
+	setDataFor,
+	setFSIdToGetDetails,
+	setMovieDetails,
+	setLoginMessage
+} from '../reducers/Action';
 import { ButtonGroup } from 'react-native-elements';
 import SearchDisplay from './SearchDisplay';
 import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
@@ -70,6 +76,7 @@ const FlatListStrip = (props) => {
 		}
 
 		if (!props.userDetails) {
+			props.setLoginMessage('Please login before start rating');
 			navigation.navigate('Login');
 			setModalVisible(false);
 			setDisplayError(false);
@@ -436,6 +443,7 @@ const mapDispatchToProps = {
 	setTrendingTodayX,
 	setDataFor,
 	setFSIdToGetDetails,
-	setMovieDetails
+	setMovieDetails,
+	setLoginMessage
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FlatListStrip);

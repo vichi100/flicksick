@@ -10,7 +10,8 @@ const initialState = {
 	countryCode: null,
 	country: null,
 	movieDetails: null,
-	utilData: null
+	utilData: null,
+	loginMessage: null
 };
 const AppReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -81,6 +82,13 @@ const AppReducer = (state = initialState, action) => {
 				...state,
 				utilData: action.payload
 			};
+		case ACTION_TYPES.SET_LOGIN_MESSAGE:
+			// // console.log("SET_UTIL_DATA");
+			return {
+				...state,
+				loginMessage: action.payload
+			};
+		
 
 		default:
 			// console.log("Default");
