@@ -94,6 +94,7 @@ const Friends = (props) => {
 	};
 
 	const getFriendMovieList = (selectedFriendMobile) => {
+		setRefreshing(true)
 		const obj = {
 			mobile: selectedFriendMobile
 		};
@@ -109,9 +110,11 @@ const Friends = (props) => {
 				// console.log(response.data);
 				if (response.data) {
 					setMovieArray(response.data);
+					setRefreshing(false)
 				}
 			},
 			(error) => {
+				setRefreshing(false)
 				console.log(error);
 			}
 		);
@@ -585,6 +588,8 @@ const Friends = (props) => {
 					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
 				</View>
 			</View>
+			
+			
 			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
 				<Text
 					style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
@@ -610,7 +615,20 @@ const Friends = (props) => {
 			</View>
 			{/* <View style={{ margin: 7 }} /> */}
 
-			<FlatListStrip
+			{refreshing ? (
+							<View
+								style={{
+									// flex: 1, 
+									height: 200,
+									justifyContent: 'center',
+									alignItems: 'center',
+									backgroundColor: 'rgba(0,0,0, .9)'
+								}}
+							>
+								<ActivityIndicator animating size="large" color={'#fff'} />
+								{/* <ActivityIndicator animating size="large" /> */}
+							</View>
+						) :<FlatListStrip
 				data={movieArray}
 				title={null}
 				navigation={navigation}
@@ -619,6 +637,9 @@ const Friends = (props) => {
 				imageHight={200}
 				imageWidth={160}
 			/>
+							}
+
+
 
 			{/* <ScrollView> */}
 			<FlatList

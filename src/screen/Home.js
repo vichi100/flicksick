@@ -83,7 +83,7 @@ const Home = (props) => {
 	const getHomeScreenData = () => {
 		// console.log('getHomeScreenData called');
 		const obj = {
-			id: '123'
+			mobile: props.userDetails && props.userDetails.mobile
 		};
 		axios(SERVER_MOVIE_API_URL + '/getHomeScreenData', {
 			method: 'post',
@@ -140,6 +140,7 @@ const Home = (props) => {
 
 	const getTopMoviesOfTheYear = (releaseDate) => {
 		const obj = {
+			mobile: props.userDetails && props.userDetails.mobile,
 			releaseDate: releaseDate
 		};
 		axios(SERVER_MOVIE_API_URL + '/getTopMoviesOfTheYear', {
@@ -293,7 +294,8 @@ const Home = (props) => {
 		console.log('document: ', document);
 		const obj = {
 			category: categoryX,
-			document: document
+			document: document,
+			mobile: props.userDetails && props.userDetails.mobile
 		};
 		axios(SERVER_MOVIE_API_URL + '/getMovieByCategory', {
 			method: 'post',
