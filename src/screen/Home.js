@@ -80,6 +80,36 @@ const Home = (props) => {
 		);
 	};
 
+	useEffect(()=>{
+		if(props.userDetails && props.userDetails.mobile){
+			getSeenMovieData()
+		}
+	},[props.userDetails]);
+
+
+	const getSeenMovieData = () =>{
+		const obj = {
+			mobile: props.userDetails && props.userDetails.mobile
+		};
+		axios(SERVER_MOVIE_API_URL + '/getSeenMovieData', {
+			method: 'post',
+			headers: {
+				'Content-type': 'Application/json',
+				Accept: 'Application/json'
+			},
+			data: obj
+		}).then(
+			(response) => {
+				// console.log('response.data', response.data);
+				props.setSeenMovies(response.data);
+			},
+			(error) => {
+				console.log('getSeenMovieData: ', error);
+				// setLoading(false);
+			}
+		);
+	}
+
 	const getHomeScreenData = () => {
 		// console.log('getHomeScreenData called');
 		const obj = {
