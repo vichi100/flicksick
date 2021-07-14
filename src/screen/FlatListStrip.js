@@ -222,7 +222,7 @@ const FlatListStrip = (props) => {
 							>
 								Seen |
 							</Text>
-							{isExist  ? (
+							{ isExist  ? (
 								<AntDesign name="check" color={'#00FF00'} size={12} />
 							) : (
 								<Text
