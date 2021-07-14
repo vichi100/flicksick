@@ -149,7 +149,7 @@ const Row = (props) => {
 						>
 							Seen |
 						</Text>
-						{props.seenMovies[item.fs_id] === 1 ? (
+						{props.seenMovies[item.fs_id] ? (
 							<AntDesign name="check" color={'#00FF00'} size={12} />
 						) : (
 							<Text

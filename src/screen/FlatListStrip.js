@@ -115,7 +115,7 @@ const FlatListStrip = (props) => {
 
 	const Row = ({ item }) => {
 		// getFSMovieRating(item);
-		// console.log('friends: ', JSON.stringify(item));
+		// console.log('friends: ', JSON.stringify(props.seenMovies));
 		const isExist = props.seenMovies[item.fs_id];
 		// console.log('friends: ', isExist);
 		return (
@@ -222,7 +222,7 @@ const FlatListStrip = (props) => {
 							>
 								Seen |
 							</Text>
-							{isExist === 1 ? (
+							{isExist  ? (
 								<AntDesign name="check" color={'#00FF00'} size={12} />
 							) : (
 								<Text

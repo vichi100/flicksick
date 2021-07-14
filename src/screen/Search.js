@@ -63,6 +63,8 @@ const Search = (props) => {
 		// Check if searched text is not blank
 		console.log(searchText);
 		if (searchText.length > 1) {
+			setGenres('all')
+			setReleaseDate('all')
 			searchMovie(searchText);
 		} else {
 			// Inserted text is blank
@@ -105,6 +107,10 @@ const Search = (props) => {
 	// const fetchResultByCategory = categoryX => {
 
 	// }
+	const setGenresX =(item)=>{
+		setGenres(item);
+		setSearchText('')
+	}
 	const renderCategoryItem = ({ item }) => {
 		// console.log(item);
 		return (
@@ -115,7 +121,7 @@ const Search = (props) => {
 					marginRight: 20
 				}}
 			>
-				<TouchableHighlight onPress={() => setGenres(item)}>
+				<TouchableHighlight onPress={() => setGenresX(item)}>
 					{item.toString().toUpperCase() === genres.toUpperCase() ? (
 						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
 					) : (
@@ -125,6 +131,12 @@ const Search = (props) => {
 			</View>
 		);
 	};
+
+
+	const setReleaseDateX = (item) =>{
+		setReleaseDate(item);
+		setSearchText('')
+	}
 
 	const renderReleaseDate = ({ item }) => {
 		// console.log(item);
@@ -136,7 +148,7 @@ const Search = (props) => {
 					marginRight: 20
 				}}
 			>
-				<TouchableHighlight onPress={() => setReleaseDate(item)}>
+				<TouchableHighlight onPress={() => setReleaseDateX(item)}>
 					{item.toString().toUpperCase() === releaseDate.toString().toUpperCase() ? (
 						<Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>{item}</Text>
 					) : (
@@ -300,6 +312,13 @@ const Search = (props) => {
 	);
 
 	const fetchOnScrollDownMovies = (startIdX) => {
+		console.log("fetchOnScrollDownMovies")
+		if(searchText && searchText.trim().length > 0){
+			setLoadingMore(false);
+				setRefreshing(false);
+				setLoading(false);
+			return
+		}
 		setLoadingMore(true);
 		console.log('startId: ', startIdX);
 		const obj = {
@@ -338,7 +357,14 @@ const Search = (props) => {
 	};
 
 	const fetchOnScrollUpMovies = () => {
+		console.log("fetchOnScrollUpMovies")
 		// pull down
+		if(searchText && searchText.trim().length > 0){
+			setLoadingMore(false);
+				setRefreshing(false);
+				setLoading(false);
+			return
+		}
 		setRefreshing(true);
 		const obj = {
 			id: endId
