@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "com.dejavuapps.flicksick",
-      "permissions": [ "READ_CONTACTS"],
+      "permissions": ["READ_CONTACTS"],
       "versionCode": 1
     }
   }
