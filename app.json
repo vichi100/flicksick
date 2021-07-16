@@ -1,15 +1,11 @@
-{
+  {
   "expo": {
     "name": "flicksick",
     "slug": "flicksick",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "platforms": [ "ios", "android" ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -17,16 +13,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+      "bundleIdentifier": "com.dejavuapps.flicksick",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSContactsUsageDescription": "FlickSick want to use your contacts to show you suggestions from your friends"
+      
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "android": {
+      "package": "com.dejavuapps.flicksick",
+      "permissions": [ "READ_CONTACTS"],
+      "versionCode": 1
     }
   }
 }

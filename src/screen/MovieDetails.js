@@ -274,7 +274,7 @@ const MovieDetails = (props) => {
 
 	const playTrailer = (trailerLink) => {
 		// console.log('playTrailer: ', 'https://www.youtube.com/embed/' + JSON.stringify(trailerLink));
-
+		// console.log("trailerLink", trailerLink)
 		setTrailerURI('https://www.youtube.com/embed/' + trailerLink);
 		setIsVisible(true);
 	};
