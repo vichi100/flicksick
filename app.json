@@ -1,29 +1,33 @@
   {
-  "expo": {
-    "name": "flicksick",
-    "slug": "flicksick",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "platforms": [ "ios", "android" ],
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "bundleIdentifier": "com.dejavuapps.flicksick",
-      "buildNumber": "1.0.0",
-      "infoPlist": {
-        "NSContactsUsageDescription": "FlickSick want to use your contacts to show you suggestions from your friends"
-      
+    "expo": {
+      "name": "FlickSick",
+      "slug": "flicksick",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "updates": {
+        "fallbackToCacheTimeout": 0
+      },
+      "assetBundlePatterns": [
+        "**/*"
+      ],
+      "ios": {
+        "bundleIdentifier": "com.dejavuapps.flicksick",
+        "buildNumber": "1.0.0",
+        "infoPlist": {
+          "NSContactsUsageDescription": "FlickSick want to use your contacts to show you suggestions from your friends"
+        }
+      },
+      "android": {
+        "package": "com.dejavuapps.flicksick",
+        "permissions": [
+          "READ_CONTACTS"
+        ],
+        "versionCode": 1
       }
-    },
-    "android": {
-      "package": "com.dejavuapps.flicksick",
-      "permissions": ["READ_CONTACTS"],
-      "versionCode": 1
     }
   }
-}
