@@ -2,7 +2,7 @@
     "expo": {
       "name": "FlickSick",
       "slug": "flicksick",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "orientation": "portrait",
       "icon": "./assets/icon.png",
       "platforms": [
@@ -17,7 +17,7 @@
       ],
       "ios": {
         "bundleIdentifier": "com.dejavuapps.flicksick",
-        "buildNumber": "1.0.0",
+        "buildNumber": "1.0.1",
         "infoPlist": {
           "NSContactsUsageDescription": "FlickSick want to use your contacts to show you suggestions from your friends"
         }
@@ -27,7 +27,7 @@
         "permissions": [
           "READ_CONTACTS"
         ],
-        "versionCode": 1
+        "versionCode": 2
       }
     }
   }
