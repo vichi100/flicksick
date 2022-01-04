@@ -101,5 +101,6 @@ const AppReducer = (state = initialState, action) => {
 			// console.log("Default");
 			return state;
 	}
+	
 };
 export default AppReducer;

@@ -25,6 +25,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { setUserDetails, setLoginMessage } from '../reducers/Action';
 import axios from 'axios';
 import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL, FLICKSICK_IMAGE_URL } from './utils/constants';
+import GlobalStyles from './GlobalStyles';
 // import Share from "react-native-share";
 
 // import files from '../assets/filesBase64';
@@ -44,8 +45,8 @@ import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL, FLICKSICK_IMAGE_URL } from '
 
 const Profile = (props) => {
 	const { navigation } = props;
-	const [ modalVisible, setModalVisible ] = useState(false);
-	const [ OTTProvidesList, setOTTProvidesList ] = useState([
+	const [modalVisible, setModalVisible] = useState(false);
+	const [OTTProvidesList, setOTTProvidesList] = useState([
 		require('../../assets/img/netflix.jpeg'),
 		require('../../assets/img/prime.jpeg'),
 		require('../../assets/img/erosnow.jpeg'),
@@ -55,12 +56,12 @@ const Profile = (props) => {
 		require('../../assets/img/zee5.jpeg')
 	]);
 
-	const [ selectedList, setSelectedList ] = useState([
+	const [selectedList, setSelectedList] = useState([
 		require('../../assets/img/netflix.jpeg'),
 		require('../../assets/img/prime.jpeg')
 	]);
 
-	const [ name, setName ] = useState(null);
+	const [name, setName] = useState(null);
 
 	const setModalVisibleX = () => {
 		if (props.userDetails === null) {
@@ -165,10 +166,7 @@ const Profile = (props) => {
 
 	return (
 		<SafeAreaView
-			style={{
-				flex: 1,
-				backgroundColor: '#000'
-			}}
+			style={GlobalStyles.droidSafeArea}
 		>
 			<View style={styles.userInfoSection}>
 				<View style={{ flexDirection: 'row', marginTop: 25 }}>

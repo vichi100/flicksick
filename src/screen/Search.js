@@ -28,28 +28,29 @@ import Row from './Row';
 import SeenModal from './SeenModal';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { SERVER_MOVIE_API_URL, FLICKSICK_IMAGE_URL, TMDB_IMAGE_URL } from './utils/constants';
+import GlobalStyles from './GlobalStyles';
 
-const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
+const categoryData = ['All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom'];
 
 const Search = (props) => {
 	const { navigation } = props;
-	const [ searchText, setSearchText ] = useState('');
-	const [ startId, setStartId ] = useState('0');
-	const [ endId, setEndId ] = useState('0');
-	const [ movieDataArray, setMovieDataArray ] = useState([]);
-	const [ showMovieDataArray, setShowMovieDataArray ] = useState([]);
-	const [ loadingMore, setLoadingMore ] = useState(false);
-	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
-	const [ refreshing, setRefreshing ] = useState(false);
-	const [ fsId, setFSId ] = useState(null);
-	const [ movieTitle, setMovieTitle ] = useState(null);
-	const [ modalVisible, setModalVisible ] = useState(false);
-	const [ genres, setGenres ] = useState('all');
-	const [ releaseDate, setReleaseDate ] = useState('all');
-	const [ loading, setLoading ] = useState(false);
-	const [ releaseDateArray, setReleaseDateArray ] = useState([]);
-	const [ genresObj, setGenresObj ] = useState([]);
-	const [ genresArray, setGenresArray ] = useState([]);
+	const [searchText, setSearchText] = useState('');
+	const [startId, setStartId] = useState('0');
+	const [endId, setEndId] = useState('0');
+	const [movieDataArray, setMovieDataArray] = useState([]);
+	const [showMovieDataArray, setShowMovieDataArray] = useState([]);
+	const [loadingMore, setLoadingMore] = useState(false);
+	const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(true);
+	const [refreshing, setRefreshing] = useState(false);
+	const [fsId, setFSId] = useState(null);
+	const [movieTitle, setMovieTitle] = useState(null);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [genres, setGenres] = useState('all');
+	const [releaseDate, setReleaseDate] = useState('all');
+	const [loading, setLoading] = useState(false);
+	const [releaseDateArray, setReleaseDateArray] = useState([]);
+	const [genresObj, setGenresObj] = useState([]);
+	const [genresArray, setGenresArray] = useState([]);
 
 	const setSearchTerm = (text) => {
 		setLoading(false);
@@ -107,7 +108,7 @@ const Search = (props) => {
 	// const fetchResultByCategory = categoryX => {
 
 	// }
-	const setGenresX =(item)=>{
+	const setGenresX = (item) => {
 		setGenres(item);
 		setSearchText('')
 	}
@@ -133,7 +134,7 @@ const Search = (props) => {
 	};
 
 
-	const setReleaseDateX = (item) =>{
+	const setReleaseDateX = (item) => {
 		setReleaseDate(item);
 		setSearchText('')
 	}
@@ -308,15 +309,15 @@ const Search = (props) => {
 
 			fetchOnScrollDownMovies(0);
 		},
-		[ genres, releaseDate ]
+		[genres, releaseDate]
 	);
 
 	const fetchOnScrollDownMovies = (startIdX) => {
 		console.log("fetchOnScrollDownMovies")
-		if(searchText && searchText.trim().length > 0){
+		if (searchText && searchText.trim().length > 0) {
 			setLoadingMore(false);
-				setRefreshing(false);
-				setLoading(false);
+			setRefreshing(false);
+			setLoading(false);
 			return
 		}
 		setLoadingMore(true);
@@ -338,7 +339,7 @@ const Search = (props) => {
 				console.log(response.data.length);
 				if (response.data.length > 0) {
 					const result = response.data;
-					const tempData = [ ...movieDataArray, ...result ];
+					const tempData = [...movieDataArray, ...result];
 					setMovieDataArray(tempData);
 					setShowMovieDataArray(tempData);
 					setStartId(tempData[tempData.length - 1]._id); // start for next scroll down
@@ -359,10 +360,10 @@ const Search = (props) => {
 	const fetchOnScrollUpMovies = () => {
 		console.log("fetchOnScrollUpMovies")
 		// pull down
-		if(searchText && searchText.trim().length > 0){
+		if (searchText && searchText.trim().length > 0) {
 			setLoadingMore(false);
-				setRefreshing(false);
-				setLoading(false);
+			setRefreshing(false);
+			setLoading(false);
 			return
 		}
 		setRefreshing(true);
@@ -384,7 +385,7 @@ const Search = (props) => {
 					if (movieDataArray.length > 25) {
 						movieDataArray.splice(movieDataArray.length - 25, movieDataArray.length);
 					}
-					const tempData = [ ...result, ...movieDataArray ];
+					const tempData = [...result, ...movieDataArray];
 					setMovieDataArray(tempData);
 					setStartId(tempData[tempData.length - 1]._id);
 					setEndId(tempData[0]._id);
@@ -459,13 +460,13 @@ const Search = (props) => {
 				const result = response.data;
 				// console.log('years: ', result[0].years);
 				setGenresObj(result[0].genres);
-				setReleaseDateArray([ 'All', ...result[0].years ]);
+				setReleaseDateArray(['All', ...result[0].years]);
 				const temp = Object.values(result[0].genres).sort();
 
-				const arr = temp.filter(function(item) {
+				const arr = temp.filter(function (item) {
 					return item.toUpperCase() !== 'Adult'.toUpperCase();
 				});
-				const xx = [ 'All', ...arr ];
+				const xx = ['All', ...arr];
 				setGenresArray(xx);
 				// console.log(Object.values(result[0].genres));
 			})
@@ -475,7 +476,7 @@ const Search = (props) => {
 	};
 
 	return (
-		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
+		<SafeAreaView style={GlobalStyles.droidSafeArea}>
 			<View style={{ marginBottom: 5 }}>
 				<TextInput
 					style={{
@@ -556,17 +557,17 @@ const Search = (props) => {
 						onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
 						// scrollEnabled={!loadingMore}
 						extraData={showMovieDataArray}
-						// refreshControl={
-						// 	<RefreshControl
-						// 		refreshing={refreshing}
-						// 		onRefresh={handleRefresh}
-						// 		tintColor={'#fff'}
-						// 		// colors={[ 'gray', 'orange' ]}
-						// 	/>
-						// }
-						// onRefresh={() => handleRefresh()}
-						// refreshing={refreshing}
-						// enabled={true}
+					// refreshControl={
+					// 	<RefreshControl
+					// 		refreshing={refreshing}
+					// 		onRefresh={handleRefresh}
+					// 		tintColor={'#fff'}
+					// 		// colors={[ 'gray', 'orange' ]}
+					// 	/>
+					// }
+					// onRefresh={() => handleRefresh()}
+					// refreshing={refreshing}
+					// enabled={true}
 					/>
 				</View>
 			) : (

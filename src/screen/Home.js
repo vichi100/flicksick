@@ -30,6 +30,7 @@ import { connect } from 'react-redux';
 import { setTrending, setMovieByFriend, setFSIdToGetDetails, setUtilData, setSeenMovies } from '../reducers/Action';
 import FlatListStrip from './FlatListStrip';
 import * as Contacts from 'expo-contacts';
+import GlobalStyles from './GlobalStyles';
 import { SERVER_MOVIE_API_URL } from './utils/constants';
 // import {setDataFor} from "../reducers/Action"
 
@@ -45,19 +46,19 @@ const SLIDER_1_FIRST_ITEM = 1;
 const Home = (props) => {
 	var num = 0;
 	const { navigation } = props;
-	const [ slider1ActiveSlide, setSlider1ActiveSlide ] = useState(SLIDER_1_FIRST_ITEM);
+	const [slider1ActiveSlide, setSlider1ActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 	const carouselRef = useRef(null);
-	const [ homeData, setHomeData ] = useState(null);
-	const [ loading, setLoading ] = useState(false);
-	const [ releaseDate, setReleaseDate ] = useState(new Date().getFullYear());
-	const [ yearsArray, setYearsArray ] = useState([]);
-	const [ topMoviesOfTheYear, setTopMoviesOfTheYear ] = useState([]);
-	const [ loadingTop, setLoadingTop ] = useState(false);
-	const [ category, setCategory ] = useState('RomCom');
-	const [ movieByCategory, setMovieByCategory ] = useState([]);
-	const [ loadingCategoryMovies, setLoadingCategoryMovies ] = useState(false);
-	const [ categoryMappingData, setCategoryMappingData ] = useState([]);
-	const [ categoryNamesArray, setCategoryNamesArray ] = useState([]);
+	const [homeData, setHomeData] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [releaseDate, setReleaseDate] = useState(new Date().getFullYear());
+	const [yearsArray, setYearsArray] = useState([]);
+	const [topMoviesOfTheYear, setTopMoviesOfTheYear] = useState([]);
+	const [loadingTop, setLoadingTop] = useState(false);
+	const [category, setCategory] = useState('RomCom');
+	const [movieByCategory, setMovieByCategory] = useState([]);
+	const [loadingCategoryMovies, setLoadingCategoryMovies] = useState(false);
+	const [categoryMappingData, setCategoryMappingData] = useState([]);
+	const [categoryNamesArray, setCategoryNamesArray] = useState([]);
 
 	const flatListRef = useRef(null);
 	const movieCategoryRef = useRef(null);
@@ -80,14 +81,14 @@ const Home = (props) => {
 		);
 	};
 
-	useEffect(()=>{
-		if(props.userDetails && props.userDetails.mobile){
+	useEffect(() => {
+		if (props.userDetails && props.userDetails.mobile) {
 			getSeenMovieData()
 		}
-	},[props.userDetails]);
+	}, [props.userDetails]);
 
 
-	const getSeenMovieData = () =>{
+	const getSeenMovieData = () => {
 		const obj = {
 			mobile: props.userDetails && props.userDetails.mobile
 		};
@@ -165,7 +166,7 @@ const Home = (props) => {
 			setLoadingTop(true);
 			getTopMoviesOfTheYear(releaseDate);
 		},
-		[ releaseDate ]
+		[releaseDate]
 	);
 
 	const getTopMoviesOfTheYear = (releaseDate) => {
@@ -310,7 +311,7 @@ const Home = (props) => {
 				getMovieByCategory(categoryX);
 			}
 		},
-		[ category, categoryMappingData ]
+		[category, categoryMappingData]
 	);
 
 	const getMovieByCategory = (categoryX) => {
@@ -353,7 +354,7 @@ const Home = (props) => {
 			{/* <ActivityIndicator animating size="large" /> */}
 		</View>
 	) : (
-		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
+		<SafeAreaView style={GlobalStyles.droidSafeArea}>
 			{homeData && homeData.length > 0 ? (
 				<ScrollView>
 					<View>
@@ -483,12 +484,12 @@ const Home = (props) => {
 								data={yearsArray}
 								snapToAlignment={'center'}
 								getItemLayout={(data, index) =>
-									// Max 5 items visibles at once
-									({
-										length: Dimensions.get('window').width / 5,
-										offset: Dimensions.get('window').width / 5 * index,
-										index
-									})}
+								// Max 5 items visibles at once
+								({
+									length: Dimensions.get('window').width / 5,
+									offset: Dimensions.get('window').width / 5 * index,
+									index
+								})}
 								snapToInterval={Dimensions.get('window').width / 5}
 								// pagingEnabled={true}
 								renderItem={(item) => renderReleaseDate(item)}
