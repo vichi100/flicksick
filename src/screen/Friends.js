@@ -31,31 +31,33 @@ import * as Contacts from 'expo-contacts';
 import FriendsDisplay from './FriendsDisplay';
 import Snackbar from '../screen/components/SnackbarComponent';
 import { SERVER_MOVIE_API_URL, SERVER_USER_API_URL } from './utils/constants';
+import GlobalStyles from './GlobalStyles';
 
-const categoryData = [ 'All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom' ];
+
+const categoryData = ['All', 'Action', 'comady', 'mystery', 'romcom', 'Action', 'comady', 'mystery', 'romcom'];
 
 const Friends = (props) => {
 	const { navigation } = props;
-	const [ search, setSearch ] = useState('');
-	const [ selectedFriendMobile, setSelectedFriendMobile ] = useState(null);
-	const [ selectedFriendName, setSelectedFriendName ] = useState('All Friends');
-	const [ contactData, setContactData ] = useState(null);
-	const [ contactObjDict, setContactObjDict ] = useState({});
-	const [ friendOn, setFriendOn ] = useState(null);
-	const [ friendOff, setFriendOff ] = useState(null);
-	const [ friendBlocked, setFriendBlocked ] = useState(null);
-	const [ allFriendsDataArray, setAllFriendsDataArray ] = useState([]);
-	const [ allFriendsDataArrayMain, setAllFriendsDataArrayMain ] = useState([]);
-	const [ subAllFriendsDataArray, setSubAllFriendsDataArray ] = useState([]);
-	const [ startIndex, setStartIndex ] = useState(0);
-	const [ endIndex, setEndIndex ] = useState(10);
-	const [ loadingMore, setLoadingMore ] = useState(false);
-	const [ onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum ] = useState(true);
-	const [ refreshing, setRefreshing ] = useState(false);
-	const [ category, setCategory ] = useState('all');
-	const [ errorMessage, setErrorMessage ] = useState('');
-	const [ isVisible, setIsVisible ] = useState(false);
-	const [ movieArray, setMovieArray ] = useState(props.movieByFriends);
+	const [search, setSearch] = useState('');
+	const [selectedFriendMobile, setSelectedFriendMobile] = useState(null);
+	const [selectedFriendName, setSelectedFriendName] = useState('All Friends');
+	const [contactData, setContactData] = useState(null);
+	const [contactObjDict, setContactObjDict] = useState({});
+	const [friendOn, setFriendOn] = useState(null);
+	const [friendOff, setFriendOff] = useState(null);
+	const [friendBlocked, setFriendBlocked] = useState(null);
+	const [allFriendsDataArray, setAllFriendsDataArray] = useState([]);
+	const [allFriendsDataArrayMain, setAllFriendsDataArrayMain] = useState([]);
+	const [subAllFriendsDataArray, setSubAllFriendsDataArray] = useState([]);
+	const [startIndex, setStartIndex] = useState(0);
+	const [endIndex, setEndIndex] = useState(10);
+	const [loadingMore, setLoadingMore] = useState(false);
+	const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(true);
+	const [refreshing, setRefreshing] = useState(false);
+	const [category, setCategory] = useState('all');
+	const [errorMessage, setErrorMessage] = useState('');
+	const [isVisible, setIsVisible] = useState(false);
+	const [movieArray, setMovieArray] = useState(props.movieByFriends);
 
 	const dismissSnackBar = () => {
 		setIsVisible(false);
@@ -281,7 +283,7 @@ const Friends = (props) => {
 			// setAllFriendsDataArrayMain([ ...allFriendsDataArray ]);
 			// Inserted text is not blank
 			// Filter the masterDataSource and update FilteredDataSource
-			const newData = allFriendsDataArrayMain.filter(function(item) {
+			const newData = allFriendsDataArrayMain.filter(function (item) {
 				// Applying filter for the inserted text in search bar
 				const itemData = item.name + item.mobile;
 				const textData = text.toUpperCase();
@@ -293,7 +295,7 @@ const Friends = (props) => {
 			console.log('text2: ', text);
 			// Inserted text is blank
 			// Update FilteredDataSource with masterDataSource
-			setAllFriendsDataArray([ ...allFriendsDataArrayMain ]);
+			setAllFriendsDataArray([...allFriendsDataArrayMain]);
 			// setAllFriendsDataArrayMain(null);
 			setSearch(text);
 		}
@@ -328,7 +330,7 @@ const Friends = (props) => {
 					const { status } = await Contacts.requestPermissionsAsync();
 					if (status === 'granted') {
 						const { data } = await Contacts.getContactsAsync({
-							fields: [ Contacts.Fields.PhoneNumbers ]
+							fields: [Contacts.Fields.PhoneNumbers]
 						});
 						// console.log(data.length);
 						if (data.length > 0) {
@@ -338,7 +340,7 @@ const Friends = (props) => {
 				})();
 			}
 		},
-		[ props.userDetails ]
+		[props.userDetails]
 	);
 
 	useEffect(
@@ -347,12 +349,12 @@ const Friends = (props) => {
 				contactData.map((item) => {
 					try {
 						createContactDict(item);
-					} catch (err) {}
+					} catch (err) { }
 				});
 				saveNewContact();
 			}
 		},
-		[ contactData ]
+		[contactData]
 	);
 
 	const createContactDict = (item) => {
@@ -561,7 +563,7 @@ const Friends = (props) => {
 			</TouchableHighlight>
 		</SafeAreaView>
 	) : (
-		<SafeAreaView style={{ backgroundColor: 'rgba(0,0,0, .9)', flex: 1 }}>
+		<SafeAreaView style={GlobalStyles.droidSafeArea}>
 			{/* <View> */}
 			<View style={{ marginBottom: 5 }}>
 				<TextInput
@@ -588,8 +590,8 @@ const Friends = (props) => {
 					<AntDesign name="search1" color={'#A9A9A9'} size={20} />
 				</View>
 			</View>
-			
-			
+
+
 			<View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 0 }}>
 				<Text
 					style={{ color: 'rgba(32,178,170,4)', fontSize: 18, fontWeight: '600', width: '26%' }}
@@ -616,19 +618,19 @@ const Friends = (props) => {
 			{/* <View style={{ margin: 7 }} /> */}
 
 			{refreshing ? (
-							<View
-								style={{
-									// flex: 1, 
-									height: 200,
-									justifyContent: 'center',
-									alignItems: 'center',
-									backgroundColor: 'rgba(0,0,0, .9)'
-								}}
-							>
-								<ActivityIndicator animating size="large" color={'#fff'} />
-								{/* <ActivityIndicator animating size="large" /> */}
-							</View>
-						) :<FlatListStrip
+				<View
+					style={{
+						// flex: 1, 
+						height: 200,
+						justifyContent: 'center',
+						alignItems: 'center',
+						backgroundColor: 'rgba(0,0,0, .9)'
+					}}
+				>
+					<ActivityIndicator animating size="large" color={'#fff'} />
+					{/* <ActivityIndicator animating size="large" /> */}
+				</View>
+			) : <FlatListStrip
 				data={movieArray}
 				title={null}
 				navigation={navigation}
@@ -637,7 +639,7 @@ const Friends = (props) => {
 				imageHight={200}
 				imageWidth={160}
 			/>
-							}
+			}
 
 
 
@@ -651,11 +653,11 @@ const Friends = (props) => {
 				extraData={allFriendsDataArray}
 				keyExtractor={rowKeyExt}
 
-				// onEndReached={() => handleLoadMore()}
-				// onEndReachedThreshold={0}
-				// ListFooterComponent={renderFooter}
-				// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-				// scrollEnabled={!loadingMore}
+			// onEndReached={() => handleLoadMore()}
+			// onEndReachedThreshold={0}
+			// ListFooterComponent={renderFooter}
+			// onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+			// scrollEnabled={!loadingMore}
 			/>
 			{/* </ScrollView> */}
 			{/* <View style={{ marginBottom: 200 }} /> */}
